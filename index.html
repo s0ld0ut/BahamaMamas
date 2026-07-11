@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -604,7 +605,7 @@
 
     <div class="hero">
         <p class="site-disclaimer">Hinweis: Diese Seite ist ein fiktives Projekt für den GTA Roleplay Server "HomeStory" - kein reales Unternehmen und keine offizielle Marke.</p>
-        <img class="hero-logo" src="/BM-LOGO-NEU.png" alt="Bahama Mamas" />
+        <img class="hero-logo" src="assets/bahama-mamas-logo.png" alt="Bahama Mamas">
         <p class="tagline">NEON PARADISE • ROCKFORD HILLS</p>
     </div>
 
@@ -998,17 +999,13 @@
         }
     </script>
     <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    // KONFIGURATION (Hier deine Daten eintragen!)
-    const SUPABASE_URL = 'https://jqmktlrythfmsxzevkjt.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt';
-    
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // Ab hier kannst du nun 'supabase.auth' verwenden 
-    // anstatt der alten Netlify-Funktionen wie 'login' oder 'logout'.
-</script>
+        // Supabase-Projekt: nur die Project URL und der "publishable" (anon) Key
+        // gehören hier ins Frontend - sie sind öffentlich und dafür gedacht.
+        const SUPABASE_URL = "https://jqmktlrythfmsxzevkjt.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const applicationForm = document.querySelector("#application-form");
         const applicationSubmit = document.querySelector("#application-submit");
@@ -1174,34 +1171,27 @@
         }
 
         function hasAdminRole(user) {
-            const metadataRoles = Array.isArray(user?.appMetadata?.roles) ? user.appMetadata.roles : [];
-            return user?.role === "admin" || user?.roles?.includes("admin") || metadataRoles.includes("admin");
+            const metadataRoles = Array.isArray(user?.app_metadata?.roles) ? user.app_metadata.roles : [];
+            return user?.app_metadata?.role === "admin" || metadataRoles.includes("admin");
         }
 
-        function getIdentityAccessToken() {
-            const cookie = document.cookie
-                .split("; ")
-                .find((entry) => entry.startsWith("nf_jwt="));
-
-            return cookie ? decodeURIComponent(cookie.slice("nf_jwt=".length)) : "";
+        async function getIdentityAccessToken() {
+            const { data } = await supabase.auth.getSession();
+            return data.session?.access_token || "";
         }
 
         async function apiFetch(url, options = {}) {
-  const headers = new Headers(options.headers || {});
-  
-  // Hole das Token von Supabase statt von Netlify
-  const { data: { session } } = await supabase.auth.getSession();
-  
-  if (session?.access_token) {
-    headers.set("Authorization", `Bearer ${session.access_token}`);
-  }
+            const headers = new Headers(options.headers || {});
+            const accessToken = await getIdentityAccessToken();
 
-  return fetch(url, {
-    ...options,
-    headers: headers, // Korrekte Zuweisung der Header
-    credentials: "same-origin"
-  });
-}
+            if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+
+            return fetch(url, {
+                ...options,
+                headers,
+                credentials: "same-origin"
+            });
+        }
 
         function renderLoggedOut() {
             loggedOutPanel.classList.remove("hidden");
@@ -1264,7 +1254,7 @@
             if (!hasAdminRole(user)) {
                 adminHelp.textContent = "Dieser Account ist eingeloggt, hat aber keine Admin-Rolle.";
                 applicationFolders.classList.add("hidden");
-                applicationsList.innerHTML = '<div class="empty-state">Keine Admin-Berechtigung. Weise dem Nutzer in Netlify die Rolle admin zu.</div>';
+                applicationsList.innerHTML = '<div class="empty-state">Keine Admin-Berechtigung. Weise dem Nutzer in Supabase (Auth &rarr; Users &rarr; User bearbeiten &rarr; Raw App Meta Data) die Rolle admin zu, z.B. { "role": "admin" }.</div>';
                 contactAdmin.classList.add("hidden");
                 teamAdmin.classList.add("hidden");
                 menuAdmin.classList.add("hidden");
@@ -1914,16 +1904,10 @@
 
             try {
                 const { email, password } = getFormPayload(loginForm);
-
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: email,
-  password: password,
-});
-
-if (error) throw error; // Dies löst den 'catch'-Block in Zeile 1918 aus
-
-loginForm.reset();
-await renderLoggedIn(data.user);
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                loginForm.reset();
+                await renderLoggedIn(data.user);
             } catch (error) {
                 showMessage(loginMessage, authErrorText(error), "error");
             } finally {
@@ -1942,7 +1926,10 @@ await renderLoggedIn(data.user);
 
             recoverButton.disabled = true;
             try {
-                await requestPasswordRecovery(email);
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.href.split("#")[0]
+                });
+                if (error) throw error;
                 showMessage(loginMessage, "Passwort-Mail wurde gesendet.", "success");
             } catch (error) {
                 showMessage(loginMessage, authErrorText(error), "error");
@@ -1958,13 +1945,12 @@ await renderLoggedIn(data.user);
 
             try {
                 const { password } = getFormPayload(passwordSetupForm);
-                const user = passwordSetupMode === "invite"
-                    ? await acceptInvite(inviteToken, password)
-                    : await updateUser({ password });
+                const { data, error } = await supabase.auth.updateUser({ password });
+                if (error) throw error;
 
                 passwordSetupForm.reset();
                 showMessage(loginMessage, "Passwort wurde gespeichert.", "success");
-                await renderLoggedIn(user);
+                await renderLoggedIn(data.user);
             } catch (error) {
                 showMessage(loginMessage, authErrorText(error), "error");
             } finally {
@@ -1973,7 +1959,7 @@ await renderLoggedIn(data.user);
         });
 
         logoutButton.addEventListener("click", async () => {
-            await logout();
+            await supabase.auth.signOut();
             renderLoggedOut();
         });
 
@@ -2490,9 +2476,8 @@ await renderLoggedIn(data.user);
         });
 
         function authErrorText(error) {
-            if (error instanceof MissingIdentityError) return "Identity ist für diese Site noch nicht aktiv.";
-            if (error instanceof AuthError && error.status === 401) return "E-Mail oder Passwort stimmt nicht.";
-            if (error instanceof AuthError && error.status === 403) return "Dieser Login ist nicht erlaubt.";
+            if (error?.status === 400 || error?.status === 401) return "E-Mail oder Passwort stimmt nicht.";
+            if (error?.status === 403) return "Dieser Login ist nicht erlaubt.";
             return error instanceof Error ? error.message : "Login fehlgeschlagen.";
         }
 
@@ -2500,18 +2485,20 @@ await renderLoggedIn(data.user);
             try {
                 await loadContent();
                 await Promise.all([loadTeam(), loadMenu(), loadEvents()]);
-                const callbackResult = await handleAuthCallback();
-                if (callbackResult?.type === "invite") {
-                    showPasswordSetup("invite", callbackResult.token);
-                    return;
-                }
-                if (callbackResult?.type === "recovery") {
-                    showPasswordSetup("recovery");
+
+                // Supabase hängt bei Einladungs-/Passwort-Wiederherstellungs-Links
+                // einen "type"-Parameter an den URL-Hash an (#access_token=...&type=recovery
+                // bzw. type=invite). supabase-js liest die Session daraus automatisch aus.
+                const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+                const linkType = hashParams.get("type");
+
+                if (linkType === "invite" || linkType === "recovery") {
+                    showPasswordSetup(linkType === "invite" ? "invite" : "recovery");
                     return;
                 }
 
-                const user = await getUser();
-                if (user) await renderLoggedIn(user);
+                const { data } = await supabase.auth.getUser();
+                if (data.user) await renderLoggedIn(data.user);
                 else renderLoggedOut();
             } catch (error) {
                 renderLoggedOut();
@@ -2519,8 +2506,8 @@ await renderLoggedIn(data.user);
             }
         }
 
-        onAuthChange((_event, user) => {
-            if (user) renderLoggedIn(user);
+        supabase.auth.onAuthStateChange((_event, session) => {
+            if (session?.user) renderLoggedIn(session.user);
             else renderLoggedOut();
         });
 
