@@ -2,75 +2,55 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Bahama Mamas | Admin</title>
+    <title>Bahama Mamas</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; 
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('bg-palmen.jpg');
-            background-attachment: fixed; background-size: cover; background-position: center;
-        }
-        .hero { text-align: center; padding: 40px; border-bottom: 1px solid #333; }
-        .hero-logo { max-width: 400px; width: 100%; }
-        nav { background: #000; padding: 15px; text-align: center; border-bottom: 1px solid #ff00ff; }
-        nav a { color: #fff; margin: 0 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
-        #content { padding: 40px; max-width: 800px; margin: auto; }
-        .card { background: rgba(20, 0, 40, 0.8); padding: 25px; border-radius: 15px; border: 1px solid #ff00ff; }
-        .btn { padding: 10px 20px; background: #ff00ff; color: #fff; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; margin-top: 10px; }
-        textarea { width: 100%; height: 150px; background: #000; color: #fff; border: 1px solid #555; padding: 10px; }
+        /* Hier kommen später deine CSS-Styles für das Design aus den Screenshots hin */
+        body { background: #050505; color: #fff; font-family: sans-serif; }
+        .card { background: #1a001a; border: 1px solid #ff00ff; padding: 20px; margin: 10px; border-radius: 10px; }
     </style>
 </head>
 <body>
-
-    <div class="hero"><img src="BM-LOGO-NEU.png" alt="Logo" class="hero-logo"></div>
-    <nav id="navbar"></nav>
-    <div id="content" class="card">Lädt...</div>
+    <nav id="navbar">
+        <a onclick="loadSection('home')">Home</a>
+        <a onclick="loadSection('events')">Events</a>
+        <a onclick="loadSection('menu')">Menü</a>
+        <a onclick="loadSection('team')">Team</a>
+        <a onclick="loadSection('bewerben')">Bewerben</a>
+        <a onclick="loadSection('kontakt')">Kontakt</a>
+        <a onclick="loadSection('admin')" style="color:red">Admin</a>
+    </nav>
+    <div id="content"></div>
 
     <script>
-        const sb = supabase.createClient('https://jqmktlrythfmsxzevkjt.supabase.co', 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt');
+        const sb = supabase.createClient('URL', 'KEY');
 
-        async function loadPage(slug) {
-            const contentDiv = document.getElementById('content');
-            if (slug === 'admin') {
-                const { data: session } = await sb.auth.getSession();
-                if (!session.session) {
-                    contentDiv.innerHTML = `<h2>Login</h2><input type="email" id="email" placeholder="Email"><input type="password" id="password" placeholder="Passwort"><button class="btn" onclick="login()">Anmelden</button>`;
-                } else {
-                    contentDiv.innerHTML = `<h2>Dashboard</h2><textarea id="edit-content"></textarea><button class="btn" onclick="saveContent()">Speichern</button><button class="btn" onclick="logout()">Logout</button>`;
-                }
+        async function loadSection(section) {
+            const content = document.getElementById('content');
+            content.innerHTML = 'Lädt...';
+            
+            if (section === 'admin') {
+                // Hier kommt die Admin-Logik mit Unterkategorien
+                content.innerHTML = `
+                    <div class="card">
+                        <h2>Admin Dashboard</h2>
+                        <button onclick="showAdminTab('events')">Events verwalten</button>
+                        <button onclick="showAdminTab('bewerbungen')">Bewerbungen (${await getCount('applications')})</button>
+                        <button onclick="showAdminTab('kontakt')">Kontaktanfragen (${await getCount('contact_requests')})</button>
+                        <div id="admin-subcontent"></div>
+                    </div>
+                `;
             } else {
-                const { data } = await sb.from('pages').select('*').eq('slug', slug).single();
-                contentDiv.innerHTML = data ? data.content_html : 'Seite nicht gefunden';
+                // Hier laden wir die Inhalte für die öffentlichen Seiten
+                const { data } = await sb.from(section).select('*');
+                content.innerHTML = `<h2>${section.toUpperCase()}</h2>` + JSON.stringify(data);
             }
         }
-
-        async function login() {
-            await sb.auth.signInWithPassword({ email: document.getElementById('email').value, password: document.getElementById('password').value });
-            loadPage('admin');
-        }
-
-        async function logout() { await sb.auth.signOut(); loadPage('admin'); }
-
-        async function saveContent() {
-            const newContent = document.getElementById('edit-content').value;
-            await sb.from('pages').update({ content_html: newContent }).eq('slug', 'home');
-            alert('Gespeichert!');
-        }
-
-        async function initNav() {
-            const nav = document.getElementById('navbar');
-            const { data } = await sb.from('pages').select('*');
-            data.forEach(p => {
-                const a = document.createElement('a');
-                a.innerText = p.title; a.onclick = () => loadPage(p.slug);
-                nav.appendChild(a);
-            });
-            const adminA = document.createElement('a');
-            adminA.innerText = 'Admin'; adminA.onclick = () => loadPage('admin');
-            nav.appendChild(adminA);
-            loadPage('home');
-        }
-        initNav();
+        
+        // Hilfsfunktion zum Zählen
+        async function getCount(table) { const { count } = await sb.from(table).select('*', { count: 'exact' }); return count; }
+        
+        loadSection('home');
     </script>
 </body>
 </html>
