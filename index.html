@@ -10,6 +10,7 @@
         nav a { color: #888; margin: 0 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
         #content { padding: 40px; max-width: 800px; margin: auto; }
         .card { background: #1a001a; padding: 20px; border-radius: 10px; border: 1px solid #ff00ff; }
+        .btn { padding: 10px 20px; background: #ff00ff; color: #fff; border-radius: 5px; cursor: pointer; border: none; }
     </style>
 </head>
 <body>
@@ -18,14 +19,50 @@
     <div id="content" class="card">Lädt...</div>
 
     <script>
-        const sb = supabase.createClient(
-    'https://jqmktlrythfmsxzevkjt.supabase.co', 
-    'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt'
-);
+        const sb = supabase.createClient('https://jqmktlrythfmsxzevkjt.supabase.co', 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt');
 
-        async function loadPage(slug = 'home') {
-            const { data } = await sb.from('pages').select('*').eq('slug', slug).single();
-            document.getElementById('content').innerHTML = data ? data.content_html : 'Seite nicht gefunden';
+        async function loadPage(slug) {
+            const contentDiv = document.getElementById('content');
+            
+            // Wenn der Admin-Bereich aufgerufen wird
+            if (slug === 'admin') {
+                contentDiv.innerHTML = `
+                    <div id="login-form">
+                        <h2>Admin Login</h2>
+                        <input type="email" id="email" placeholder="Email" style="display:block; width:90%; margin-bottom:10px; padding:10px;">
+                        <input type="password" id="password" placeholder="Passwort" style="display:block; width:90%; margin-bottom:10px; padding:10px;">
+                        <button class="btn" onclick="login()">Anmelden</button>
+                    </div>
+                    <div id="admin-dashboard" style="display:none;">
+                        <h2>Admin Dashboard</h2>
+                        <button class="btn" onclick="logout()">Logout</button>
+                    </div>
+                `;
+                checkAuth();
+            } else {
+                const { data } = await sb.from('pages').select('*').eq('slug', slug).single();
+                contentDiv.innerHTML = data ? data.content_html : 'Seite nicht gefunden';
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) alert(error.message); else checkAuth();
+        }
+
+        async function logout() {
+            await sb.auth.signOut();
+            location.reload();
+        }
+
+        async function checkAuth() {
+            const { data } = await sb.auth.getSession();
+            if (data.session) {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+            }
         }
 
         async function initNav() {
@@ -37,7 +74,13 @@
                 a.onclick = () => loadPage(page.slug);
                 nav.appendChild(a);
             });
-            loadPage(); // Lade Home beim Start
+            // Admin manuell hinzufügen
+            const adminA = document.createElement('a');
+            adminA.innerText = 'Admin';
+            adminA.onclick = () => loadPage('admin');
+            nav.appendChild(adminA);
+            
+            loadPage('home'); // Startseite
         }
 
         initNav();
