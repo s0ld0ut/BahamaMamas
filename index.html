@@ -998,18 +998,17 @@
         }
     </script>
     <script type="module">
-        import {
-            AuthError,
-            MissingIdentityError,
-            acceptInvite,
-            getUser,
-            handleAuthCallback,
-            login,
-            logout,
-            onAuthChange,
-            requestPasswordRecovery,
-            updateUser
-        } from "https://esm.sh/@netlify/identity@1.2.0";
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    // KONFIGURATION (Hier deine Daten eintragen!)
+    const SUPABASE_URL = 'https://jqmktlrythfmsxzevkjt.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt';
+    
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Ab hier kannst du nun 'supabase.auth' verwenden 
+    // anstatt der alten Netlify-Funktionen wie 'login' oder 'logout'.
+</script>
 
         const applicationForm = document.querySelector("#application-form");
         const applicationSubmit = document.querySelector("#application-submit");
