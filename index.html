@@ -30,7 +30,6 @@
 
     <nav id="navbar">
         <a href="#home" class="active" onclick="setActive(this)">Home</a>
-        <a href="#events" onclick="setActive(this)">Events</a>
         <a href="#menu" onclick="setActive(this)">Menü</a>
         <a href="#admin" onclick="setActive(this)" style="color: #ff5555;">Admin</a>
     </nav>
@@ -51,20 +50,21 @@
     </section>
 
     <script>
-        const SUPABASE_URL = 'https://jqmktlrythfmsxzevkjt.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Hier wird der Client korrekt initialisiert, ohne den Namen doppelt zu belegen
+        const sbClient = supabase.createClient(
+            'https://jqmktlrythfmsxzevkjt.supabase.co', 
+            'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt'
+        );
 
-        // Globale Funktionen sicher binden
         document.getElementById('login-btn').onclick = async () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            const { error } = await sbClient.auth.signInWithPassword({ email, password });
             if (error) alert(error.message); else location.reload();
         };
 
         document.getElementById('logout-btn').onclick = async () => {
-            await supabase.auth.signOut();
+            await sbClient.auth.signOut();
             location.reload();
         };
 
@@ -74,7 +74,7 @@
         }
 
         window.onload = async () => {
-            const { data } = await supabase.auth.getSession();
+            const { data } = await sbClient.auth.getSession();
             if (data.session) {
                 document.getElementById('login-form').style.display = 'none';
                 document.getElementById('admin-dashboard').style.display = 'block';
