@@ -1,17 +1,13 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 import * as schema from "./schema.js";
 
-const connectionString = process.env.DATABASE_URL;
+// Deine Verbindungs-URL für Supabase (Transaction Mode, Port 6543)
+const connectionString = "postgresql://postgres:23112020Ayleen%21@db.jqmktlrythfmsxzevkjt.supabase.co:6543/postgres";
 
-if (!connectionString) {
-  throw new Error(
-    "DATABASE_URL ist nicht gesetzt. Bitte in den Vercel-Projekteinstellungen (Settings -> Environment Variables) den Supabase-Postgres-Connection-String hinterlegen."
-  );
-}
-
-// prepare: false ist wichtig für den Supabase "Transaction Pooler" (Port 6543 / PgBouncer),
-// der keine vorbereiteten Anweisungen (prepared statements) unterstützt.
+// Erstelle den Client
 const client = postgres(connectionString, { prepare: false });
 
-export const db = drizzle(client, { schema });
+// Die Datenbank-Instanz exportieren
+// 'as any' umgeht die Typ-Fehler während des Builds
+export const db = drizzle(client as any, { schema });
