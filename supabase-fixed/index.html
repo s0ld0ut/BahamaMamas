@@ -1,0 +1,2517 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bahama Mamas | Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pink: #ff00ff;
+            --cyan: #00d4ff;
+            --dark: #050505;
+            --panel: rgba(20, 0, 40, 0.78);
+            --panel-strong: rgba(6, 0, 14, 0.92);
+            --line: rgba(255, 0, 255, 0.72);
+            --muted: #b9adc8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: #050505;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('bg-palmen.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            min-height: 100vh;
+        }
+
+        .hero { text-align: center; padding: 28px 20px 40px; border-bottom: 1px solid #333; }
+
+        .site-disclaimer {
+            color: var(--muted);
+            font-size: 0.78rem;
+            line-height: 1.4;
+            margin: 0 auto 18px;
+            max-width: 760px;
+        }
+
+        @keyframes logoBlink {
+            0%, 18%, 22%, 48%, 54%, 100% {
+                opacity: 1;
+                filter:
+                    drop-shadow(0 0 8px rgba(255, 42, 180, 0.82))
+                    drop-shadow(0 0 18px rgba(255, 0, 255, 0.58))
+                    drop-shadow(0 0 34px rgba(255, 128, 40, 0.24));
+            }
+            20%, 52% {
+                opacity: 1;
+                filter:
+                    drop-shadow(0 0 3px rgba(255, 42, 180, 0.44))
+                    drop-shadow(0 0 9px rgba(255, 0, 255, 0.22));
+            }
+        }
+
+        .hero-logo {
+            display: block;
+            width: min(640px, 94vw);
+            height: auto;
+            margin: 0 auto 6px;
+            animation: logoBlink 3.4s infinite;
+        }
+
+        .tagline { color: var(--cyan); letter-spacing: 5px; text-transform: uppercase; }
+
+        nav {
+            background: #000;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        nav a {
+            color: #888;
+            margin: 0 16px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            display: inline-block;
+            padding: 8px 0;
+        }
+
+        nav a:hover, nav a.active {
+            color: #fff;
+            text-shadow: 0 0 10px var(--cyan);
+            border-bottom: 2px solid var(--cyan);
+        }
+
+        section { display: none; padding: 40px 20px; max-width: 1100px; margin: auto; }
+        section:target { display: block; }
+        body:not(:has(:target)) #home { display: block; }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 35px rgba(255, 0, 255, 0.12);
+            backdrop-filter: blur(4px);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        h2 {
+            color: var(--pink);
+            border-bottom: 1px solid var(--pink);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 { color: #fff; }
+        p { line-height: 1.6; }
+
+        .btn, button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            background: var(--pink);
+            color: #fff;
+            border-radius: 5px;
+            border: 0;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+            min-height: 46px;
+            box-shadow: 0 0 18px rgba(255, 0, 255, 0.35);
+        }
+
+        .btn.secondary, button.secondary {
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.16);
+        }
+
+        button:disabled { opacity: 0.58; cursor: progress; }
+
+        label {
+            display: block;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: 1px solid rgba(0, 212, 255, 0.54);
+            border-radius: 8px;
+            padding: 13px 14px;
+            font: inherit;
+            outline: none;
+            min-height: 46px;
+        }
+
+        textarea { min-height: 118px; resize: vertical; }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--pink);
+            box-shadow: 0 0 0 3px rgba(255, 0, 255, 0.16);
+        }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .field.full { grid-column: 1 / -1; }
+        fieldset {
+            border: 1px solid rgba(0, 212, 255, 0.34);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 0 0 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        legend {
+            color: var(--cyan);
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            padding: 0 10px;
+            text-transform: uppercase;
+        }
+        .contact-intro { max-width: 850px; }
+        .contact-callout {
+            border-left: 4px solid var(--cyan);
+            padding: 14px 18px;
+            margin: 22px 0 26px;
+            color: #e8fbff;
+            background: rgba(0, 212, 255, 0.08);
+        }
+        .hint { color: var(--muted); margin-top: 0; }
+        .message { margin-top: 16px; padding: 13px 14px; border-radius: 8px; display: none; }
+        .message.show { display: block; }
+        .message.success { border: 1px solid #00ffa8; color: #d6fff1; background: rgba(0, 120, 80, 0.18); }
+        .message.error { border: 1px solid #ff4f9b; color: #ffd8e9; background: rgba(140, 0, 60, 0.22); }
+
+        .admin-shell {
+            display: grid;
+            grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.6fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .admin-meta {
+            color: var(--cyan);
+            font-weight: 700;
+            word-break: break-word;
+        }
+
+        .menu-intro {
+            max-width: 720px;
+            margin-bottom: 26px;
+        }
+
+        .menu-board {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .menu-block {
+            position: relative;
+            overflow: hidden;
+            min-height: 240px;
+            padding: 26px;
+            border: 1px solid rgba(0, 212, 255, 0.42);
+            border-radius: 14px;
+            background: linear-gradient(145deg, rgba(23, 0, 38, 0.94), rgba(0, 28, 38, 0.84));
+        }
+
+        .menu-block[data-category="extras"] { grid-column: 1 / -1; }
+
+        .menu-block h2 {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+            font-size: clamp(1.4rem, 4vw, 2rem);
+            letter-spacing: 0.08em;
+        }
+
+        .menu-items { position: relative; z-index: 1; }
+        .menu-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: baseline;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .menu-row:last-child { border-bottom: 0; }
+        .menu-item-copy { display: grid; gap: 5px; }
+        .menu-item-name { color: #fff5fc; font-weight: 750; letter-spacing: 0.02em; }
+        .menu-item-description { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+        .menu-price { color: var(--cyan); font-weight: 900; white-space: nowrap; }
+        .menu-category-note { margin: -10px 0 18px; color: var(--pink-soft); font-weight: 700; letter-spacing: 0.04em; }
+
+        .event-ticker {
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 18px 22px;
+            border: 1px solid var(--cyan);
+            border-radius: 14px;
+            background: linear-gradient(110deg, rgba(0, 212, 255, 0.16), rgba(255, 0, 255, 0.16));
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.13);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .event-ticker::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: translateX(-100%);
+            animation: tickerSweep 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes tickerSweep {
+            0%, 55% { transform: translateX(-100%); }
+            85%, 100% { transform: translateX(100%); }
+        }
+
+        .event-ticker-label {
+            color: #050505;
+            background: var(--cyan);
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 0.76rem;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .event-ticker-copy { min-width: 0; position: relative; z-index: 1; }
+        .event-ticker-copy strong { display: block; color: #fff; font-size: 1.08rem; }
+        .event-ticker-meta { color: var(--cyan); font-size: 0.92rem; margin-top: 4px; }
+        .event-ticker .btn { margin: 0; min-height: 40px; padding: 10px 16px; position: relative; z-index: 1; }
+
+        .events-intro { max-width: 780px; margin-bottom: 24px; }
+        .event-list { display: grid; gap: 16px; }
+        .event-card {
+            display: grid;
+            grid-template-columns: 120px minmax(0, 1fr) auto;
+            gap: 22px;
+            align-items: center;
+            padding: 22px;
+            border: 1px solid rgba(255, 0, 255, 0.48);
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(27, 0, 42, 0.94), rgba(0, 25, 35, 0.84));
+        }
+
+        .event-date-block {
+            display: grid;
+            justify-items: center;
+            padding: 14px 10px;
+            border: 1px solid rgba(0, 212, 255, 0.48);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.34);
+        }
+
+        .event-day { color: #fff; font-size: 2rem; font-weight: 900; line-height: 1; }
+        .event-month { color: var(--cyan); font-weight: 900; letter-spacing: 0.12em; margin-top: 6px; }
+        .event-copy h3 { margin: 0 0 5px; font-size: 1.35rem; }
+        .event-copy p { color: var(--muted); margin: 10px 0 0; white-space: pre-wrap; }
+        .event-time { color: var(--cyan); font-weight: 800; }
+
+        .event-status {
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            padding: 7px 11px;
+            font-size: 0.82rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .event-status[data-status="aktiv"] { color: #79ffc8; background: rgba(0, 150, 94, 0.18); }
+        .event-status[data-status="soon"] { color: var(--cyan); background: rgba(0, 212, 255, 0.12); }
+        .event-status[data-status="in-planung"] { color: #ffb6e7; background: rgba(255, 0, 255, 0.12); }
+        .event-status[data-status="beendet"] { color: #aaa0b6; background: rgba(120, 110, 130, 0.12); }
+
+        .admin-layout { display: grid; gap: 20px; }
+        .admin-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            border: 1px solid rgba(255, 0, 255, 0.46);
+            border-radius: 14px;
+            background: rgba(8, 0, 16, 0.82);
+        }
+
+        .admin-tab {
+            margin: 0;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--muted);
+            box-shadow: none;
+        }
+
+        .admin-tab:hover, .admin-tab.active {
+            color: #050505;
+            border-color: var(--cyan);
+            background: var(--cyan);
+            box-shadow: 0 0 18px rgba(0, 212, 255, 0.24);
+        }
+
+        .admin-panel[hidden] { display: none; }
+        .admin-panel > .card { margin: 0; }
+        .content-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .content-settings-grid .full { grid-column: 1 / -1; }
+        .list-editor { display: grid; gap: 10px; }
+        .list-editor-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+        .custom-blocks { display: grid; gap: 18px; margin-top: 22px; }
+        .custom-fields { display: grid; gap: 16px; margin-top: 18px; }
+        .menu-admin-card { margin-top: 0; }
+        .menu-editor-list { display: grid; gap: 16px; margin-top: 22px; }
+        .menu-editor {
+            display: grid;
+            grid-template-columns: minmax(180px, 1.4fr) minmax(180px, 1fr) minmax(120px, 0.55fr) minmax(110px, 0.45fr);
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid rgba(0, 212, 255, 0.44);
+            border-radius: 12px;
+            background: var(--panel-strong);
+        }
+
+        .menu-editor .full { grid-column: 1 / -1; }
+        .event-editor-list { display: grid; gap: 16px; margin-top: 22px; }
+        .event-editor {
+            display: grid;
+            grid-template-columns: minmax(150px, 0.7fr) minmax(130px, 0.55fr) minmax(220px, 1.4fr) minmax(150px, 0.7fr);
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid rgba(255, 0, 255, 0.46);
+            border-radius: 12px;
+            background: var(--panel-strong);
+        }
+
+        .event-editor .full { grid-column: 1 / -1; }
+
+        .application-list { display: grid; gap: 16px; }
+        .contact-request-list { display: grid; gap: 16px; }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .team-member-card {
+            position: relative;
+            overflow: hidden;
+            padding: 24px;
+            border: 1px solid rgba(255, 0, 255, 0.52);
+            border-radius: 12px;
+            background: linear-gradient(145deg, rgba(26, 0, 45, 0.9), rgba(0, 25, 36, 0.72));
+        }
+
+        .team-member-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: 4px;
+            background: linear-gradient(var(--pink), var(--cyan));
+        }
+
+        .team-member-card h3 { margin: 0 0 6px; }
+        .team-role { color: var(--cyan); font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+        .team-expertise { color: #ffe4fb; }
+
+        .team-admin-card { margin-top: 20px; }
+        .team-editor-list { display: grid; gap: 16px; margin-top: 22px; }
+        .team-editor {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            padding: 18px;
+            border: 1px solid rgba(0, 212, 255, 0.44);
+            border-radius: 12px;
+            background: var(--panel-strong);
+        }
+
+        .team-editor .full { grid-column: 1 / -1; }
+        .team-editor-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .team-editor-actions button { margin-top: 0; }
+
+        .application-folders {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 0 0 16px;
+        }
+
+        .folder-tab {
+            background: transparent;
+            border: 1px solid rgba(0, 212, 255, 0.62);
+            color: var(--cyan);
+            box-shadow: none;
+            margin-top: 0;
+        }
+
+        .folder-tab.active {
+            background: var(--cyan);
+            color: #050505;
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.28);
+        }
+
+        .application-item {
+            background: var(--panel-strong);
+            border: 1px solid rgba(0, 212, 255, 0.44);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .contact-admin-card { margin-top: 20px; }
+        .contact-request-item {
+            background: linear-gradient(145deg, rgba(8, 0, 18, 0.96), rgba(0, 26, 36, 0.8));
+            border: 1px solid rgba(255, 0, 255, 0.42);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .contact-message {
+            white-space: pre-wrap;
+            line-height: 1.65;
+        }
+
+        .application-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+            padding-bottom: 12px;
+            margin-bottom: 14px;
+        }
+
+        .application-head h3 { margin: 0 0 6px; }
+        .pill {
+            border: 1px solid var(--pink);
+            color: #fff;
+            border-radius: 999px;
+            padding: 6px 10px;
+            white-space: nowrap;
+            font-size: 0.88rem;
+            background: rgba(255, 0, 255, 0.16);
+        }
+
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px 16px;
+        }
+
+        .answer {
+            color: #f4eaff;
+            overflow-wrap: anywhere;
+        }
+
+        .answer b {
+            color: var(--cyan);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .answer.full { grid-column: 1 / -1; }
+
+        .admin-actions {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .application-controls {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            gap: 12px;
+            margin-top: 16px;
+            align-items: end;
+        }
+
+        .admin-actions textarea {
+            min-height: 96px;
+        }
+
+        .admin-action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        button.danger {
+            background: #b90046;
+            box-shadow: 0 0 18px rgba(255, 79, 155, 0.28);
+        }
+
+        .empty-state {
+            border: 1px dashed rgba(0, 212, 255, 0.55);
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            color: var(--muted);
+            background: rgba(0, 0, 0, 0.34);
+        }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 820px) {
+            .grid-2, .grid-3, .form-grid, .admin-shell, .answer-grid, .admin-actions, .application-controls, .team-grid, .team-editor, .menu-board, .menu-editor, .event-editor, .content-settings-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-settings-grid .full { grid-column: auto; }
+
+            .menu-block[data-category="extras"] { grid-column: auto; }
+            .team-editor .full, .menu-editor .full, .event-editor .full { grid-column: auto; }
+            .event-ticker, .event-card { grid-template-columns: 1fr; }
+            .event-ticker { align-items: start; }
+            .event-ticker .btn { justify-self: start; }
+            .event-date-block { justify-self: start; min-width: 110px; }
+
+            nav a { margin: 0 8px; }
+            .tagline { letter-spacing: 2px; }
+            section { padding: 28px 14px; }
+            .card { padding: 20px; }
+            .application-head { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <p class="site-disclaimer">Hinweis: Diese Seite ist ein fiktives Projekt für den GTA Roleplay Server "HomeStory" - kein reales Unternehmen und keine offizielle Marke.</p>
+        <img class="hero-logo" src="assets/bahama-mamas-logo.png" alt="Bahama Mamas">
+        <p class="tagline">NEON PARADISE • ROCKFORD HILLS</p>
+    </div>
+
+    <nav id="navbar">
+        <a href="#home" onclick="setActive(this)">Home</a>
+        <a href="#events" onclick="setActive(this)">Events</a>
+        <a href="#menu" onclick="setActive(this)">Menü</a>
+        <a href="#team" onclick="setActive(this)">Team</a>
+        <a href="#apply" onclick="setActive(this)">Bewerben</a>
+        <a href="#contact" onclick="setActive(this)">Kontakt</a>
+        <a href="#admin" onclick="setActive(this)">Admin</a>
+    </nav>
+
+    <section id="home">
+        <div id="event-ticker" class="event-ticker" aria-live="polite">
+            <span class="event-ticker-label">Next Event</span>
+            <div class="event-ticker-copy">
+                <strong>Events werden geladen...</strong>
+                <div class="event-ticker-meta">Der nächste Termin erscheint gleich hier.</div>
+            </div>
+            <a class="btn secondary" href="#events" onclick="setActive(document.querySelector('nav a[href=&quot;#events&quot;]'))">Alle Events</a>
+        </div>
+
+        <div class="card">
+            <h2 id="home-title">Willkommen im Neon Paradise</h2>
+            <p id="home-text">Das Bahama Mamas ist das Juwel von Rockford Hills. Wir bieten eine Flucht aus der Realität durch erstklassigen Service, exklusive Drinks und unvergessliche Nächte.</p>
+        </div>
+
+        <div id="custom-home-blocks" class="custom-blocks" aria-live="polite"></div>
+
+        <div class="grid-3">
+            <div class="card">
+                <h2>Neon-Beats</h2>
+                <p>Unsere Resident-DJs sorgen für den perfekten Sound, der Rockford Hills beben lässt.</p>
+            </div>
+            <div class="card">
+                <h2>Premium Mixology</h2>
+                <p>Von klassischen Cocktails bis zu eigenen Kreationen - unsere Barkeeper sind Weltklasse.</p>
+            </div>
+            <div class="card">
+                <h2>Exklusive Atmosphäre</h2>
+                <p>Ein Dresscode, der Klasse verlangt, und ein Klientel, das Stil zu schätzen weiß.</p>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Öffnungszeiten</h2>
+                <p>Geöffnet: <b>Freitag/Samstag ab spätestens 20:00 Uhr.</b></p>
+                <p>Alle genauen Infos erhaltet ihr auf Birdy.</p>
+            </div>
+            <div class="card">
+                <h2>Location</h2>
+                <p>Standort: Rockford Hills, Los Santos.</p>
+                <p>Parkmöglichkeiten: Direkt vor der Tür ist eine Garage.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="events">
+        <div class="events-intro">
+            <h2>Events im Neon Paradise</h2>
+            <p class="hint">Alle angekündigten Nächte, Specials und geplanten Highlights auf einen Blick.</p>
+        </div>
+        <div id="event-list" class="event-list" aria-live="polite">
+            <div class="empty-state">Events werden geladen...</div>
+        </div>
+    </section>
+
+    <section id="menu">
+        <div class="menu-intro">
+            <h2>Drinks & Bites</h2>
+        </div>
+        <div class="menu-board" id="menu-board" aria-live="polite">
+            <article class="menu-block" data-category="signature-drinks">
+                <h2>SIGNATURE DRINKS</h2>
+                <div class="menu-items"><div class="empty-state">Menü wird geladen...</div></div>
+            </article>
+            <article class="menu-block" data-category="spirits">
+                <h2>SPIRITS</h2>
+                <div class="menu-items"><div class="empty-state">Menü wird geladen...</div></div>
+            </article>
+            <article class="menu-block" data-category="fresh-virgin">
+                <h2>FRESH &amp; VIRGIN</h2>
+                <div class="menu-items"><div class="empty-state">Menü wird geladen...</div></div>
+            </article>
+            <article class="menu-block" data-category="bar-bites">
+                <h2>BAR BITES</h2>
+                <div class="menu-items"><div class="empty-state">Menü wird geladen...</div></div>
+            </article>
+            <article class="menu-block" data-category="extras">
+                <h2>EXTRA'S</h2>
+                <p class="menu-category-note">Champagner &amp; VIP Tickets</p>
+                <div class="menu-items"><div class="empty-state">Menü wird geladen...</div></div>
+            </article>
+        </div>
+    </section>
+
+    <section id="team">
+        <div class="card">
+            <h2>Unser Management Board</h2>
+            <p class="hint">Die Menschen hinter den Nächten im Neon Paradise.</p>
+            <div id="team-list" class="team-grid" aria-live="polite">
+                <div class="empty-state">Team wird geladen...</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="apply">
+        <div class="card">
+            <h2 id="application-title">Werde Teil der Crew</h2>
+            <p class="hint" id="application-intro">Bahama Mamas. Rockford Hills' #1 Nightlife Destination. Erstklassige Drinks, elektrisierende Beats, exklusive Stimmung. Sei dabei.</p>
+            <form id="application-form">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="fullName">Vor- und Nachname</label>
+                        <input id="fullName" name="fullName" autocomplete="name" required>
+                    </div>
+                    <div class="field">
+                        <label for="age">Alter</label>
+                        <input id="age" name="age" inputmode="numeric" required>
+                    </div>
+                    <div class="field">
+                        <label for="phone">Telefonnummer</label>
+                        <input id="phone" name="phone" autocomplete="tel" required>
+                    </div>
+                    <div class="field">
+                        <label for="position">Wunschposition</label>
+                        <select id="position" name="position" required>
+                            <option value="">Bitte auswählen</option>
+                            <option>Bar Manager (Barkeeper)</option>
+                            <option>Service Manager (Service Personal)</option>
+                            <option>Nightlife Talent (Tänzer/in)</option>
+                            <option>DJ</option>
+                            <option>Security Team (Security)</option>
+                            <option>Rising Star (Quereinsteiger)</option>
+                        </select>
+                    </div>
+                    <div class="field full">
+                        <label for="motivation">Warum möchtest du ein Teil des Bahama Mamas Teams werden?</label>
+                        <textarea id="motivation" name="motivation" required></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="experience">Welche Erfahrungen bringst du in der Gastronomie oder im Bereich Nightlife mit?</label>
+                        <textarea id="experience" name="experience" required></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="guestExperience">Was zeichnet dich aus, wenn es darum geht, Gästen einen unvergesslichen Abend zu bereiten?</label>
+                        <textarea id="guestExperience" name="guestExperience" required></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="availability">An welchen Tagen könntest du verfügbar sein?</label>
+                        <textarea id="availability" name="availability" required></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="contactPreference">Wie und wann können wir dich am schnellsten erreichen?</label>
+                        <textarea id="contactPreference" name="contactPreference" required></textarea>
+                    </div>
+                    <div id="application-custom-fields" class="field full custom-fields"></div>
+                </div>
+                <button type="submit" id="application-submit">Bewerbung absenden</button>
+                <div id="application-message" class="message" role="status"></div>
+            </form>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="card">
+            <h2 id="contact-title">Kontakt</h2>
+            <div class="contact-intro">
+                <p id="contact-intro">Willkommen im Neon Paradise. Wir freuen uns über dein Interesse am Bahama Mamas.</p>
+                <p>Egal ob du eine Partnerschaft anstrebst, unser nächstes Event sponsern möchtest oder einfach eine allgemeine Frage hast – unser Team steht dir jederzeit zur Verfügung.</p>
+            </div>
+            <p class="contact-callout"><strong>Bitte fülle das folgende Kontaktformular aus, damit wir dein Anliegen direkt an die richtige Stelle weiterleiten und uns schnellstmöglich bei dir zurückmelden können.</strong></p>
+            <form id="contact-form">
+                <fieldset>
+                    <legend>Persönliche Informationen</legend>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="contact-name">Name / Unternehmen</label>
+                            <input id="contact-name" name="nameOrCompany" autocomplete="organization" maxlength="160" required>
+                        </div>
+                        <div class="field">
+                            <label for="contact-method">Kontaktmöglichkeit</label>
+                            <input id="contact-method" name="contactMethod" placeholder="Telefon, E-Mail oder Discord" maxlength="240" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Anfragen Details</legend>
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="request-type">Art der Anfrage</label>
+                            <select id="request-type" name="requestType" required>
+                                <option value="">Bitte auswählen</option>
+                                <option>Sponsoring</option>
+                                <option>Allgemeine Fragen</option>
+                                <option>Partnerschaft</option>
+                                <option>Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="contact-subject">Betreff</label>
+                            <input id="contact-subject" name="subject" maxlength="240" required>
+                        </div>
+                        <div class="field full">
+                            <label for="contact-message-field">Nachricht</label>
+                            <textarea id="contact-message-field" name="message" maxlength="5000" required></textarea>
+                        </div>
+                    </div>
+                </fieldset>
+                <button type="submit" id="contact-submit">Anfrage absenden</button>
+                <div id="contact-form-message" class="message" role="status"></div>
+            </form>
+        </div>
+    </section>
+
+    <section id="admin">
+        <div class="admin-layout">
+            <div class="card">
+                <h2>Admin Bereich</h2>
+                <div id="logged-out-panel">
+                    <p class="hint">Melde dich mit einem Admin-Account an, um die Bereiche zu verwalten.</p>
+                    <form id="login-form">
+                        <label for="login-email">E-Mail</label>
+                        <input id="login-email" name="email" type="email" autocomplete="email" required>
+                        <label for="login-password" style="margin-top: 14px;">Passwort</label>
+                        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+                        <button type="submit" id="login-submit">Einloggen</button>
+                    </form>
+                    <button class="secondary" id="recover-button" type="button">Passwort-Mail senden</button>
+                    <form id="password-setup-form" class="hidden">
+                        <p class="hint" id="password-setup-text">Lege ein neues Passwort fest.</p>
+                        <label for="new-password">Neues Passwort</label>
+                        <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+                        <button type="submit" id="password-setup-submit">Passwort speichern</button>
+                    </form>
+                    <div id="login-message" class="message" role="status"></div>
+                </div>
+                <div id="logged-in-panel" class="hidden">
+                    <p>Eingeloggt als <span class="admin-meta" id="admin-email"></span></p>
+                    <div class="admin-action-row">
+                        <button type="button" id="refresh-admin" class="secondary">Daten neu laden</button>
+                        <button type="button" id="logout-button">Ausloggen</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-toolbar" class="admin-toolbar hidden" role="tablist" aria-label="Admin Unterkategorien">
+                <button type="button" class="admin-tab active" data-admin-panel="applications" role="tab">Bewerbungen</button>
+                <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
+                <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team Verwaltung</button>
+                <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Speisekarte Verwalten</button>
+                <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
+                <button type="button" class="admin-tab" data-admin-panel="content" role="tab">Inhalte &amp; Felder</button>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="applications">
+                <div class="card">
+                <h2>Bewerbungen</h2>
+                <p class="hint" id="admin-help">Nach dem Login erscheinen hier alle eingegangenen Bewerbungen.</p>
+                <div id="application-folders" class="application-folders hidden" aria-label="Bewerbungsordner"></div>
+                <div id="applications-list" class="application-list">
+                    <div class="empty-state">Noch nicht eingeloggt.</div>
+                </div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="contacts" hidden>
+                <div id="contact-admin" class="card contact-admin-card hidden">
+                    <h2>Kontaktanfragen</h2>
+                    <p class="hint" id="contact-admin-help">Nach dem Login erscheinen hier alle eingegangenen Kontaktanfragen.</p>
+                    <div id="contact-request-folders" class="application-folders hidden" aria-label="Kontaktanfrage-Ordner"></div>
+                    <div id="contact-requests-list" class="contact-request-list">
+                        <div class="empty-state">Noch nicht eingeloggt.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="team" hidden>
+                <div id="team-admin" class="card team-admin-card hidden">
+                    <h2>Team verwalten</h2>
+                    <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter anlegen, bearbeiten, sortieren und löschen.</p>
+                    <form id="team-create-form" class="team-editor">
+                        <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
+                        <div>
+                            <label for="team-role">Position</label>
+                            <select id="team-role" name="role" required>
+                                <option value="">Bitte auswählen</option><option>Owner</option><option>Co-Owner</option><option>Event Director</option><option>DJ</option><option>Bar Manager</option><option>Service Manager</option><option>Nightlife Talent</option><option>Security Team</option><option>Rising Star</option>
+                            </select>
+                        </div>
+                        <div><label for="team-expertise">Expertise</label><input id="team-expertise" name="expertise" maxlength="240"></div>
+                        <div><label for="team-sort-order">Reihenfolge</label><input id="team-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <div class="full"><label for="team-description">Beschreibung</label><textarea id="team-description" name="description" maxlength="1200"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="team-create-submit">Mitarbeiter hinzufügen</button></div>
+                    </form>
+                    <div id="team-admin-list" class="team-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="menu" hidden>
+                <div id="menu-admin" class="card menu-admin-card hidden">
+                    <h2>Speisekarte verwalten</h2>
+                    <p class="hint" id="menu-admin-help">Getränke und Snacks mit optionaler Beschreibung anlegen, einer Kategorie zuordnen und Preise in Dollar festlegen.</p>
+                    <form id="menu-create-form" class="menu-editor">
+                        <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
+                        <div>
+                            <label for="menu-category">Kategorie</label>
+                            <select id="menu-category" name="category" required>
+                                <option value="">Bitte auswählen</option>
+                                <option value="signature-drinks">SIGNATURE DRINKS</option>
+                                <option value="spirits">SPIRITS</option>
+                                <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
+                                <option value="bar-bites">BAR BITES</option>
+                                <option value="extras">EXTRA'S</option>
+                            </select>
+                        </div>
+                        <div><label for="menu-price">Preis in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                        <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Zutaten, Geschmack oder Besonderheiten"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
+                    </form>
+                    <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="events" hidden>
+                <div id="event-admin" class="card hidden">
+                    <h2>Events verwalten</h2>
+                    <p class="hint" id="event-admin-help">Events mit Datum, Startzeit, Beschreibung und aktuellem Status verwalten.</p>
+                    <form id="event-create-form" class="event-editor">
+                        <div><label for="event-date">Datum</label><input id="event-date" name="eventDate" type="date" required></div>
+                        <div><label for="event-start-time">Startzeit</label><input id="event-start-time" name="startTime" type="time" required></div>
+                        <div><label for="event-name">Event Name</label><input id="event-name" name="name" maxlength="140" required></div>
+                        <div>
+                            <label for="event-status">Status</label>
+                            <select id="event-status" name="status" required>
+                                <option value="soon">Soon</option>
+                                <option value="aktiv">Aktiv</option>
+                                <option value="beendet">Beendet</option>
+                                <option value="in-planung" selected>In Planung</option>
+                            </select>
+                        </div>
+                        <div class="full"><label for="event-description">Beschreibung</label><textarea id="event-description" name="description" maxlength="1200"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="event-create-submit">Event hinzufügen</button></div>
+                    </form>
+                    <div id="event-admin-list" class="event-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="content" hidden>
+                <div id="content-admin" class="card hidden">
+                    <h2>Inhalte &amp; Felder verwalten</h2>
+                    <p class="hint" id="content-admin-help">Texte, Dropdown-Optionen und zusätzliche Felder zentral bearbeiten.</p>
+                    <form id="content-settings-form" class="content-settings-grid">
+                        <div><label for="setting-home-title">Startseiten-Titel</label><input id="setting-home-title" name="homeTitle" maxlength="160" required></div>
+                        <div><label for="setting-application-title">Bewerbungs-Titel</label><input id="setting-application-title" name="applicationTitle" maxlength="160" required></div>
+                        <div class="full"><label for="setting-home-text">Startseiten-Text</label><textarea id="setting-home-text" name="homeText" maxlength="5000" required></textarea></div>
+                        <div class="full"><label for="setting-application-intro">Bewerbungs-Einleitung</label><textarea id="setting-application-intro" name="applicationIntro" maxlength="5000" required></textarea></div>
+                        <div><label for="setting-contact-title">Kontakt-Titel</label><input id="setting-contact-title" name="contactTitle" maxlength="160" required></div>
+                        <div><label for="setting-contact-intro">Kontakt-Einleitung</label><textarea id="setting-contact-intro" name="contactIntro" maxlength="5000" required></textarea></div>
+                        <div class="full"><h3>Bewerbungspositionen</h3><div id="application-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="applicationPositions">Option hinzufügen</button></div>
+                        <div class="full"><h3>Arten von Kontaktanfragen</h3><div id="contact-type-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="contactRequestTypes">Option hinzufügen</button></div>
+                        <div class="full"><h3>Team-Positionen</h3><div id="team-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="teamPositions">Option hinzufügen</button></div>
+                        <div class="full"><h3>Speisekarten-Kategorien</h3><div id="menu-category-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="menuCategories">Kategorie hinzufügen</button></div>
+                        <div class="full"><h3>Event-Status</h3><div id="event-status-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="eventStatuses">Status hinzufügen</button></div>
+                        <div class="full"><h3>Zusätzliche Bewerbungsfelder</h3><p class="hint">Freie Textfelder oder Dropdowns ergänzen. Dropdown-Optionen mit Komma trennen.</p><div id="application-field-editor" class="list-editor"></div><button type="button" class="secondary" id="add-application-field">Feld hinzufügen</button></div>
+                        <div class="full"><button type="submit" id="content-settings-submit">Einstellungen speichern</button></div>
+                    </form>
+
+                    <hr>
+                    <h3>Eigene Inhaltsblöcke</h3>
+                    <p class="hint">Zusätzliche Karten erscheinen auf der Startseite und können jederzeit geändert oder gelöscht werden.</p>
+                    <form id="content-block-create-form" class="content-settings-grid">
+                        <div><label for="content-block-title">Titel</label><input id="content-block-title" name="title" maxlength="160" required></div>
+                        <div><label for="content-block-sort">Reihenfolge</label><input id="content-block-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <input type="hidden" name="section" value="home">
+                        <div class="full"><label for="content-block-body">Text</label><textarea id="content-block-body" name="body" maxlength="5000"></textarea></div>
+                        <div class="full"><button type="submit">Inhaltsblock hinzufügen</button></div>
+                    </form>
+                    <div id="content-block-admin-list" class="custom-blocks"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function setActive(element) {
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        // Supabase-Projekt: nur die Project URL und der "publishable" (anon) Key
+        // gehören hier ins Frontend - sie sind öffentlich und dafür gedacht.
+        const SUPABASE_URL = "https://jqmktlrythfmsxzevkjt.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const applicationForm = document.querySelector("#application-form");
+        const applicationSubmit = document.querySelector("#application-submit");
+        const applicationMessage = document.querySelector("#application-message");
+        const contactForm = document.querySelector("#contact-form");
+        const contactSubmit = document.querySelector("#contact-submit");
+        const contactFormMessage = document.querySelector("#contact-form-message");
+        const eventTicker = document.querySelector("#event-ticker");
+        const eventList = document.querySelector("#event-list");
+        const menuBoard = document.querySelector("#menu-board");
+        const teamList = document.querySelector("#team-list");
+        const loginForm = document.querySelector("#login-form");
+        const loginSubmit = document.querySelector("#login-submit");
+        const loginMessage = document.querySelector("#login-message");
+        const recoverButton = document.querySelector("#recover-button");
+        const passwordSetupForm = document.querySelector("#password-setup-form");
+        const passwordSetupText = document.querySelector("#password-setup-text");
+        const passwordSetupSubmit = document.querySelector("#password-setup-submit");
+        const loggedOutPanel = document.querySelector("#logged-out-panel");
+        const loggedInPanel = document.querySelector("#logged-in-panel");
+        const adminEmail = document.querySelector("#admin-email");
+        const applicationFolders = document.querySelector("#application-folders");
+        const applicationsList = document.querySelector("#applications-list");
+        const contactAdmin = document.querySelector("#contact-admin");
+        const contactAdminHelp = document.querySelector("#contact-admin-help");
+        const contactRequestFolders = document.querySelector("#contact-request-folders");
+        const contactRequestsList = document.querySelector("#contact-requests-list");
+        const refreshAdmin = document.querySelector("#refresh-admin");
+        const logoutButton = document.querySelector("#logout-button");
+        const adminHelp = document.querySelector("#admin-help");
+        const teamAdmin = document.querySelector("#team-admin");
+        const teamAdminHelp = document.querySelector("#team-admin-help");
+        const teamCreateForm = document.querySelector("#team-create-form");
+        const teamCreateSubmit = document.querySelector("#team-create-submit");
+        const teamAdminList = document.querySelector("#team-admin-list");
+        const adminToolbar = document.querySelector("#admin-toolbar");
+        const menuAdmin = document.querySelector("#menu-admin");
+        const menuAdminHelp = document.querySelector("#menu-admin-help");
+        const menuCreateForm = document.querySelector("#menu-create-form");
+        const menuCreateSubmit = document.querySelector("#menu-create-submit");
+        const menuAdminList = document.querySelector("#menu-admin-list");
+        const eventAdmin = document.querySelector("#event-admin");
+        const eventAdminHelp = document.querySelector("#event-admin-help");
+        const eventCreateForm = document.querySelector("#event-create-form");
+        const eventCreateSubmit = document.querySelector("#event-create-submit");
+        const eventAdminList = document.querySelector("#event-admin-list");
+        const contentAdmin = document.querySelector("#content-admin");
+        const contentAdminHelp = document.querySelector("#content-admin-help");
+        const contentSettingsForm = document.querySelector("#content-settings-form");
+        const contentSettingsSubmit = document.querySelector("#content-settings-submit");
+        const contentBlockCreateForm = document.querySelector("#content-block-create-form");
+        const contentBlockAdminList = document.querySelector("#content-block-admin-list");
+        const applicationCustomFields = document.querySelector("#application-custom-fields");
+        const customHomeBlocks = document.querySelector("#custom-home-blocks");
+        let passwordSetupMode = null;
+        let inviteToken = null;
+        let currentApplicationFolder = "neu";
+        let currentContactFolder = "neu";
+        let allApplications = [];
+        let allContactRequests = [];
+        let allTeamMembers = [];
+        let allMenuItems = [];
+        let allEvents = [];
+        let contentBlocks = [];
+        let siteSettings = {};
+
+        const folderLabels = {
+            neu: "NEU",
+            gespeichert: "Gespeichert"
+        };
+
+        const contactFolderLabels = {
+            neu: "Neu",
+            archiv: "Archiv"
+        };
+
+        let teamPositions = [
+            "Owner",
+            "Co-Owner",
+            "Event Director",
+            "DJ",
+            "Bar Manager",
+            "Service Manager",
+            "Nightlife Talent",
+            "Security Team",
+            "Rising Star"
+        ];
+
+        let menuCategories = [
+            { value: "signature-drinks", label: "SIGNATURE DRINKS" },
+            { value: "spirits", label: "SPIRITS" },
+            { value: "fresh-virgin", label: "FRESH & VIRGIN" },
+            { value: "bar-bites", label: "BAR BITES" },
+            { value: "extras", label: "EXTRA'S" }
+        ];
+
+        let eventStatuses = [
+            { value: "soon", label: "Soon" },
+            { value: "aktiv", label: "Aktiv" },
+            { value: "beendet", label: "Beendet" },
+            { value: "in-planung", label: "In Planung" }
+        ];
+
+        function showMessage(element, text, type) {
+            element.textContent = text;
+            element.className = `message show ${type}`;
+        }
+
+        function clearMessage(element) {
+            element.textContent = "";
+            element.className = "message";
+        }
+
+        function getFormPayload(form) {
+            return Object.fromEntries(new FormData(form).entries());
+        }
+
+        function getApplicationPayload() {
+            const payload = getFormPayload(applicationForm);
+            const customAnswers = {};
+            Object.keys(payload).filter((key) => key.startsWith("custom:")).forEach((key) => {
+                customAnswers[key.slice(7)] = payload[key];
+                delete payload[key];
+            });
+            return { ...payload, customAnswers };
+        }
+
+        function slugify(value) {
+            return String(value || "option").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 100) || `option-${Date.now()}`;
+        }
+
+        function renderSelectOptions(select, items, placeholder = true) {
+            const currentValue = select.value;
+            select.innerHTML = `${placeholder ? '<option value="">Bitte auswählen</option>' : ""}${items.map((item) => {
+                const value = typeof item === "string" ? item : item.value;
+                const label = typeof item === "string" ? item : item.label;
+                return `<option value="${escapeAttribute(value)}">${escapeHtml(label)}</option>`;
+            }).join("")}`;
+            if ([...select.options].some((option) => option.value === currentValue)) select.value = currentValue;
+        }
+
+        function formatDate(value) {
+            return new Intl.DateTimeFormat("de-DE", {
+                dateStyle: "medium",
+                timeStyle: "short"
+            }).format(new Date(value));
+        }
+
+        function formatPrice(value) {
+            return `${new Intl.NumberFormat("de-DE").format(Number(value) || 0)} $`;
+        }
+
+        function parseEventDate(event) {
+            return new Date(`${event.eventDate}T${event.startTime}:00`);
+        }
+
+        function formatEventDate(value, options = { dateStyle: "long" }) {
+            return new Intl.DateTimeFormat("de-DE", options).format(new Date(`${value}T12:00:00`));
+        }
+
+        function getEventStatusLabel(status) {
+            return eventStatuses.find((item) => item.value === status)?.label || status;
+        }
+
+        function hasAdminRole(user) {
+            const metadataRoles = Array.isArray(user?.app_metadata?.roles) ? user.app_metadata.roles : [];
+            return user?.app_metadata?.role === "admin" || metadataRoles.includes("admin");
+        }
+
+        async function getIdentityAccessToken() {
+            const { data } = await supabase.auth.getSession();
+            return data.session?.access_token || "";
+        }
+
+        async function apiFetch(url, options = {}) {
+            const headers = new Headers(options.headers || {});
+            const accessToken = await getIdentityAccessToken();
+
+            if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+
+            return fetch(url, {
+                ...options,
+                headers,
+                credentials: "same-origin"
+            });
+        }
+
+        function renderLoggedOut() {
+            loggedOutPanel.classList.remove("hidden");
+            loggedInPanel.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+            recoverButton.classList.remove("hidden");
+            passwordSetupForm.classList.add("hidden");
+            adminEmail.textContent = "";
+            adminToolbar.classList.add("hidden");
+            applicationFolders.classList.add("hidden");
+            applicationFolders.innerHTML = "";
+            allApplications = [];
+            currentApplicationFolder = "neu";
+            adminHelp.textContent = "Nach dem Login erscheinen hier alle eingegangenen Bewerbungen.";
+            applicationsList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            contactAdmin.classList.add("hidden");
+            contactRequestFolders.classList.add("hidden");
+            contactRequestFolders.innerHTML = "";
+            allContactRequests = [];
+            currentContactFolder = "neu";
+            contactAdminHelp.textContent = "Nach dem Login erscheinen hier alle eingegangenen Kontaktanfragen.";
+            contactRequestsList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            teamAdmin.classList.add("hidden");
+            teamAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            menuAdmin.classList.add("hidden");
+            menuAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            eventAdmin.classList.add("hidden");
+            eventAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            contentAdmin.classList.add("hidden");
+        }
+
+        function showPasswordSetup(mode, token) {
+            passwordSetupMode = mode;
+            inviteToken = token || null;
+            loggedOutPanel.classList.remove("hidden");
+            loggedInPanel.classList.add("hidden");
+            loginForm.classList.add("hidden");
+            recoverButton.classList.add("hidden");
+            passwordSetupForm.classList.remove("hidden");
+            passwordSetupText.textContent = mode === "invite"
+                ? "Einladung erkannt. Lege ein Passwort für deinen Admin-Account fest."
+                : "Passwort-Wiederherstellung erkannt. Lege dein neues Passwort fest.";
+            applicationFolders.classList.add("hidden");
+            applicationFolders.innerHTML = "";
+            adminHelp.textContent = "Schließe zuerst die Passwort-Einrichtung ab.";
+            applicationsList.innerHTML = '<div class="empty-state">Passwort-Einrichtung offen.</div>';
+            contactAdmin.classList.add("hidden");
+            teamAdmin.classList.add("hidden");
+            menuAdmin.classList.add("hidden");
+            eventAdmin.classList.add("hidden");
+            contentAdmin.classList.add("hidden");
+            adminToolbar.classList.add("hidden");
+        }
+
+        async function renderLoggedIn(user) {
+            loggedOutPanel.classList.add("hidden");
+            loggedInPanel.classList.remove("hidden");
+            adminEmail.textContent = user.email || user.name || "Admin";
+
+            if (!hasAdminRole(user)) {
+                adminHelp.textContent = "Dieser Account ist eingeloggt, hat aber keine Admin-Rolle.";
+                applicationFolders.classList.add("hidden");
+                applicationsList.innerHTML = '<div class="empty-state">Keine Admin-Berechtigung. Weise dem Nutzer in Supabase (Auth &rarr; Users &rarr; User bearbeiten &rarr; Raw App Meta Data) die Rolle admin zu, z.B. { "role": "admin" }.</div>';
+                contactAdmin.classList.add("hidden");
+                teamAdmin.classList.add("hidden");
+                menuAdmin.classList.add("hidden");
+                eventAdmin.classList.add("hidden");
+                contentAdmin.classList.add("hidden");
+                adminToolbar.classList.add("hidden");
+                return;
+            }
+
+            adminToolbar.classList.remove("hidden");
+            contactAdmin.classList.remove("hidden");
+            teamAdmin.classList.remove("hidden");
+            menuAdmin.classList.remove("hidden");
+            eventAdmin.classList.remove("hidden");
+            contentAdmin.classList.remove("hidden");
+            await loadContent(true);
+            await Promise.all([loadApplications(), loadContactRequests(), loadTeam(true), loadMenu(true), loadEvents(true)]);
+        }
+
+        function showAdminPanel(panelName) {
+            document.querySelectorAll("[data-admin-panel-content]").forEach((panel) => {
+                panel.hidden = panel.dataset.adminPanelContent !== panelName;
+            });
+            document.querySelectorAll("[data-admin-panel]").forEach((button) => {
+                const active = button.dataset.adminPanel === panelName;
+                button.classList.toggle("active", active);
+                button.setAttribute("aria-selected", String(active));
+            });
+        }
+
+        function getApplicationFolder(application) {
+            return application.applicationFolder === "gespeichert" ? "gespeichert" : "neu";
+        }
+
+        function renderFolderTabs() {
+            const counts = allApplications.reduce((result, application) => {
+                const folder = getApplicationFolder(application);
+                result[folder] += 1;
+                return result;
+            }, { neu: 0, gespeichert: 0 });
+
+            applicationFolders.classList.remove("hidden");
+            applicationFolders.innerHTML = ["neu", "gespeichert"].map((folder) => `
+                <button
+                    type="button"
+                    class="folder-tab ${folder === currentApplicationFolder ? "active" : ""}"
+                    data-application-folder="${folder}"
+                    aria-pressed="${folder === currentApplicationFolder ? "true" : "false"}"
+                >${folderLabels[folder]} (${counts[folder]})</button>
+            `).join("");
+        }
+
+        function renderApplications() {
+            renderFolderTabs();
+
+            const visibleApplications = allApplications.filter((application) => (
+                getApplicationFolder(application) === currentApplicationFolder
+            ));
+
+            if (!visibleApplications.length) {
+                applicationsList.innerHTML = `<div class="empty-state">Keine Bewerbungen im Ordner ${folderLabels[currentApplicationFolder]}.</div>`;
+                return;
+            }
+
+            applicationsList.innerHTML = visibleApplications.map((application) => {
+                const folder = getApplicationFolder(application);
+                const targetFolder = folder === "gespeichert" ? "neu" : "gespeichert";
+                const folderButtonText = folder === "gespeichert" ? "Zurück nach NEU" : "Bewerbung speichern";
+                let customAnswers = {};
+                try { customAnswers = JSON.parse(application.customAnswers || "{}"); } catch {}
+
+                return `
+                <article class="application-item" data-id="${application.id}">
+                    <div class="application-head">
+                        <div>
+                            <h3>${escapeHtml(application.fullName)}</h3>
+                            <div class="hint">${escapeHtml(application.position)} | ${formatDate(application.createdAt)}</div>
+                        </div>
+                        <span class="pill">${escapeHtml(application.status)} | ${folderLabels[folder]}</span>
+                    </div>
+                    <div class="answer-grid">
+                        <div class="answer"><b>Alter</b>${escapeHtml(application.age)}</div>
+                        <div class="answer"><b>Telefonnummer</b>${escapeHtml(application.phone)}</div>
+                        <div class="answer"><b>Warum Bahama Mamas?</b>${escapeHtml(application.motivation)}</div>
+                        <div class="answer"><b>Erfahrung</b>${escapeHtml(application.experience)}</div>
+                        <div class="answer"><b>Gäste-Erlebnis</b>${escapeHtml(application.guestExperience)}</div>
+                        <div class="answer"><b>Verfügbarkeit</b>${escapeHtml(application.availability)}</div>
+                        <div class="answer"><b>Erreichbarkeit</b>${escapeHtml(application.contactPreference)}</div>
+                        ${Object.entries(customAnswers).map(([key, value]) => `<div class="answer"><b>${escapeHtml(key)}</b>${escapeHtml(value)}</div>`).join("")}
+                        <div class="answer"><b>Admin-Notiz</b>${escapeHtml(application.adminNotes || "-")}</div>
+                    </div>
+                    <div class="application-controls">
+                        <form class="admin-actions" data-update-form>
+                            <div>
+                                <label for="status-${application.id}">Status</label>
+                                <select id="status-${application.id}" name="status">
+                                    ${["neu", "kontaktiert", "angenommen", "abgelehnt"].map((status) => `<option ${status === application.status ? "selected" : ""}>${status}</option>`).join("")}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="notes-${application.id}">Notiz</label>
+                                <textarea id="notes-${application.id}" name="adminNotes">${escapeHtml(application.adminNotes || "")}</textarea>
+                                <input type="hidden" name="applicationFolder" value="${folder}">
+                            </div>
+                            <div class="admin-action-row">
+                                <button type="submit">Änderungen speichern</button>
+                            </div>
+                        </form>
+                        <button type="button" class="secondary" data-move-application="${targetFolder}">${folderButtonText}</button>
+                        <button type="button" class="danger" data-delete-application>Bewerbung löschen</button>
+                    </div>
+                </article>
+            `;
+            }).join("");
+        }
+
+        function getContactFolder(contactRequest) {
+            return contactRequest.folder === "archiv" ? "archiv" : "neu";
+        }
+
+        function renderContactFolderTabs() {
+            const counts = allContactRequests.reduce((result, contactRequest) => {
+                result[getContactFolder(contactRequest)] += 1;
+                return result;
+            }, { neu: 0, archiv: 0 });
+
+            contactRequestFolders.classList.remove("hidden");
+            contactRequestFolders.innerHTML = ["neu", "archiv"].map((folder) => `
+                <button
+                    type="button"
+                    class="folder-tab ${folder === currentContactFolder ? "active" : ""}"
+                    data-contact-folder="${folder}"
+                    aria-pressed="${folder === currentContactFolder ? "true" : "false"}"
+                >${contactFolderLabels[folder]} (${counts[folder]})</button>
+            `).join("");
+        }
+
+        function renderContactRequests() {
+            renderContactFolderTabs();
+
+            const visibleRequests = allContactRequests.filter((contactRequest) => (
+                getContactFolder(contactRequest) === currentContactFolder
+            ));
+
+            if (!visibleRequests.length) {
+                contactRequestsList.innerHTML = `<div class="empty-state">Keine Kontaktanfragen im Ordner ${contactFolderLabels[currentContactFolder]}.</div>`;
+                return;
+            }
+
+            contactRequestsList.innerHTML = visibleRequests.map((contactRequest) => {
+                const folder = getContactFolder(contactRequest);
+                const targetFolder = folder === "archiv" ? "neu" : "archiv";
+                const moveText = folder === "archiv" ? "Zurück zu Neu" : "Archivieren";
+
+                return `
+                    <article class="contact-request-item" data-contact-request-id="${contactRequest.id}">
+                        <div class="application-head">
+                            <div>
+                                <h3>${escapeHtml(contactRequest.subject)}</h3>
+                                <div class="hint">${escapeHtml(contactRequest.nameOrCompany)} | ${formatDate(contactRequest.createdAt)}</div>
+                            </div>
+                            <span class="pill">${escapeHtml(contactRequest.requestType)} | ${contactFolderLabels[folder]}</span>
+                        </div>
+                        <div class="answer-grid">
+                            <div class="answer"><b>Name / Unternehmen</b>${escapeHtml(contactRequest.nameOrCompany)}</div>
+                            <div class="answer"><b>Kontaktmöglichkeit</b>${escapeHtml(contactRequest.contactMethod)}</div>
+                            <div class="answer"><b>Art der Anfrage</b>${escapeHtml(contactRequest.requestType)}</div>
+                            <div class="answer"><b>Betreff</b>${escapeHtml(contactRequest.subject)}</div>
+                            <div class="answer full contact-message"><b>Nachricht</b>${escapeHtml(contactRequest.message)}</div>
+                        </div>
+                        <div class="admin-action-row">
+                            <button type="button" class="secondary" data-move-contact-request="${targetFolder}">${moveText}</button>
+                            <button type="button" class="danger" data-delete-contact-request>Kontaktanfrage löschen</button>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[char]));
+        }
+
+        function escapeAttribute(value) {
+            return escapeHtml(value).replace(/`/g, "&#096;");
+        }
+
+        function renderApplicationFields() {
+            const fields = Array.isArray(siteSettings.applicationFields) ? siteSettings.applicationFields : [];
+            applicationCustomFields.innerHTML = fields.map((field, index) => {
+                const key = field.key || `zusatzfeld-${index + 1}`;
+                const required = field.required ? " required" : "";
+                if (field.type === "select") {
+                    const options = Array.isArray(field.options) ? field.options : [];
+                    return `<div class="field full"><label for="custom-${escapeAttribute(key)}">${escapeHtml(field.label)}</label><select id="custom-${escapeAttribute(key)}" name="custom:${escapeAttribute(field.label)}"${required}><option value="">Bitte auswählen</option>${options.map((option) => `<option>${escapeHtml(option)}</option>`).join("")}</select></div>`;
+                }
+                return `<div class="field full"><label for="custom-${escapeAttribute(key)}">${escapeHtml(field.label)}</label><textarea id="custom-${escapeAttribute(key)}" name="custom:${escapeAttribute(field.label)}" maxlength="5000"${required}></textarea></div>`;
+            }).join("");
+        }
+
+        function renderContentBlocks() {
+            const homeBlocks = contentBlocks.filter((block) => block.section === "home");
+            customHomeBlocks.innerHTML = homeBlocks.map((block) => `<article class="card"><h2>${escapeHtml(block.title)}</h2>${block.body ? `<p>${escapeHtml(block.body)}</p>` : ""}</article>`).join("");
+            contentBlockAdminList.innerHTML = homeBlocks.length ? homeBlocks.map((block) => `
+                <form class="content-settings-grid card" data-content-block-form data-id="${block.id}">
+                    <div><label for="block-title-${block.id}">Titel</label><input id="block-title-${block.id}" name="title" maxlength="160" value="${escapeAttribute(block.title)}" required></div>
+                    <div><label for="block-sort-${block.id}">Reihenfolge</label><input id="block-sort-${block.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(block.sortOrder) || 0}" required></div>
+                    <input type="hidden" name="section" value="home">
+                    <div class="full"><label for="block-body-${block.id}">Text</label><textarea id="block-body-${block.id}" name="body" maxlength="5000">${escapeHtml(block.body || "")}</textarea></div>
+                    <div class="full team-editor-actions"><button type="submit">Block speichern</button><button type="button" class="danger" data-delete-content-block>Block löschen</button></div>
+                </form>
+            `).join("") : '<div class="empty-state">Noch keine eigenen Inhaltsblöcke angelegt.</div>';
+        }
+
+        function renderSimpleListEditor(containerId, key) {
+            const container = document.querySelector(containerId);
+            const values = Array.isArray(siteSettings[key]) ? siteSettings[key] : [];
+            container.innerHTML = values.map((value, index) => `<div class="list-editor-row"><input data-list-key="${key}" data-list-index="${index}" value="${escapeAttribute(value)}" maxlength="160" required><button type="button" class="danger" data-remove-list-item="${key}" data-index="${index}">Entfernen</button></div>`).join("");
+        }
+
+        function renderPairedListEditor(containerId, key) {
+            const container = document.querySelector(containerId);
+            const values = Array.isArray(siteSettings[key]) ? siteSettings[key] : [];
+            container.innerHTML = values.map((item, index) => `<div class="list-editor-row"><div class="form-grid"><input data-pair-key="${key}" data-pair-index="${index}" data-pair-field="label" value="${escapeAttribute(item.label)}" maxlength="160" placeholder="Anzeigename" required><input data-pair-key="${key}" data-pair-index="${index}" data-pair-field="value" value="${escapeAttribute(item.value)}" maxlength="120" placeholder="Interner Wert" required></div><button type="button" class="danger" data-remove-paired-item="${key}" data-index="${index}">Entfernen</button></div>`).join("");
+        }
+
+        function renderApplicationFieldEditor() {
+            const fields = Array.isArray(siteSettings.applicationFields) ? siteSettings.applicationFields : [];
+            document.querySelector("#application-field-editor").innerHTML = fields.map((field, index) => `<div class="list-editor-row"><div class="form-grid"><input data-field-index="${index}" data-field-property="label" value="${escapeAttribute(field.label || "")}" maxlength="160" placeholder="Feldbezeichnung" required><select data-field-index="${index}" data-field-property="type"><option value="textarea"${field.type !== "select" ? " selected" : ""}>Textfeld</option><option value="select"${field.type === "select" ? " selected" : ""}>Dropdown</option></select><input data-field-index="${index}" data-field-property="options" value="${escapeAttribute((field.options || []).join(", "))}" placeholder="Dropdown-Optionen, mit Komma getrennt"><label><input data-field-index="${index}" data-field-property="required" type="checkbox"${field.required ? " checked" : ""}> Pflichtfeld</label></div><button type="button" class="danger" data-remove-application-field="${index}">Entfernen</button></div>`).join("");
+        }
+
+        function renderContentSettings() {
+            document.querySelector("#setting-home-title").value = siteSettings.homeTitle || "";
+            document.querySelector("#setting-home-text").value = siteSettings.homeText || "";
+            document.querySelector("#setting-application-title").value = siteSettings.applicationTitle || "";
+            document.querySelector("#setting-application-intro").value = siteSettings.applicationIntro || "";
+            document.querySelector("#setting-contact-title").value = siteSettings.contactTitle || "";
+            document.querySelector("#setting-contact-intro").value = siteSettings.contactIntro || "";
+            renderSimpleListEditor("#application-position-editor", "applicationPositions");
+            renderSimpleListEditor("#contact-type-editor", "contactRequestTypes");
+            renderSimpleListEditor("#team-position-editor", "teamPositions");
+            renderPairedListEditor("#menu-category-editor", "menuCategories");
+            renderPairedListEditor("#event-status-editor", "eventStatuses");
+            renderApplicationFieldEditor();
+            renderContentBlocks();
+        }
+
+        function applyContentSettings() {
+            document.querySelector("#home-title").textContent = siteSettings.homeTitle || "";
+            document.querySelector("#home-text").textContent = siteSettings.homeText || "";
+            document.querySelector("#application-title").textContent = siteSettings.applicationTitle || "";
+            document.querySelector("#application-intro").textContent = siteSettings.applicationIntro || "";
+            document.querySelector("#contact-title").textContent = siteSettings.contactTitle || "";
+            document.querySelector("#contact-intro").textContent = siteSettings.contactIntro || "";
+            teamPositions = Array.isArray(siteSettings.teamPositions) ? siteSettings.teamPositions : teamPositions;
+            menuCategories = Array.isArray(siteSettings.menuCategories) ? siteSettings.menuCategories : menuCategories;
+            eventStatuses = Array.isArray(siteSettings.eventStatuses) ? siteSettings.eventStatuses : eventStatuses;
+            renderSelectOptions(document.querySelector("#position"), siteSettings.applicationPositions || []);
+            renderSelectOptions(document.querySelector("#request-type"), siteSettings.contactRequestTypes || []);
+            renderSelectOptions(document.querySelector("#team-role"), teamPositions);
+            renderSelectOptions(document.querySelector("#menu-category"), menuCategories);
+            renderSelectOptions(document.querySelector("#event-status"), eventStatuses, false);
+            renderApplicationFields();
+            renderContentBlocks();
+            renderPublicMenu();
+        }
+
+        async function loadContent(forAdmin = false) {
+            const response = await apiFetch("/api/content");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || "Inhalte konnten nicht geladen werden.");
+            siteSettings = data.settings || {};
+            contentBlocks = data.blocks || [];
+            applyContentSettings();
+            if (forAdmin) {
+                renderContentSettings();
+                contentAdminHelp.textContent = "Inhalte und Auswahlfelder sind geladen.";
+            }
+        }
+
+        function renderPublicTeam() {
+            if (!allTeamMembers.length) {
+                teamList.innerHTML = '<div class="empty-state">Aktuell sind noch keine Teammitglieder eingetragen.</div>';
+                return;
+            }
+
+            teamList.innerHTML = allTeamMembers.map((member) => `
+                <article class="team-member-card">
+                    <h3>${escapeHtml(member.name)}</h3>
+                    <div class="team-role">${escapeHtml(member.role)}</div>
+                    ${member.expertise ? `<p class="team-expertise"><b>Expertise:</b> ${escapeHtml(member.expertise)}</p>` : ""}
+                    ${member.description ? `<p>${escapeHtml(member.description)}</p>` : ""}
+                </article>
+            `).join("");
+        }
+
+        function renderPublicMenu() {
+            menuBoard.innerHTML = menuCategories.map((category) => `
+                <article class="menu-block" data-category="${escapeAttribute(category.value)}">
+                    <h2>${escapeHtml(category.label)}</h2>
+                    <div class="menu-items"></div>
+                </article>
+            `).join("");
+            menuCategories.forEach((category) => {
+                const block = [...menuBoard.querySelectorAll("[data-category]")].find((element) => element.dataset.category === category.value);
+                const container = block?.querySelector(".menu-items");
+                if (!container) return;
+                const items = allMenuItems.filter((item) => item.category === category.value);
+                container.innerHTML = items.length
+                    ? items.map((item) => `
+                        <div class="menu-row">
+                            <span class="menu-item-copy">
+                                <span class="menu-item-name">${escapeHtml(item.name)}</span>
+                                ${item.description ? `<span class="menu-item-description">${escapeHtml(item.description)}</span>` : ""}
+                            </span>
+                            <span class="menu-price">${formatPrice(item.price)}</span>
+                        </div>
+                    `).join("")
+                    : '<div class="empty-state">Aktuell keine Einträge.</div>';
+            });
+        }
+
+        function renderMenuAdmin() {
+            if (!allMenuItems.length) {
+                menuAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden. Lege oben den ersten an.</div>';
+                return;
+            }
+
+            menuAdminList.innerHTML = allMenuItems.map((item) => `
+                <form class="menu-editor" data-menu-form data-id="${item.id}">
+                    <div><label for="menu-item-name-${item.id}">Name</label><input id="menu-item-name-${item.id}" name="name" maxlength="120" value="${escapeAttribute(item.name)}" required></div>
+                    <div>
+                        <label for="menu-item-category-${item.id}">Kategorie</label>
+                        <select id="menu-item-category-${item.id}" name="category" required>
+                            ${menuCategories.map((category) => `<option value="${category.value}"${category.value === item.category ? " selected" : ""}>${escapeHtml(category.label)}</option>`).join("")}
+                        </select>
+                    </div>
+                    <div><label for="menu-item-price-${item.id}">Preis in $</label><input id="menu-item-price-${item.id}" name="price" type="number" min="0" max="10000000" step="1" value="${Number(item.price) || 0}" required></div>
+                    <div><label for="menu-item-sort-${item.id}">Reihenfolge</label><input id="menu-item-sort-${item.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(item.sortOrder) || 0}" required></div>
+                    <div class="full"><label for="menu-item-description-${item.id}">Beschreibung</label><textarea id="menu-item-description-${item.id}" name="description" maxlength="500" placeholder="Optional, z. B. Zutaten, Geschmack oder Besonderheiten">${escapeHtml(item.description || "")}</textarea></div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-menu-item>Eintrag löschen</button>
+                    </div>
+                </form>
+            `).join("");
+        }
+
+        async function loadMenu(forAdmin = false) {
+            if (forAdmin) menuAdminHelp.textContent = "Speisekarte wird geladen.";
+
+            const response = await apiFetch("/api/menu");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const errorText = data.error || "Speisekarte konnte nicht geladen werden.";
+                menuBoard.querySelectorAll(".menu-items").forEach((container) => {
+                    container.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                });
+                if (forAdmin) {
+                    menuAdminHelp.textContent = errorText;
+                    menuAdminList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                }
+                return;
+            }
+
+            allMenuItems = data.menuItems || [];
+            renderPublicMenu();
+            if (forAdmin) {
+                menuAdminHelp.textContent = `${allMenuItems.length} Speisekarten-Eintrag/Einträge gespeichert.`;
+                renderMenuAdmin();
+            }
+        }
+
+        function renderEventTicker() {
+            const now = new Date();
+            const nextEvent = allEvents.find((event) => event.status === "aktiv")
+                || allEvents.find((event) => event.status !== "beendet" && parseEventDate(event) >= now);
+
+            if (!nextEvent) {
+                eventTicker.innerHTML = `
+                    <span class="event-ticker-label">Next Event</span>
+                    <div class="event-ticker-copy">
+                        <strong>Aktuell ist kein Event angekündigt.</strong>
+                        <div class="event-ticker-meta">Schau später noch einmal vorbei.</div>
+                    </div>
+                    <a class="btn secondary" href="#events" onclick="setActive(document.querySelector('nav a[href=&quot;#events&quot;]'))">Alle Events</a>
+                `;
+                return;
+            }
+
+            const statusLabel = getEventStatusLabel(nextEvent.status);
+            eventTicker.innerHTML = `
+                <span class="event-ticker-label">${nextEvent.status === "aktiv" ? "Live Now" : "Next Event"}</span>
+                <div class="event-ticker-copy">
+                    <strong>${escapeHtml(nextEvent.name)}</strong>
+                    <div class="event-ticker-meta">${escapeHtml(formatEventDate(nextEvent.eventDate))} · ${escapeHtml(nextEvent.startTime)} Uhr · ${escapeHtml(statusLabel)}</div>
+                </div>
+                <a class="btn secondary" href="#events" onclick="setActive(document.querySelector('nav a[href=&quot;#events&quot;]'))">Alle Events</a>
+            `;
+        }
+
+        function renderPublicEvents() {
+            renderEventTicker();
+
+            if (!allEvents.length) {
+                eventList.innerHTML = '<div class="empty-state">Aktuell sind keine Events eingetragen.</div>';
+                return;
+            }
+
+            eventList.innerHTML = allEvents.map((event) => {
+                const date = new Date(`${event.eventDate}T12:00:00`);
+                const day = new Intl.DateTimeFormat("de-DE", { day: "2-digit" }).format(date);
+                const month = new Intl.DateTimeFormat("de-DE", { month: "short" }).format(date).replace(".", "").toUpperCase();
+
+                return `
+                    <article class="event-card">
+                        <div class="event-date-block" aria-label="${escapeAttribute(formatEventDate(event.eventDate))}">
+                            <span class="event-day">${escapeHtml(day)}</span>
+                            <span class="event-month">${escapeHtml(month)}</span>
+                        </div>
+                        <div class="event-copy">
+                            <h3>${escapeHtml(event.name)}</h3>
+                            <div class="event-time">${escapeHtml(formatEventDate(event.eventDate, { weekday: "long", year: "numeric", month: "long", day: "numeric" }))} · ${escapeHtml(event.startTime)} Uhr</div>
+                            ${event.description ? `<p>${escapeHtml(event.description)}</p>` : ""}
+                        </div>
+                        <span class="event-status" data-status="${escapeAttribute(event.status)}">${escapeHtml(getEventStatusLabel(event.status))}</span>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        function renderEventAdmin() {
+            if (!allEvents.length) {
+                eventAdminList.innerHTML = '<div class="empty-state">Noch keine Events vorhanden. Lege oben das erste an.</div>';
+                return;
+            }
+
+            eventAdminList.innerHTML = allEvents.map((event) => `
+                <form class="event-editor" data-event-form data-id="${event.id}">
+                    <div><label for="event-date-${event.id}">Datum</label><input id="event-date-${event.id}" name="eventDate" type="date" value="${escapeAttribute(event.eventDate)}" required></div>
+                    <div><label for="event-time-${event.id}">Startzeit</label><input id="event-time-${event.id}" name="startTime" type="time" value="${escapeAttribute(event.startTime)}" required></div>
+                    <div><label for="event-name-${event.id}">Event Name</label><input id="event-name-${event.id}" name="name" maxlength="140" value="${escapeAttribute(event.name)}" required></div>
+                    <div>
+                        <label for="event-status-${event.id}">Status</label>
+                        <select id="event-status-${event.id}" name="status" required>
+                            ${eventStatuses.map((status) => `<option value="${status.value}"${status.value === event.status ? " selected" : ""}>${status.label}</option>`).join("")}
+                        </select>
+                    </div>
+                    <div class="full"><label for="event-description-${event.id}">Beschreibung</label><textarea id="event-description-${event.id}" name="description" maxlength="1200">${escapeHtml(event.description || "")}</textarea></div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-event>Event löschen</button>
+                    </div>
+                </form>
+            `).join("");
+        }
+
+        async function loadEvents(forAdmin = false) {
+            if (forAdmin) eventAdminHelp.textContent = "Events werden geladen.";
+
+            const response = await apiFetch("/api/events");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const errorText = data.error || "Events konnten nicht geladen werden.";
+                eventTicker.querySelector(".event-ticker-copy").innerHTML = `<strong>${escapeHtml(errorText)}</strong>`;
+                eventList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                if (forAdmin) {
+                    eventAdminHelp.textContent = errorText;
+                    eventAdminList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                }
+                return;
+            }
+
+            allEvents = data.events || [];
+            renderPublicEvents();
+            if (forAdmin) {
+                eventAdminHelp.textContent = `${allEvents.length} Event(s) gespeichert.`;
+                renderEventAdmin();
+            }
+        }
+
+        function renderTeamAdmin() {
+            if (!allTeamMembers.length) {
+                teamAdminList.innerHTML = '<div class="empty-state">Noch keine Mitarbeiter vorhanden. Lege oben den ersten Eintrag an.</div>';
+                return;
+            }
+
+            teamAdminList.innerHTML = allTeamMembers.map((member) => `
+                <form class="team-editor" data-team-form data-id="${member.id}">
+                    <div>
+                        <label for="member-name-${member.id}">Name</label>
+                        <input id="member-name-${member.id}" name="name" maxlength="120" value="${escapeAttribute(member.name)}" required>
+                    </div>
+                    <div>
+                        <label for="member-role-${member.id}">Position</label>
+                        <select id="member-role-${member.id}" name="role" required>
+                            ${teamPositions.map((position) => `
+                                <option${position === member.role ? " selected" : ""}>${escapeHtml(position)}</option>
+                            `).join("")}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="member-expertise-${member.id}">Expertise</label>
+                        <input id="member-expertise-${member.id}" name="expertise" maxlength="240" value="${escapeAttribute(member.expertise || "")}">
+                    </div>
+                    <div>
+                        <label for="member-sort-${member.id}">Reihenfolge</label>
+                        <input id="member-sort-${member.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(member.sortOrder) || 0}" required>
+                    </div>
+                    <div class="full">
+                        <label for="member-description-${member.id}">Beschreibung</label>
+                        <textarea id="member-description-${member.id}" name="description" maxlength="1200">${escapeHtml(member.description || "")}</textarea>
+                    </div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-team-member>Mitarbeiter löschen</button>
+                    </div>
+                </form>
+            `).join("");
+        }
+
+        async function loadTeam(forAdmin = false) {
+            if (forAdmin) teamAdminHelp.textContent = "Team wird geladen.";
+
+            const response = await apiFetch("/api/team");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                const errorText = data.error || "Team konnte nicht geladen werden.";
+                teamList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                if (forAdmin) {
+                    teamAdminHelp.textContent = errorText;
+                    teamAdminList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                }
+                return;
+            }
+
+            allTeamMembers = data.teamMembers || [];
+            renderPublicTeam();
+            if (forAdmin) {
+                teamAdminHelp.textContent = `${allTeamMembers.length} Teammitglied(er) gespeichert.`;
+                renderTeamAdmin();
+            }
+        }
+
+        async function loadApplications() {
+            adminHelp.textContent = "Bewerbungen werden geladen.";
+            applicationsList.innerHTML = '<div class="empty-state">Lade Bewerbungen...</div>';
+
+            const response = await apiFetch("/api/applications");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                adminHelp.textContent = data.error || "Bewerbungen konnten nicht geladen werden.";
+                applicationFolders.classList.add("hidden");
+                applicationsList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Fehler beim Laden.")}</div>`;
+                return;
+            }
+
+            allApplications = data.applications;
+            const newCount = allApplications.filter((application) => getApplicationFolder(application) === "neu").length;
+            const savedCount = allApplications.filter((application) => getApplicationFolder(application) === "gespeichert").length;
+            adminHelp.textContent = `${allApplications.length} Bewerbung(en) im System. ${newCount} in NEU, ${savedCount} in Gespeichert.`;
+            renderApplications();
+        }
+
+        async function loadContactRequests() {
+            contactAdminHelp.textContent = "Kontaktanfragen werden geladen.";
+            contactRequestsList.innerHTML = '<div class="empty-state">Lade Kontaktanfragen...</div>';
+
+            const response = await apiFetch("/api/contact-requests");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                contactAdminHelp.textContent = data.error || "Kontaktanfragen konnten nicht geladen werden.";
+                contactRequestFolders.classList.add("hidden");
+                contactRequestsList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Fehler beim Laden.")}</div>`;
+                return;
+            }
+
+            allContactRequests = data.contactRequests || [];
+            const newCount = allContactRequests.filter((contactRequest) => getContactFolder(contactRequest) === "neu").length;
+            const archivedCount = allContactRequests.filter((contactRequest) => getContactFolder(contactRequest) === "archiv").length;
+            contactAdminHelp.textContent = `${allContactRequests.length} Kontaktanfrage(n) im System. ${newCount} neu, ${archivedCount} archiviert.`;
+            renderContactRequests();
+        }
+
+        applicationForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearMessage(applicationMessage);
+            applicationSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/applications", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(getApplicationPayload())
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Bewerbung konnte nicht gespeichert werden.");
+
+                applicationForm.reset();
+                showMessage(applicationMessage, "Deine Bewerbung ist eingegangen. Wir melden uns bei dir.", "success");
+            } catch (error) {
+                showMessage(applicationMessage, error.message, "error");
+            } finally {
+                applicationSubmit.disabled = false;
+            }
+        });
+
+        contactForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearMessage(contactFormMessage);
+            contactSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/contact-requests", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(getFormPayload(contactForm))
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Kontaktanfrage konnte nicht gesendet werden.");
+                contactForm.reset();
+                showMessage(contactFormMessage, "Vielen Dank! Deine Anfrage ist eingegangen. Wir melden uns schnellstmöglich bei dir.", "success");
+            } catch (error) {
+                showMessage(contactFormMessage, error.message, "error");
+            } finally {
+                contactSubmit.disabled = false;
+            }
+        });
+
+        loginForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearMessage(loginMessage);
+            loginSubmit.disabled = true;
+
+            try {
+                const { email, password } = getFormPayload(loginForm);
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                loginForm.reset();
+                await renderLoggedIn(data.user);
+            } catch (error) {
+                showMessage(loginMessage, authErrorText(error), "error");
+            } finally {
+                loginSubmit.disabled = false;
+            }
+        });
+
+        recoverButton.addEventListener("click", async () => {
+            clearMessage(loginMessage);
+            const email = document.querySelector("#login-email").value.trim();
+
+            if (!email) {
+                showMessage(loginMessage, "Bitte zuerst deine E-Mail eintragen.", "error");
+                return;
+            }
+
+            recoverButton.disabled = true;
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.href.split("#")[0]
+                });
+                if (error) throw error;
+                showMessage(loginMessage, "Passwort-Mail wurde gesendet.", "success");
+            } catch (error) {
+                showMessage(loginMessage, authErrorText(error), "error");
+            } finally {
+                recoverButton.disabled = false;
+            }
+        });
+
+        passwordSetupForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            clearMessage(loginMessage);
+            passwordSetupSubmit.disabled = true;
+
+            try {
+                const { password } = getFormPayload(passwordSetupForm);
+                const { data, error } = await supabase.auth.updateUser({ password });
+                if (error) throw error;
+
+                passwordSetupForm.reset();
+                showMessage(loginMessage, "Passwort wurde gespeichert.", "success");
+                await renderLoggedIn(data.user);
+            } catch (error) {
+                showMessage(loginMessage, authErrorText(error), "error");
+            } finally {
+                passwordSetupSubmit.disabled = false;
+            }
+        });
+
+        logoutButton.addEventListener("click", async () => {
+            await supabase.auth.signOut();
+            renderLoggedOut();
+        });
+
+        refreshAdmin.addEventListener("click", async () => {
+            await loadContent(true);
+            await Promise.all([loadApplications(), loadContactRequests(), loadTeam(true), loadMenu(true), loadEvents(true)]);
+        });
+
+        adminToolbar.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-admin-panel]");
+            if (!button) return;
+            showAdminPanel(button.dataset.adminPanel);
+        });
+
+        contentSettingsForm.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const addListButton = target?.closest("[data-add-list-item]");
+            const addPairButton = target?.closest("[data-add-paired-item]");
+            const removeListButton = target?.closest("[data-remove-list-item]");
+            const removePairButton = target?.closest("[data-remove-paired-item]");
+            const removeFieldButton = target?.closest("[data-remove-application-field]");
+
+            collectContentSettings();
+            if (addListButton) {
+                const key = addListButton.dataset.addListItem;
+                siteSettings[key] = [...(siteSettings[key] || []), "Neue Option"];
+            } else if (addPairButton) {
+                const key = addPairButton.dataset.addPairedItem;
+                siteSettings[key] = [...(siteSettings[key] || []), { label: "Neue Option", value: slugify("Neue Option") }];
+            } else if (removeListButton) {
+                const key = removeListButton.dataset.removeListItem;
+                siteSettings[key] = (siteSettings[key] || []).filter((_item, index) => index !== Number(removeListButton.dataset.index));
+            } else if (removePairButton) {
+                const key = removePairButton.dataset.removePairedItem;
+                siteSettings[key] = (siteSettings[key] || []).filter((_item, index) => index !== Number(removePairButton.dataset.index));
+            } else if (removeFieldButton) {
+                siteSettings.applicationFields = (siteSettings.applicationFields || []).filter((_item, index) => index !== Number(removeFieldButton.dataset.removeApplicationField));
+            } else {
+                return;
+            }
+            renderContentSettings();
+        });
+
+        document.querySelector("#add-application-field").addEventListener("click", () => {
+            siteSettings.applicationFields = [...(siteSettings.applicationFields || []), { key: `zusatzfeld-${Date.now()}`, label: "Neue Frage", type: "textarea", options: [], required: false }];
+            renderContentSettings();
+        });
+
+        function collectContentSettings() {
+            const basics = getFormPayload(contentSettingsForm);
+            ["homeTitle", "homeText", "applicationTitle", "applicationIntro", "contactTitle", "contactIntro"].forEach((key) => { siteSettings[key] = basics[key]; });
+            document.querySelectorAll("[data-list-key]").forEach((input) => { siteSettings[input.dataset.listKey][Number(input.dataset.listIndex)] = input.value.trim(); });
+            document.querySelectorAll("[data-pair-key]").forEach((input) => { siteSettings[input.dataset.pairKey][Number(input.dataset.pairIndex)][input.dataset.pairField] = input.value.trim(); });
+            const fields = siteSettings.applicationFields || [];
+            document.querySelectorAll("[data-field-index]").forEach((input) => {
+                const field = fields[Number(input.dataset.fieldIndex)];
+                const property = input.dataset.fieldProperty;
+                if (property === "required") field.required = input.checked;
+                else if (property === "options") field.options = input.value.split(",").map((value) => value.trim()).filter(Boolean);
+                else field[property] = input.value.trim();
+                field.key = field.key || slugify(field.label);
+            });
+            siteSettings.applicationFields = fields;
+            return siteSettings;
+        }
+
+        contentSettingsForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            contentSettingsSubmit.disabled = true;
+            try {
+                const response = await apiFetch("/api/content", { method: "PUT", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ settings: collectContentSettings() }) });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Einstellungen konnten nicht gespeichert werden.");
+                await loadContent(true);
+                await Promise.all([loadTeam(true), loadMenu(true), loadEvents(true)]);
+                contentAdminHelp.textContent = "Texte, Dropdowns und Felder wurden gespeichert.";
+            } catch (error) {
+                contentAdminHelp.textContent = error.message;
+            } finally {
+                contentSettingsSubmit.disabled = false;
+            }
+        });
+
+        contentBlockCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const button = contentBlockCreateForm.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/content", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(getFormPayload(contentBlockCreateForm)) });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Inhaltsblock konnte nicht angelegt werden.");
+                contentBlockCreateForm.reset();
+                document.querySelector("#content-block-sort").value = "10";
+                await loadContent(true);
+            } catch (error) {
+                contentAdminHelp.textContent = error.message;
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        contentBlockAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-content-block-form]");
+            if (!form) return;
+            event.preventDefault();
+            const response = await apiFetch("/api/content", { method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) }) });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) contentAdminHelp.textContent = data.error || "Block konnte nicht gespeichert werden.";
+            else await loadContent(true);
+        });
+
+        contentBlockAdminList.addEventListener("click", async (event) => {
+            const button = event.target instanceof Element ? event.target.closest("[data-delete-content-block]") : null;
+            if (!button) return;
+            const form = button.closest("[data-content-block-form]");
+            if (!confirm("Diesen Inhaltsblock wirklich löschen?")) return;
+            const response = await apiFetch("/api/content", { method: "DELETE", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ id: Number(form.dataset.id) }) });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) contentAdminHelp.textContent = data.error || "Block konnte nicht gelöscht werden.";
+            else await loadContent(true);
+        });
+
+        eventCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            eventCreateSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/events", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(eventCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Event konnte nicht hinzugefügt werden.");
+                eventCreateForm.reset();
+                document.querySelector("#event-status").value = "in-planung";
+                await loadEvents(true);
+                eventAdminHelp.textContent = "Event wurde hinzugefügt.";
+            } catch (error) {
+                eventAdminHelp.textContent = error.message;
+            } finally {
+                eventCreateSubmit.disabled = false;
+            }
+        });
+
+        eventAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-event-form]");
+            if (!form) return;
+            event.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/events", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Event konnte nicht gespeichert werden.");
+                await loadEvents(true);
+                eventAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                eventAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        eventAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-event]");
+            if (!button) return;
+
+            const form = button.closest("[data-event-form]");
+            const name = form.querySelector('[name="name"]').value || "dieses Event";
+            if (!confirm(`${name} wirklich dauerhaft löschen?`)) return;
+
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/events", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Event konnte nicht gelöscht werden.");
+                await loadEvents(true);
+                eventAdminHelp.textContent = "Event wurde gelöscht.";
+            } catch (error) {
+                eventAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        menuCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            menuCreateSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/menu", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(menuCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht hinzugefügt werden.");
+                menuCreateForm.reset();
+                document.querySelector("#menu-sort-order").value = "10";
+                await loadMenu(true);
+                menuAdminHelp.textContent = "Eintrag wurde hinzugefügt.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+            } finally {
+                menuCreateSubmit.disabled = false;
+            }
+        });
+
+        menuAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-menu-form]");
+            if (!form) return;
+            event.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/menu", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gespeichert werden.");
+                await loadMenu(true);
+                menuAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        menuAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-menu-item]");
+            if (!button) return;
+
+            const form = button.closest("[data-menu-form]");
+            const name = form.querySelector('[name="name"]').value || "diesen Eintrag";
+            if (!confirm(`${name} wirklich dauerhaft aus der Speisekarte löschen?`)) return;
+
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/menu", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gelöscht werden.");
+                await loadMenu(true);
+                menuAdminHelp.textContent = "Eintrag wurde gelöscht.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        teamCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            teamCreateSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/team", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(teamCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Mitarbeiter konnte nicht hinzugefügt werden.");
+                teamCreateForm.reset();
+                document.querySelector("#team-sort-order").value = "10";
+                await loadTeam(true);
+                teamAdminHelp.textContent = "Mitarbeiter wurde hinzugefügt.";
+            } catch (error) {
+                teamAdminHelp.textContent = error.message;
+            } finally {
+                teamCreateSubmit.disabled = false;
+            }
+        });
+
+        teamAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-team-form]");
+            if (!form) return;
+            event.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/team", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Mitarbeiter konnte nicht gespeichert werden.");
+                await loadTeam(true);
+                teamAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                teamAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        teamAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-team-member]");
+            if (!button) return;
+
+            const form = button.closest("[data-team-form]");
+            const name = form.querySelector('[name="name"]').value || "dieses Teammitglied";
+            if (!confirm(`${name} wirklich dauerhaft aus dem Team löschen?`)) return;
+
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/team", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Mitarbeiter konnte nicht gelöscht werden.");
+                await loadTeam(true);
+                teamAdminHelp.textContent = "Mitarbeiter wurde gelöscht.";
+            } catch (error) {
+                teamAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        applicationFolders.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-application-folder]");
+            if (!button) return;
+
+            currentApplicationFolder = button.dataset.applicationFolder;
+            renderApplications();
+        });
+
+        contactRequestFolders.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-contact-folder]");
+            if (!button) return;
+
+            currentContactFolder = button.dataset.contactFolder;
+            renderContactRequests();
+        });
+
+        contactRequestsList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const article = target?.closest("[data-contact-request-id]");
+            if (!article) return;
+
+            const moveButton = target.closest("[data-move-contact-request]");
+            if (moveButton) {
+                moveButton.disabled = true;
+
+                try {
+                    const response = await apiFetch("/api/contact-requests", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "same-origin",
+                        body: JSON.stringify({
+                            id: Number(article.dataset.contactRequestId),
+                            folder: moveButton.dataset.moveContactRequest
+                        })
+                    });
+                    const data = await response.json().catch(() => ({}));
+
+                    if (!response.ok) throw new Error(data.error || "Kontaktanfrage konnte nicht verschoben werden.");
+                    await loadContactRequests();
+                } catch (error) {
+                    contactAdminHelp.textContent = error.message;
+                    moveButton.disabled = false;
+                }
+                return;
+            }
+
+            const deleteButton = target.closest("[data-delete-contact-request]");
+            if (!deleteButton) return;
+
+            const subject = article.querySelector("h3")?.textContent || "diese Kontaktanfrage";
+            const confirmed = confirm(`Kontaktanfrage „${subject}“ wirklich dauerhaft löschen?`);
+            if (!confirmed) return;
+
+            deleteButton.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/contact-requests", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(article.dataset.contactRequestId) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Kontaktanfrage konnte nicht gelöscht werden.");
+                await loadContactRequests();
+            } catch (error) {
+                contactAdminHelp.textContent = error.message;
+                deleteButton.disabled = false;
+            }
+        });
+
+        async function saveApplication(article, payload) {
+            const response = await apiFetch("/api/applications", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    id: Number(article.dataset.id),
+                    ...payload
+                })
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) throw new Error(data.error || "Änderung konnte nicht gespeichert werden.");
+            await loadApplications();
+        }
+
+        applicationsList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-update-form]");
+            if (!form) return;
+            event.preventDefault();
+
+            const article = form.closest(".application-item");
+            const button = form.querySelector("button");
+            button.disabled = true;
+
+            try {
+                await saveApplication(article, getFormPayload(form));
+            } catch (error) {
+                adminHelp.textContent = error.message;
+            } finally {
+                button.disabled = false;
+            }
+        });
+
+        applicationsList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const moveButton = target?.closest("[data-move-application]");
+            if (moveButton) {
+                const article = moveButton.closest(".application-item");
+                const form = article.querySelector("[data-update-form]");
+                moveButton.disabled = true;
+
+                try {
+                    await saveApplication(article, {
+                        ...getFormPayload(form),
+                        applicationFolder: moveButton.dataset.moveApplication
+                    });
+                } catch (error) {
+                    adminHelp.textContent = error.message;
+                    moveButton.disabled = false;
+                }
+                return;
+            }
+
+            const button = target?.closest("[data-delete-application]");
+            if (!button) return;
+
+            const article = button.closest(".application-item");
+            const name = article.querySelector("h3")?.textContent || "diese Bewerbung";
+            const confirmed = confirm(`Bewerbung von ${name} wirklich dauerhaft löschen?`);
+            if (!confirmed) return;
+
+            button.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/applications", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(article.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Bewerbung konnte nicht gelöscht werden.");
+                await loadApplications();
+            } catch (error) {
+                adminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        function authErrorText(error) {
+            if (error?.status === 400 || error?.status === 401) return "E-Mail oder Passwort stimmt nicht.";
+            if (error?.status === 403) return "Dieser Login ist nicht erlaubt.";
+            return error instanceof Error ? error.message : "Login fehlgeschlagen.";
+        }
+
+        async function bootAuth() {
+            try {
+                await loadContent();
+                await Promise.all([loadTeam(), loadMenu(), loadEvents()]);
+
+                // Supabase hängt bei Einladungs-/Passwort-Wiederherstellungs-Links
+                // einen "type"-Parameter an den URL-Hash an (#access_token=...&type=recovery
+                // bzw. type=invite). supabase-js liest die Session daraus automatisch aus.
+                const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+                const linkType = hashParams.get("type");
+
+                if (linkType === "invite" || linkType === "recovery") {
+                    showPasswordSetup(linkType === "invite" ? "invite" : "recovery");
+                    return;
+                }
+
+                const { data } = await supabase.auth.getUser();
+                if (data.user) await renderLoggedIn(data.user);
+                else renderLoggedOut();
+            } catch (error) {
+                renderLoggedOut();
+                showMessage(loginMessage, authErrorText(error), "error");
+            }
+        }
+
+        supabase.auth.onAuthStateChange((_event, session) => {
+            if (session?.user) renderLoggedIn(session.user);
+            else renderLoggedOut();
+        });
+
+        bootAuth();
+    </script>
+</body>
+</html>
