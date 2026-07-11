@@ -18,7 +18,10 @@
     <div id="content" class="card">Lädt...</div>
 
     <script>
-        const sb = supabase.createClient('DEINE_SUPABASE_URL', 'DEIN_SUPABASE_ANON_KEY');
+        const sb = supabase.createClient(
+    'https://jqmktlrythfmsxzevkjt.supabase.co', 
+    'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt'
+);
 
         async function loadPage(slug = 'home') {
             const { data } = await sb.from('pages').select('*').eq('slug', slug).single();
