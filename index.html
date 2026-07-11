@@ -2,82 +2,73 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Bahama Mamas | Admin</title>
+    <title>Bahama Mamas Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { background: #050505; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
         nav { background: #000; padding: 15px; text-align: center; border-bottom: 1px solid #ff00ff; margin-bottom: 20px; }
         nav a { color: #fff; margin: 0 15px; text-decoration: none; cursor: pointer; font-weight: bold; }
-        .card { background: #1a001a; border: 1px solid #ff00ff; padding: 20px; border-radius: 10px; max-width: 800px; margin: auto; }
-        button { background: #ff00ff; color: #fff; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; margin: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+        .card { background: #1a001a; border: 1px solid #ff00ff; padding: 20px; border-radius: 10px; max-width: 900px; margin: auto; }
+        button { background: #ff00ff; color: #fff; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #fff; }
+        th, td { border: 1px solid #ff00ff; padding: 10px; text-align: left; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a onclick="loadSection('home')">Home</a>
-        <a onclick="loadSection('events')">Events</a>
-        <a onclick="loadSection('menu')">Menü</a>
-        <a onclick="loadSection('team')">Team</a>
-        <a onclick="loadSection('bewerben')">Bewerben</a>
-        <a onclick="loadSection('kontakt')">Kontakt</a>
-        <a onclick="loadSection('admin')" style="color:#ff00ff">Admin</a>
-    </nav>
+<nav>
+    <a onclick="loadSection('home')">Home</a>
+    <a onclick="loadSection('events')">Events</a>
+    <a onclick="loadSection('menu')">Menü</a>
+    <a onclick="loadSection('team')">Team</a>
+    <a onclick="loadSection('bewerben')">Bewerben</a>
+    <a onclick="loadSection('kontakt')">Kontakt</a>
+    <a onclick="loadSection('admin')" style="color:#ff00ff">Admin</a>
+</nav>
 
-    <div id="content" class="card">Willkommen im Bahama Mamas...</div>
+<div id="content" class="card">Lade...</div>
 
-    <script>
-        // --- HIER DEINE DATEN EINTRAGEN ---
-        const SUPABASE_URL = 'https://jqmktlrythfmsxzevkjt.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt';
-        // ----------------------------------
+<script>
+    const SUPABASE_URL = 'https://jqmktlrythfmsxzevkjt.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function loadSection(section) {
-            const content = document.getElementById('content');
-            content.innerHTML = 'Lädt...';
-            
-            if (section === 'admin') {
-                content.innerHTML = `
-                    <h2>Admin Dashboard</h2>
-                    <button onclick="showApplications()">Bewerbungen verwalten</button>
-                    <div id="admin-subcontent"></div>
-                `;
-            } else {
-                const { data } = await sb.from(section).select('*');
-                content.innerHTML = `<h2>${section.toUpperCase()}</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
-            }
-        }
-
-        async function showApplications() {
-            const sub = document.getElementById('admin-subcontent');
-            const { data } = await sb.from('applications').select('*');
-            
-            let html = '<h3>Bewerbungen</h3><table><tr><th>Name</th><th>Status</th><th>Aktion</th></tr>';
-            data.forEach(app => {
-                html += `<tr>
-                    <td>${app.name}</td>
-                    <td>${app.status || 'NEU'}</td>
-                    <td>
-                        <button onclick="updateStatus(${app.id}, 'Angenommen')">Annehmen</button>
-                        <button onclick="updateStatus(${app.id}, 'Abgelehnt')">Ablehnen</button>
-                    </td>
-                </tr>`;
+    async function loadSection(section) {
+        const content = document.getElementById('content');
+        
+        if (section === 'home') {
+            content.innerHTML = '<h2>HOME</h2><p>Willkommen im Bahama Mamas.</p>';
+        } else if (section === 'admin') {
+            content.innerHTML = `<h2>Admin Dashboard</h2><button onclick="showApplications()">Bewerbungen verwalten</button><div id="admin-subcontent"></div>`;
+        } else if (['events', 'menu', 'team'].includes(section)) {
+            const { data } = await sb.from(section).select('*');
+            let html = `<h2>${section.toUpperCase()}</h2><table>`;
+            data.forEach(item => {
+                html += `<tr><td>${item.title || item.name}</td><td>${item.event_date || item.price || item.position}</td></tr>`;
             });
-            html += '</table>';
-            sub.innerHTML = html;
+            content.innerHTML = html + '</table>';
+        } else {
+            content.innerHTML = `<h2>${section.toUpperCase()}</h2><p>Bereich in Arbeit.</p>`;
         }
+    }
 
-        async function updateStatus(id, newStatus) {
-            await sb.from('applications').update({ status: newStatus }).eq('id', id);
-            alert('Status aktualisiert!');
-            showApplications();
-        }
+    async function showApplications() {
+        const { data } = await sb.from('applications').select('*');
+        let html = '<h3>Bewerbungen</h3><table><tr><th>Name</th><th>Status</th><th>Aktion</th></tr>';
+        data.forEach(app => {
+            html += `<tr><td>${app.name}</td><td>${app.status}</td>
+            <td><button onclick="updateStatus(${app.id}, 'Angenommen')">Annehmen</button></td></tr>`;
+        });
+        document.getElementById('admin-subcontent').innerHTML = html + '</table>';
+    }
 
-        loadSection('home');
-    </script>
+    async function updateStatus(id, newStatus) {
+        await sb.from('applications').update({ status: newStatus }).eq('id', id);
+        alert('Status: ' + newStatus);
+        showApplications();
+    }
+
+    loadSection('home');
+</script>
 </body>
 </html>
