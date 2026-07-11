@@ -1,90 +1,82 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <title>Bahama Mamas Dashboard</title>
-    <style>
-        body { background: #050505; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
-        nav { background: #000; padding: 15px; text-align: center; border-bottom: 1px solid #ff00ff; margin-bottom: 20px; }
-        nav a { color: #fff; margin: 0 15px; text-decoration: none; cursor: pointer; font-weight: bold; }
-        .card { background: #1a001a; border: 1px solid #ff00ff; padding: 20px; border-radius: 10px; max-width: 900px; margin: auto; }
-        button { background: #ff00ff; color: #fff; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; color: #fff; }
-        th, td { border: 1px solid #ff00ff; padding: 10px; text-align: left; }
-    </style>
-</head>
-<body>
-
-<nav>
-    <a onclick="window.loadSection('home')">Home</a>
-    <a onclick="window.loadSection('events')">Events</a>
-    <a onclick="window.loadSection('menu')">Menü</a>
-    <a onclick="window.loadSection('team')">Team</a>
-    <a onclick="window.loadSection('bewerben')">Bewerben</a>
-    <a onclick="window.loadSection('admin')" style="color:#ff00ff">Admin</a>
-</nav>
-
-<div id="content" class="card">Willkommen im Bahama Mamas Dashboard. Wähle eine Option aus.</div>
+<!-- [Behalte den CSS-Teil exakt wie bisher] -->
 
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    const supabase = createClient('https://jqmktlrythfmsxzevkjt.supabase.co', 'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt');
+    // SUPABASE KONFIGURATION - HIER EIGENE WERTE EINTRAGEN
+    const supabase = createClient('https://tlwamusobhrfbankdztv.supabase.co', 'sb_publishable_gb_bV7OV-qms-Fle3Vv2fg_e35hBGi1');
 
-    window.loadSection = async function(section) {
-        const content = document.getElementById('content');
-        
-        // Header/Basis immer behalten
-        if (section === 'home') {
-            content.innerHTML = '<h2>HOME</h2><p>Willkommen im Bahama Mamas.</p>';
-        } else if (section === 'admin') {
-            content.innerHTML = `<h2>Admin Dashboard</h2><button onclick="window.loadApplications()">Bewerbungen verwalten</button><div id="admin-subcontent"></div>`;
+    // --- REVIDIERTE FUNKTIONEN ---
+
+    // 1. Authentifizierung prüfen
+    async function checkAuth() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+            renderLoggedIn(user);
         } else {
-            content.innerHTML = `<h2>${section.toUpperCase()}</h2><p>Daten werden geladen...</p>`;
-            
-            const { data, error } = await supabase.from(section).select('*');
-            
-            if (error) {
-                content.innerHTML = `<h2>${section.toUpperCase()}</h2><p>Fehler: Tabelle "${section}" konnte nicht geladen werden.</p>`;
-            } else if (!data || data.length === 0) {
-                content.innerHTML = `<h2>${section.toUpperCase()}</h2><p>Keine Einträge in "${section}" gefunden.</p>`;
-            } else {
-                let html = `<h2>${section.toUpperCase()}</h2><table>`;
-                data.forEach(item => {
-                    html += `<tr><td>${item.title || item.name || 'Ohne Namen'}</td><td>${item.event_date || item.price || item.position || '-'}</td></tr>`;
-                });
-                content.innerHTML = html + '</table>';
-            }
+            renderLoggedOut();
         }
-    };
+    }
 
-    window.loadApplications = async function() {
-        const sub = document.getElementById('admin-subcontent');
-        sub.innerHTML = 'Lade...';
-        const { data, error } = await supabase.from('applications').select('*');
-        
-        if (error) { sub.innerHTML = "Fehler: " + error.message; return; }
-        
-        if (!data || data.length === 0) {
-            sub.innerHTML = '<p>Keine Bewerbungen offen.</p>';
-        } else {
-            let html = '<h3>Bewerbungen</h3><table><tr><th>Name</th><th>Status</th><th>Aktion</th></tr>';
-            data.forEach(app => {
-                html += `<tr><td>${app.name}</td><td>${app.status}</td>
-                <td><button onclick="window.updateStatus(${app.id}, 'Angenommen')">Annehmen</button></td></tr>`;
-            });
-            sub.innerHTML = html + '</table>';
-        }
-    };
+    // 2. Login
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearMessage(loginMessage);
+        loginSubmit.disabled = true;
 
-    window.updateStatus = async function(id, newStatus) {
-        const { error } = await supabase.from('applications').update({ status: newStatus }).eq('id', id);
-        if (error) alert('Fehler: ' + error.message);
-        else {
-            alert('Status aktualisiert!');
-            window.loadApplications();
+        try {
+            const { email, password } = getFormPayload(loginForm);
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            
+            renderLoggedIn(data.user);
+        } catch (error) {
+            showMessage(loginMessage, "Login fehlgeschlagen: " + error.message, "error");
+        } finally {
+            loginSubmit.disabled = false;
         }
-    };
+    });
+
+    // 3. Admin-Check (Beispiel für Datenbank-Prüfung statt Netlify-Rollen)
+    async function hasAdminRole(user) {
+        // Prüft in der Tabelle 'profiles', ob der User Admin ist
+        const { data } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+        return data?.role === 'admin';
+    }
+
+    // 4. Beispiel für Daten laden (Bewerbungen)
+    async function loadApplications() {
+        const { data, error } = await supabase
+            .from('applications')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            applicationsList.innerHTML = "Fehler beim Laden.";
+            return;
+        }
+        allApplications = data;
+        renderApplications();
+    }
+
+    // [Füge hier analog die Funktionen für loadMenu, loadEvents, etc. ein, 
+    // indem du 'apiFetch' durch 'supabase.from(...).select(...)' ersetzt]
+
+    // Initialisierung
+    checkAuth();
+    
+    // Auth-Listener für Session-Änderungen
+    supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT') renderLoggedOut();
+    });
+
+    // --- Logout ---
+    logoutButton.addEventListener("click", async () => {
+        await supabase.auth.signOut();
+    });
+
 </script>
-</body>
-</html>
