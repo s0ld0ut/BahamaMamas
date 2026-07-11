@@ -2,84 +2,42 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Bahama Mamas | Official</title>
+    <title>Bahama Mamas | Admin-Baukasten</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; 
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('bg-palmen.jpg');
-            background-attachment: fixed; background-size: cover; background-position: center;
-        }
-        .hero { text-align: center; padding: 40px; border-bottom: 1px solid #333; }
-        .hero-logo { max-width: 600px; width: 100%; animation: blink 2s infinite ease-in-out; }
-        @keyframes blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #ff00ff); } 50% { opacity: 0.8; filter: drop-shadow(0 0 5px #ff00ff); } }
-        nav { background: #000; padding: 15px; text-align: center; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
+        body { background: #050505; color: #fff; font-family: sans-serif; margin: 0; }
+        nav { background: #000; padding: 20px; text-align: center; border-bottom: 1px solid #ff00ff; }
         nav a { color: #888; margin: 0 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
-        nav a.active { color: #fff; border-bottom: 2px solid #ff00ff; }
-        section { display: none; padding: 40px 20px; max-width: 1000px; margin: auto; }
-        section:target { display: block; }
-        body:not(:has(:target)) #home { display: block; }
-        .card { background: rgba(20, 0, 40, 0.7); border: 1px solid #ff00ff; padding: 25px; border-radius: 15px; margin-bottom: 20px; }
-        h2 { color: #ff00ff; }
-        .btn { padding: 10px 20px; background: #ff00ff; color: #fff; border-radius: 5px; cursor: pointer; border: none; font-weight: bold; }
+        #content { padding: 40px; max-width: 800px; margin: auto; }
+        .card { background: #1a001a; padding: 20px; border-radius: 10px; border: 1px solid #ff00ff; }
     </style>
 </head>
 <body>
 
-    <div class="hero"><img src="BM-LOGO-NEU.png" alt="Logo" class="hero-logo"></div>
-
-    <nav id="navbar">
-        <a href="#home" class="active" onclick="setActive(this)">Home</a>
-        <a href="#menu" onclick="setActive(this)">Menü</a>
-        <a href="#admin" onclick="setActive(this)" style="color: #ff5555;">Admin</a>
-    </nav>
-
-    <section id="home"><div class="card"><h2>Home</h2><p>Willkommen.</p></div></section>
-    <section id="menu"><div class="card"><h2>Menü</h2><div id="menu-container">Lädt...</div></div></section>
-    <section id="admin">
-        <div class="card" id="login-form">
-            <h2>Admin Login</h2>
-            <input type="email" id="email" placeholder="Email" style="display:block; width:95%; margin-bottom:10px; padding:10px;">
-            <input type="password" id="password" placeholder="Passwort" style="display:block; width:95%; margin-bottom:10px; padding:10px;">
-            <button class="btn" id="login-btn">Anmelden</button>
-        </div>
-        <div id="admin-dashboard" style="display:none;" class="card">
-            <h2>Admin Dashboard</h2>
-            <button class="btn" id="logout-btn">Logout</button>
-        </div>
-    </section>
+    <nav id="navbar"></nav>
+    <div id="content" class="card">Lädt...</div>
 
     <script>
-        // Hier wird der Client korrekt initialisiert, ohne den Namen doppelt zu belegen
-        const sbClient = supabase.createClient(
-            'https://jqmktlrythfmsxzevkjt.supabase.co', 
-            'sb_publishable_Nw2I0O0YW4WfMQ4xRaSzLg_k4rShVPt'
-        );
+        const sb = supabase.createClient('DEINE_SUPABASE_URL', 'DEIN_SUPABASE_ANON_KEY');
 
-        document.getElementById('login-btn').onclick = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const { error } = await sbClient.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message); else location.reload();
-        };
-
-        document.getElementById('logout-btn').onclick = async () => {
-            await sbClient.auth.signOut();
-            location.reload();
-        };
-
-        function setActive(el) {
-            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-            el.classList.add('active');
+        async function loadPage(slug = 'home') {
+            const { data } = await sb.from('pages').select('*').eq('slug', slug).single();
+            document.getElementById('content').innerHTML = data ? data.content_html : 'Seite nicht gefunden';
         }
 
-        window.onload = async () => {
-            const { data } = await sbClient.auth.getSession();
-            if (data.session) {
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('admin-dashboard').style.display = 'block';
-            }
-        };
+        async function initNav() {
+            const { data } = await sb.from('pages').select('*').order('order');
+            const nav = document.getElementById('navbar');
+            data.forEach(page => {
+                const a = document.createElement('a');
+                a.innerText = page.title;
+                a.onclick = () => loadPage(page.slug);
+                nav.appendChild(a);
+            });
+            loadPage(); // Lade Home beim Start
+        }
+
+        initNav();
     </script>
 </body>
 </html>
