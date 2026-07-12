@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { desc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { contactRequests } from "../db/schema.js";
-import { requireAdmin } from "./_lib/auth.js";
+import { requirePermission } from "./_lib/auth.js";
 
 const folders = new Set(["neu", "archiv"]);
 
@@ -49,7 +49,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "GET") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "contacts", "view");
     if (!user) return;
 
     const rows = await db.select().from(contactRequests).orderBy(desc(contactRequests.createdAt));
@@ -57,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "PATCH") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "contacts", "edit");
     if (!user) return;
 
     const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as { id?: number; folder?: string } | null;
@@ -86,7 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "DELETE") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "contacts", "edit");
     if (!user) return;
 
     const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as { id?: number } | null;

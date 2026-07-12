@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { asc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { teamMembers } from "../db/schema.js";
-import { requireAdmin } from "./_lib/auth.js";
+import { requirePermission } from "./_lib/auth.js";
 
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "POST") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "team", "edit");
     if (!user) return;
 
     const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as Record<string, unknown> | null;
@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "PATCH") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "team", "edit");
     if (!user) return;
 
     const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as Record<string, unknown> | null;
@@ -80,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.method === "DELETE") {
-    const user = await requireAdmin(req, res);
+    const user = await requirePermission(req, res, "team", "edit");
     if (!user) return;
 
     const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as { id?: number } | null;

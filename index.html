@@ -400,6 +400,30 @@
         }
 
         .menu-editor .full { grid-column: 1 / -1; }
+
+        .checkbox-field { grid-column: 1 / -1; display: flex; align-items: center; }
+        .checkbox-field label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 400; }
+
+        .own-password-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin-top: 18px; }
+        .own-password-form label { display: block; margin-bottom: 6px; }
+        .own-password-form input { min-width: 220px; }
+
+        .user-editor { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr); gap: 14px; padding: 18px; border: 1px solid rgba(0, 212, 255, 0.44); border-radius: 12px; background: var(--panel-strong); }
+        .user-editor .full { grid-column: 1 / -1; }
+
+        .permission-grid { display: grid; gap: 10px; margin-top: 10px; }
+        .permission-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding: 10px 14px; border: 1px solid rgba(0, 212, 255, 0.25); border-radius: 10px; }
+        .permission-row .permission-label { min-width: 160px; font-weight: 600; }
+        .permission-row label { display: flex; align-items: center; gap: 6px; color: var(--muted); font-weight: 400; }
+
+        .balance-negative { color: #ff6b6b; }
+        .balance-positive { color: #4ade80; }
+
+        .recipe-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+        .recipe-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(0, 212, 255, 0.12); border: 1px solid rgba(0, 212, 255, 0.35); font-size: 0.85rem; }
+        .recipe-chip button { background: none; border: none; color: inherit; cursor: pointer; padding: 0; font-size: 1rem; line-height: 1; }
+        .recipe-add-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+        .recipe-add-row select, .recipe-add-row input { width: auto; }
         .event-editor-list { display: grid; gap: 16px; margin-top: 22px; }
         .event-editor {
             display: grid;
@@ -828,29 +852,29 @@
             <div class="card">
                 <h2>Admin Bereich</h2>
                 <div id="logged-out-panel">
-                    <p class="hint">Melde dich mit einem Admin-Account an, um die Bereiche zu verwalten.</p>
+                    <p class="hint">Melde dich mit einem Mitarbeiter-Account an, um die Bereiche zu verwalten.</p>
                     <form id="login-form">
-                        <label for="login-email">E-Mail</label>
-                        <input id="login-email" name="email" type="email" autocomplete="email" required>
+                        <label for="login-username">Benutzername</label>
+                        <input id="login-username" name="username" type="text" autocomplete="username" required>
                         <label for="login-password" style="margin-top: 14px;">Passwort</label>
                         <input id="login-password" name="password" type="password" autocomplete="current-password" required>
                         <button type="submit" id="login-submit">Einloggen</button>
                     </form>
-                    <button class="secondary" id="recover-button" type="button">Passwort-Mail senden</button>
-                    <form id="password-setup-form" class="hidden">
-                        <p class="hint" id="password-setup-text">Lege ein neues Passwort fest.</p>
-                        <label for="new-password">Neues Passwort</label>
-                        <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
-                        <button type="submit" id="password-setup-submit">Passwort speichern</button>
-                    </form>
+                    <p class="hint">Passwort vergessen? Wende dich an eine Person mit Zugriff auf "Nutzer verwalten" - sie kann dir ein neues Passwort setzen.</p>
                     <div id="login-message" class="message" role="status"></div>
                 </div>
                 <div id="logged-in-panel" class="hidden">
-                    <p>Eingeloggt als <span class="admin-meta" id="admin-email"></span></p>
+                    <p>Eingeloggt als <span class="admin-meta" id="admin-username"></span></p>
                     <div class="admin-action-row">
                         <button type="button" id="refresh-admin" class="secondary">Daten neu laden</button>
                         <button type="button" id="logout-button">Ausloggen</button>
                     </div>
+                    <form id="own-password-form" class="own-password-form">
+                        <label for="own-new-password">Eigenes Passwort ändern</label>
+                        <input id="own-new-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Neues Passwort" required>
+                        <button type="submit" id="own-password-submit" class="secondary">Passwort ändern</button>
+                    </form>
+                    <div id="own-password-message" class="message" role="status"></div>
                 </div>
             </div>
 
@@ -858,9 +882,13 @@
                 <button type="button" class="admin-tab active" data-admin-panel="applications" role="tab">Bewerbungen</button>
                 <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
                 <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team Verwaltung</button>
-                <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Speisekarte Verwalten</button>
+                <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Lager &amp; Preisliste</button>
                 <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
+                <button type="button" class="admin-tab" data-admin-panel="vip" role="tab">VIP-Tickets</button>
+                <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
+                <button type="button" class="admin-tab" data-admin-panel="info" role="tab">Wichtige Infos</button>
                 <button type="button" class="admin-tab" data-admin-panel="content" role="tab">Inhalte &amp; Felder</button>
+                <button type="button" class="admin-tab" data-admin-panel="users" role="tab">Nutzer verwalten</button>
             </div>
 
             <div class="admin-panel" data-admin-panel-content="applications">
@@ -889,7 +917,7 @@
                 <div id="team-admin" class="card team-admin-card hidden">
                     <h2>Team verwalten</h2>
                     <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter anlegen, bearbeiten, sortieren und löschen.</p>
-                    <form id="team-create-form" class="team-editor">
+                    <form id="team-create-form" class="team-editor" data-permission-category="team">
                         <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
                         <div>
                             <label for="team-role">Position</label>
@@ -908,9 +936,9 @@
 
             <div class="admin-panel" data-admin-panel-content="menu" hidden>
                 <div id="menu-admin" class="card menu-admin-card hidden">
-                    <h2>Speisekarte verwalten</h2>
-                    <p class="hint" id="menu-admin-help">Getränke und Snacks mit optionaler Beschreibung anlegen, einer Kategorie zuordnen und Preise in Dollar festlegen.</p>
-                    <form id="menu-create-form" class="menu-editor">
+                    <h2>Lager &amp; Preisliste</h2>
+                    <p class="hint" id="menu-admin-help">Getränke und Snacks mit Preis, Einkaufspreis und Lagerbestand verwalten. "MAX WIN" und "Fehlt" werden automatisch berechnet.</p>
+                    <form id="menu-create-form" class="menu-editor" data-permission-category="menu">
                         <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
                         <div>
                             <label for="menu-category">Kategorie</label>
@@ -923,12 +951,28 @@
                                 <option value="extras">EXTRA'S</option>
                             </select>
                         </div>
-                        <div><label for="menu-price">Preis in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                        <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                        <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
+                        <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                        <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
                         <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Zutaten, Geschmack oder Besonderheiten"></textarea></div>
+                        <div class="checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
+                        <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
                         <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
                     </form>
                     <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+
+                    <hr>
+                    <h3>Zutaten-Lager (Rohstoffe)</h3>
+                    <p class="hint">Rohstoffe für Rezepte. "Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
+                    <form id="ingredient-create-form" class="menu-editor" data-permission-category="menu">
+                        <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
+                        <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                        <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
+                        <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                        <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
+                    </form>
+                    <div id="ingredient-admin-list" class="menu-editor-list"></div>
                 </div>
             </div>
 
@@ -936,7 +980,7 @@
                 <div id="event-admin" class="card hidden">
                     <h2>Events verwalten</h2>
                     <p class="hint" id="event-admin-help">Events mit Datum, Startzeit, Beschreibung und aktuellem Status verwalten.</p>
-                    <form id="event-create-form" class="event-editor">
+                    <form id="event-create-form" class="event-editor" data-permission-category="events">
                         <div><label for="event-date">Datum</label><input id="event-date" name="eventDate" type="date" required></div>
                         <div><label for="event-start-time">Startzeit</label><input id="event-start-time" name="startTime" type="time" required></div>
                         <div><label for="event-name">Event Name</label><input id="event-name" name="name" maxlength="140" required></div>
@@ -953,6 +997,67 @@
                         <div class="full team-editor-actions"><button type="submit" id="event-create-submit">Event hinzufügen</button></div>
                     </form>
                     <div id="event-admin-list" class="event-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="vip" hidden>
+                <div id="vip-admin" class="card hidden">
+                    <h2>VIP-Tickets</h2>
+                    <p class="hint" id="vip-admin-help">Ticket-Arten mit Preis und Laufzeit verwalten, sowie Ticket-Inhaber eintragen. "Gültig bis", "Tage Rest" und "Aktiv" werden automatisch berechnet.</p>
+
+                    <h3>Ticket-Arten</h3>
+                    <form id="vip-type-create-form" class="menu-editor" data-permission-category="vip">
+                        <div><label for="vip-type-name">Name</label><input id="vip-type-name" name="name" maxlength="120" required></div>
+                        <div><label for="vip-type-duration">Laufzeit in Tagen</label><input id="vip-type-duration" name="durationDays" type="number" min="1" max="3650" value="30" required></div>
+                        <div><label for="vip-type-price">Preis in $</label><input id="vip-type-price" name="price" type="number" min="0" max="100000000" value="50000" required></div>
+                        <div><label for="vip-type-sort">Reihenfolge</label><input id="vip-type-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <div class="full team-editor-actions"><button type="submit" id="vip-type-create-submit">Ticket-Art hinzufügen</button></div>
+                    </form>
+                    <div id="vip-type-admin-list" class="menu-editor-list"></div>
+
+                    <hr>
+                    <h3>Ticket-Inhaber</h3>
+                    <form id="vip-ticket-create-form" class="menu-editor" data-permission-category="vip">
+                        <div><label for="vip-ticket-holder">Besitzer</label><input id="vip-ticket-holder" name="holderName" maxlength="160" required></div>
+                        <div>
+                            <label for="vip-ticket-type">Ticket-Art</label>
+                            <select id="vip-ticket-type" name="ticketTypeId" required></select>
+                        </div>
+                        <div><label for="vip-ticket-issued">Ausgestellt am</label><input id="vip-ticket-issued" name="issuedAt" type="date" required></div>
+                        <div class="full"><label for="vip-ticket-notes">Notiz</label><textarea id="vip-ticket-notes" name="notes" maxlength="1000"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="vip-ticket-create-submit">Ticket eintragen</button></div>
+                    </form>
+                    <div id="vip-ticket-admin-list" class="menu-editor-list"></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="finance" hidden>
+                <div id="finance-admin" class="card hidden">
+                    <h2>Finanzen</h2>
+                    <p class="hint" id="finance-admin-help">Ein- und Ausgaben erfassen. Der laufende Kontostand wird automatisch berechnet.</p>
+                    <p class="admin-meta">Kontostand: <span id="finance-balance">0 $</span></p>
+                    <form id="finance-create-form" class="menu-editor" data-permission-category="finance">
+                        <div><label for="finance-date">Datum</label><input id="finance-date" name="entryDate" type="date" required></div>
+                        <div><label for="finance-description">Beschreibung</label><input id="finance-description" name="description" maxlength="240" required></div>
+                        <div><label for="finance-amount">Betrag in $ (negativ = Ausgabe)</label><input id="finance-amount" name="amount" type="number" step="1" required></div>
+                        <div class="full team-editor-actions"><button type="submit" id="finance-create-submit">Eintrag hinzufügen</button></div>
+                    </form>
+                    <div id="finance-admin-list" class="menu-editor-list"></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="info" hidden>
+                <div id="info-admin" class="card hidden">
+                    <h2>Wichtige Infos</h2>
+                    <p class="hint" id="info-admin-help">Interne Hinweise für Mitarbeiter (nur im Admin-Bereich sichtbar, nicht öffentlich).</p>
+                    <form id="info-create-form" class="menu-editor" data-permission-category="info">
+                        <div><label for="info-title">Titel</label><input id="info-title" name="title" maxlength="160" required></div>
+                        <div><label for="info-sort">Reihenfolge</label><input id="info-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <div class="checkbox-field"><label><input type="checkbox" id="info-pinned" name="pinned" value="true"> Angepinnt (oben anzeigen)</label></div>
+                        <div class="full"><label for="info-body">Text</label><textarea id="info-body" name="body" maxlength="5000"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="info-create-submit">Hinweis hinzufügen</button></div>
+                    </form>
+                    <div id="info-admin-list" class="menu-editor-list"></div>
                 </div>
             </div>
 
@@ -989,6 +1094,23 @@
                     <div id="content-block-admin-list" class="custom-blocks"></div>
                 </div>
             </div>
+
+            <div class="admin-panel" data-admin-panel-content="users" hidden>
+                <div id="users-admin" class="card hidden">
+                    <h2>Nutzer verwalten</h2>
+                    <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten anlegen.</p>
+                    <form id="user-create-form" class="user-editor" data-permission-category="users">
+                        <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
+                        <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
+                        <div class="full">
+                            <h3>Rechte</h3>
+                            <div id="user-new-permissions" class="permission-grid"></div>
+                        </div>
+                        <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
+                    </form>
+                    <div id="users-admin-list" class="menu-editor-list"></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1020,13 +1142,12 @@
         const loginForm = document.querySelector("#login-form");
         const loginSubmit = document.querySelector("#login-submit");
         const loginMessage = document.querySelector("#login-message");
-        const recoverButton = document.querySelector("#recover-button");
-        const passwordSetupForm = document.querySelector("#password-setup-form");
-        const passwordSetupText = document.querySelector("#password-setup-text");
-        const passwordSetupSubmit = document.querySelector("#password-setup-submit");
+        const ownPasswordForm = document.querySelector("#own-password-form");
+        const ownPasswordSubmit = document.querySelector("#own-password-submit");
+        const ownPasswordMessage = document.querySelector("#own-password-message");
         const loggedOutPanel = document.querySelector("#logged-out-panel");
         const loggedInPanel = document.querySelector("#logged-in-panel");
-        const adminEmail = document.querySelector("#admin-email");
+        const adminUsername = document.querySelector("#admin-username");
         const applicationFolders = document.querySelector("#application-folders");
         const applicationsList = document.querySelector("#applications-list");
         const contactAdmin = document.querySelector("#contact-admin");
@@ -1047,11 +1168,40 @@
         const menuCreateForm = document.querySelector("#menu-create-form");
         const menuCreateSubmit = document.querySelector("#menu-create-submit");
         const menuAdminList = document.querySelector("#menu-admin-list");
+        const ingredientCreateForm = document.querySelector("#ingredient-create-form");
+        const ingredientCreateSubmit = document.querySelector("#ingredient-create-submit");
+        const ingredientAdminList = document.querySelector("#ingredient-admin-list");
         const eventAdmin = document.querySelector("#event-admin");
         const eventAdminHelp = document.querySelector("#event-admin-help");
         const eventCreateForm = document.querySelector("#event-create-form");
         const eventCreateSubmit = document.querySelector("#event-create-submit");
         const eventAdminList = document.querySelector("#event-admin-list");
+        const vipAdmin = document.querySelector("#vip-admin");
+        const vipAdminHelp = document.querySelector("#vip-admin-help");
+        const vipTypeCreateForm = document.querySelector("#vip-type-create-form");
+        const vipTypeCreateSubmit = document.querySelector("#vip-type-create-submit");
+        const vipTypeAdminList = document.querySelector("#vip-type-admin-list");
+        const vipTicketCreateForm = document.querySelector("#vip-ticket-create-form");
+        const vipTicketCreateSubmit = document.querySelector("#vip-ticket-create-submit");
+        const vipTicketAdminList = document.querySelector("#vip-ticket-admin-list");
+        const vipTicketTypeSelect = document.querySelector("#vip-ticket-type");
+        const financeAdmin = document.querySelector("#finance-admin");
+        const financeAdminHelp = document.querySelector("#finance-admin-help");
+        const financeBalance = document.querySelector("#finance-balance");
+        const financeCreateForm = document.querySelector("#finance-create-form");
+        const financeCreateSubmit = document.querySelector("#finance-create-submit");
+        const financeAdminList = document.querySelector("#finance-admin-list");
+        const infoAdmin = document.querySelector("#info-admin");
+        const infoAdminHelp = document.querySelector("#info-admin-help");
+        const infoCreateForm = document.querySelector("#info-create-form");
+        const infoCreateSubmit = document.querySelector("#info-create-submit");
+        const infoAdminList = document.querySelector("#info-admin-list");
+        const usersAdmin = document.querySelector("#users-admin");
+        const usersAdminHelp = document.querySelector("#users-admin-help");
+        const userCreateForm = document.querySelector("#user-create-form");
+        const userCreateSubmit = document.querySelector("#user-create-submit");
+        const userNewPermissions = document.querySelector("#user-new-permissions");
+        const usersAdminList = document.querySelector("#users-admin-list");
         const contentAdmin = document.querySelector("#content-admin");
         const contentAdminHelp = document.querySelector("#content-admin-help");
         const contentSettingsForm = document.querySelector("#content-settings-form");
@@ -1060,17 +1210,37 @@
         const contentBlockAdminList = document.querySelector("#content-block-admin-list");
         const applicationCustomFields = document.querySelector("#application-custom-fields");
         const customHomeBlocks = document.querySelector("#custom-home-blocks");
-        let passwordSetupMode = null;
-        let inviteToken = null;
         let currentApplicationFolder = "neu";
         let currentContactFolder = "neu";
         let allApplications = [];
         let allContactRequests = [];
         let allTeamMembers = [];
         let allMenuItems = [];
+        let allIngredients = [];
         let allEvents = [];
+        let allVipTicketTypes = [];
+        let allVipTickets = [];
+        let allFinanceEntries = [];
+        let allInfoNotes = [];
+        let allUsers = [];
+        let currentPermissions = {};
         let contentBlocks = [];
         let siteSettings = {};
+
+        const CATEGORY_LABELS = {
+            applications: "Bewerbungen",
+            contacts: "Kontaktanfragen",
+            team: "Team",
+            menu: "Lager & Preisliste",
+            events: "Events",
+            vip: "VIP-Tickets",
+            finance: "Finanzen",
+            info: "Wichtige Infos",
+            content: "Inhalte & Felder",
+            users: "Nutzer verwalten",
+        };
+        const CATEGORIES = Object.keys(CATEGORY_LABELS);
+
 
         const folderLabels = {
             neu: "NEU",
@@ -1170,9 +1340,52 @@
             return eventStatuses.find((item) => item.value === status)?.label || status;
         }
 
-        function hasAdminRole(user) {
-            const metadataRoles = Array.isArray(user?.app_metadata?.roles) ? user.app_metadata.roles : [];
-            return user?.app_metadata?.role === "admin" || metadataRoles.includes("admin");
+        const USERNAME_EMAIL_SUFFIX = "@bahamamamas.internal";
+
+        function emailToDisplayUsername(user) {
+            const metaUsername = user?.app_metadata?.username;
+            if (typeof metaUsername === "string" && metaUsername) return metaUsername;
+            const email = user?.email || "";
+            return email.endsWith(USERNAME_EMAIL_SUFFIX) ? email.slice(0, -USERNAME_EMAIL_SUFFIX.length) : email;
+        }
+
+        function getClientPermissions(user) {
+            const meta = user?.app_metadata || {};
+            const result = {};
+
+            if (meta.permissions && typeof meta.permissions === "object" && !Array.isArray(meta.permissions)) {
+                CATEGORIES.forEach((category) => {
+                    const level = meta.permissions[category];
+                    if (level === "view" || level === "edit") result[category] = level;
+                });
+                return result;
+            }
+
+            // Legacy-Accounts (nur { role: "admin" }) => voller Zugriff auf alles.
+            if (meta.role === "admin") {
+                CATEGORIES.forEach((category) => { result[category] = "edit"; });
+                return result;
+            }
+
+            return result;
+        }
+
+        function levelSatisfies(level, required) {
+            if (!level || level === "none") return false;
+            if (required === "view") return level === "view" || level === "edit";
+            return level === "edit";
+        }
+
+        function canView(category) { return levelSatisfies(currentPermissions[category], "view"); }
+        function canEdit(category) { return levelSatisfies(currentPermissions[category], "edit"); }
+
+        /** Deaktiviert alle Buttons/Formulare in einem Listen-Container für Nutzer mit nur "Sehen"-Recht. */
+        function applyReadOnly(container, category) {
+            if (!container) return;
+            const readOnly = !canEdit(category);
+            container.querySelectorAll("button, input, textarea, select").forEach((element) => {
+                element.disabled = readOnly;
+            });
         }
 
         async function getIdentityAccessToken() {
@@ -1193,13 +1406,7 @@
             });
         }
 
-        function renderLoggedOut() {
-            loggedOutPanel.classList.remove("hidden");
-            loggedInPanel.classList.add("hidden");
-            loginForm.classList.remove("hidden");
-            recoverButton.classList.remove("hidden");
-            passwordSetupForm.classList.add("hidden");
-            adminEmail.textContent = "";
+        function resetAdminUI() {
             adminToolbar.classList.add("hidden");
             applicationFolders.classList.add("hidden");
             applicationFolders.innerHTML = "";
@@ -1218,60 +1425,87 @@
             teamAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
             menuAdmin.classList.add("hidden");
             menuAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            ingredientAdminList.innerHTML = "";
             eventAdmin.classList.add("hidden");
             eventAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            vipAdmin.classList.add("hidden");
+            vipTypeAdminList.innerHTML = "";
+            vipTicketAdminList.innerHTML = "";
+            financeAdmin.classList.add("hidden");
+            financeAdminList.innerHTML = "";
+            infoAdmin.classList.add("hidden");
+            infoAdminList.innerHTML = "";
+            usersAdmin.classList.add("hidden");
+            usersAdminList.innerHTML = "";
             contentAdmin.classList.add("hidden");
         }
 
-        function showPasswordSetup(mode, token) {
-            passwordSetupMode = mode;
-            inviteToken = token || null;
+        function renderLoggedOut() {
             loggedOutPanel.classList.remove("hidden");
             loggedInPanel.classList.add("hidden");
-            loginForm.classList.add("hidden");
-            recoverButton.classList.add("hidden");
-            passwordSetupForm.classList.remove("hidden");
-            passwordSetupText.textContent = mode === "invite"
-                ? "Einladung erkannt. Lege ein Passwort für deinen Admin-Account fest."
-                : "Passwort-Wiederherstellung erkannt. Lege dein neues Passwort fest.";
-            applicationFolders.classList.add("hidden");
-            applicationFolders.innerHTML = "";
-            adminHelp.textContent = "Schließe zuerst die Passwort-Einrichtung ab.";
-            applicationsList.innerHTML = '<div class="empty-state">Passwort-Einrichtung offen.</div>';
-            contactAdmin.classList.add("hidden");
-            teamAdmin.classList.add("hidden");
-            menuAdmin.classList.add("hidden");
-            eventAdmin.classList.add("hidden");
-            contentAdmin.classList.add("hidden");
-            adminToolbar.classList.add("hidden");
+            currentPermissions = {};
+            resetAdminUI();
         }
 
         async function renderLoggedIn(user) {
             loggedOutPanel.classList.add("hidden");
             loggedInPanel.classList.remove("hidden");
-            adminEmail.textContent = user.email || user.name || "Admin";
+            adminUsername.textContent = emailToDisplayUsername(user);
+            currentPermissions = getClientPermissions(user);
 
-            if (!hasAdminRole(user)) {
-                adminHelp.textContent = "Dieser Account ist eingeloggt, hat aber keine Admin-Rolle.";
-                applicationFolders.classList.add("hidden");
-                applicationsList.innerHTML = '<div class="empty-state">Keine Admin-Berechtigung. Weise dem Nutzer in Supabase (Auth &rarr; Users &rarr; User bearbeiten &rarr; Raw App Meta Data) die Rolle admin zu, z.B. { "role": "admin" }.</div>';
-                contactAdmin.classList.add("hidden");
-                teamAdmin.classList.add("hidden");
-                menuAdmin.classList.add("hidden");
-                eventAdmin.classList.add("hidden");
-                contentAdmin.classList.add("hidden");
+            const visibleCategories = CATEGORIES.filter((category) => canView(category));
+
+            if (visibleCategories.length === 0) {
                 adminToolbar.classList.add("hidden");
+                adminHelp.textContent = "Dieser Account ist eingeloggt, hat aber aktuell für keinen Bereich eine Berechtigung. Bitte eine Person mit Zugriff auf \"Nutzer verwalten\" bitten, dir Rechte zuzuweisen.";
+                applicationsList.innerHTML = '<div class="empty-state">Keine Berechtigung für irgendeinen Bereich.</div>';
                 return;
             }
 
             adminToolbar.classList.remove("hidden");
-            contactAdmin.classList.remove("hidden");
-            teamAdmin.classList.remove("hidden");
-            menuAdmin.classList.remove("hidden");
-            eventAdmin.classList.remove("hidden");
-            contentAdmin.classList.remove("hidden");
+
+            document.querySelectorAll("[data-admin-panel]").forEach((button) => {
+                const category = button.dataset.adminPanel;
+                button.classList.toggle("hidden", !canView(category));
+            });
+
+            const cardByCategory = {
+                contacts: contactAdmin,
+                team: teamAdmin,
+                menu: menuAdmin,
+                events: eventAdmin,
+                vip: vipAdmin,
+                finance: financeAdmin,
+                info: infoAdmin,
+                content: contentAdmin,
+                users: usersAdmin,
+            };
+            Object.entries(cardByCategory).forEach(([category, element]) => {
+                element.classList.toggle("hidden", !canView(category));
+            });
+
+            [menuCreateForm, ingredientCreateForm, teamCreateForm, eventCreateForm, vipTypeCreateForm, vipTicketCreateForm, financeCreateForm, infoCreateForm, userCreateForm].forEach((form) => {
+                if (!form) return;
+                const category = form.dataset.permissionCategory;
+                if (category) form.classList.toggle("hidden", !canEdit(category));
+            });
+
             await loadContent(true);
-            await Promise.all([loadApplications(), loadContactRequests(), loadTeam(true), loadMenu(true), loadEvents(true)]);
+
+            const loaders = [];
+            if (canView("applications")) loaders.push(loadApplications());
+            if (canView("contacts")) loaders.push(loadContactRequests());
+            if (canView("team")) loaders.push(loadTeam(true));
+            if (canView("menu")) loaders.push(loadMenu(true), loadIngredients());
+            if (canView("events")) loaders.push(loadEvents(true));
+            if (canView("vip")) loaders.push(loadVipTicketTypes(), loadVipTickets());
+            if (canView("finance")) loaders.push(loadFinance());
+            if (canView("info")) loaders.push(loadInfoNotes());
+            if (canView("users")) loaders.push(loadUsers());
+            await Promise.all(loaders);
+
+            const firstCategory = visibleCategories.includes("applications") ? "applications" : visibleCategories[0];
+            showAdminPanel(firstCategory);
         }
 
         function showAdminPanel(panelName) {
@@ -1369,6 +1603,7 @@
                 </article>
             `;
             }).join("");
+            applyReadOnly(applicationsList, "applications");
         }
 
         function getContactFolder(contactRequest) {
@@ -1432,6 +1667,7 @@
                     </article>
                 `;
             }).join("");
+            applyReadOnly(contactRequestsList, "contacts");
         }
 
         function escapeHtml(value) {
@@ -1575,6 +1811,7 @@
                             <span class="menu-item-copy">
                                 <span class="menu-item-name">${escapeHtml(item.name)}</span>
                                 ${item.description ? `<span class="menu-item-description">${escapeHtml(item.description)}</span>` : ""}
+                                ${item.recipeVisible && item.recipe && item.recipe.length ? `<span class="menu-item-description">Zutaten: ${item.recipe.map((entry) => `${entry.amount}x ${escapeHtml(entry.name)}`).join(", ")}</span>` : ""}
                             </span>
                             <span class="menu-price">${formatPrice(item.price)}</span>
                         </div>
@@ -1586,6 +1823,7 @@
         function renderMenuAdmin() {
             if (!allMenuItems.length) {
                 menuAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden. Lege oben den ersten an.</div>';
+                applyReadOnly(menuAdminList, "menu");
                 return;
             }
 
@@ -1598,15 +1836,59 @@
                             ${menuCategories.map((category) => `<option value="${category.value}"${category.value === item.category ? " selected" : ""}>${escapeHtml(category.label)}</option>`).join("")}
                         </select>
                     </div>
-                    <div><label for="menu-item-price-${item.id}">Preis in $</label><input id="menu-item-price-${item.id}" name="price" type="number" min="0" max="10000000" step="1" value="${Number(item.price) || 0}" required></div>
+                    <div><label for="menu-item-price-${item.id}">VK-Preis in $</label><input id="menu-item-price-${item.id}" name="price" type="number" min="0" max="10000000" step="1" value="${Number(item.price) || 0}" required></div>
+                    <div><label for="menu-item-cost-${item.id}">EK-Preis in $</label><input id="menu-item-cost-${item.id}" name="costPrice" type="number" min="0" max="10000000" step="1" value="${Number(item.costPrice) || 0}" required></div>
+                    <div><label for="menu-item-stock-target-${item.id}">Soll-Bestand</label><input id="menu-item-stock-target-${item.id}" name="stockTarget" type="number" min="0" max="1000000" step="1" value="${Number(item.stockTarget) || 0}" required></div>
+                    <div><label for="menu-item-stock-current-${item.id}">Ist-Bestand</label><input id="menu-item-stock-current-${item.id}" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="${Number(item.stockCurrent) || 0}" required></div>
                     <div><label for="menu-item-sort-${item.id}">Reihenfolge</label><input id="menu-item-sort-${item.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(item.sortOrder) || 0}" required></div>
-                    <div class="full"><label for="menu-item-description-${item.id}">Beschreibung</label><textarea id="menu-item-description-${item.id}" name="description" maxlength="500" placeholder="Optional, z. B. Zutaten, Geschmack oder Besonderheiten">${escapeHtml(item.description || "")}</textarea></div>
+                    <div class="checkbox-field"><label><input type="checkbox" name="recipeVisible" value="true" ${item.recipeVisible ? "checked" : ""}> Rezept öffentlich anzeigen</label></div>
+                    <div class="full"><label for="menu-item-description-${item.id}">Beschreibung</label><textarea id="menu-item-description-${item.id}" name="description" maxlength="500">${escapeHtml(item.description || "")}</textarea></div>
+                    <div class="full admin-meta">MAX WIN: ${formatPrice(item.maxWin ?? 0)} &middot; Fehlt: ${item.stockMissing ?? 0}</div>
+                    <div class="full">
+                        <h3>Rezept</h3>
+                        <div class="recipe-list" data-recipe-list data-menu-item-id="${item.id}">
+                            ${(item.recipe || []).map((entry) => `
+                                <span class="recipe-chip">${entry.amount}x ${escapeHtml(entry.name)} <button type="button" data-delete-recipe-item data-recipe-id="${entry.id}">&times;</button></span>
+                            `).join("") || '<span class="hint">Noch keine Zutaten zugeordnet.</span>'}
+                        </div>
+                        <div class="recipe-add-row" data-recipe-add data-menu-item-id="${item.id}">
+                            <select data-recipe-ingredient>
+                                ${allIngredients.map((ingredient) => `<option value="${ingredient.id}">${escapeHtml(ingredient.name)}</option>`).join("")}
+                            </select>
+                            <input type="number" min="1" max="100000" value="1" data-recipe-amount>
+                            <button type="button" data-add-recipe-item>Zutat zuordnen</button>
+                        </div>
+                    </div>
                     <div class="full team-editor-actions">
                         <button type="submit">Änderungen speichern</button>
                         <button type="button" class="danger" data-delete-menu-item>Eintrag löschen</button>
                     </div>
                 </form>
             `).join("");
+            applyReadOnly(menuAdminList, "menu");
+        }
+
+        function renderIngredientAdmin() {
+            if (!allIngredients.length) {
+                ingredientAdminList.innerHTML = '<div class="empty-state">Noch keine Zutaten vorhanden.</div>';
+                applyReadOnly(ingredientAdminList, "menu");
+                return;
+            }
+
+            ingredientAdminList.innerHTML = allIngredients.map((ingredient) => `
+                <form class="menu-editor" data-ingredient-form data-id="${ingredient.id}">
+                    <div><label>Name</label><input name="name" maxlength="120" value="${escapeAttribute(ingredient.name)}" required></div>
+                    <div><label>Soll-Bestand</label><input name="stockTarget" type="number" min="0" max="1000000" value="${Number(ingredient.stockTarget) || 0}" required></div>
+                    <div><label>Einkaufspreis in $</label><input name="costPrice" type="number" min="0" max="10000000" value="${Number(ingredient.costPrice) || 0}" required></div>
+                    <div><label>Ist-Bestand</label><input name="stockCurrent" type="number" min="0" max="1000000" value="${Number(ingredient.stockCurrent) || 0}" required></div>
+                    <div class="full admin-meta">Fehlt: ${ingredient.missing ?? 0} &middot; Kosten Nachbestellung: ${formatPrice(ingredient.restockCost ?? 0)}</div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-ingredient>Zutat löschen</button>
+                    </div>
+                </form>
+            `).join("");
+            applyReadOnly(ingredientAdminList, "menu");
         }
 
         async function loadMenu(forAdmin = false) {
@@ -1633,6 +1915,20 @@
                 menuAdminHelp.textContent = `${allMenuItems.length} Speisekarten-Eintrag/Einträge gespeichert.`;
                 renderMenuAdmin();
             }
+        }
+
+        async function loadIngredients() {
+            const response = await apiFetch("/api/ingredients");
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                ingredientAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Zutaten konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+
+            allIngredients = data.ingredients || [];
+            renderIngredientAdmin();
+            renderMenuAdmin();
         }
 
         function renderEventTicker() {
@@ -1717,6 +2013,7 @@
                     </div>
                 </form>
             `).join("");
+            applyReadOnly(eventAdminList, "events");
         }
 
         async function loadEvents(forAdmin = false) {
@@ -1744,9 +2041,214 @@
             }
         }
 
+        function renderVipTypeAdmin() {
+            if (!allVipTicketTypes.length) {
+                vipTypeAdminList.innerHTML = '<div class="empty-state">Noch keine Ticket-Arten vorhanden.</div>';
+            } else {
+                vipTypeAdminList.innerHTML = allVipTicketTypes.map((type) => `
+                    <form class="menu-editor" data-vip-type-form data-id="${type.id}">
+                        <div><label>Name</label><input name="name" maxlength="120" value="${escapeAttribute(type.name)}" required></div>
+                        <div><label>Laufzeit in Tagen</label><input name="durationDays" type="number" min="1" max="3650" value="${Number(type.durationDays) || 30}" required></div>
+                        <div><label>Preis in $</label><input name="price" type="number" min="0" max="100000000" value="${Number(type.price) || 0}" required></div>
+                        <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(type.sortOrder) || 0}" required></div>
+                        <div class="full team-editor-actions">
+                            <button type="submit">Änderungen speichern</button>
+                            <button type="button" class="danger" data-delete-vip-type>Ticket-Art löschen</button>
+                        </div>
+                    </form>
+                `).join("");
+            }
+            applyReadOnly(vipTypeAdminList, "vip");
+
+            vipTicketTypeSelect.innerHTML = allVipTicketTypes
+                .map((type) => `<option value="${type.id}">${escapeHtml(type.name)}</option>`)
+                .join("") || '<option value="">Keine Ticket-Art vorhanden</option>';
+        }
+
+        async function loadVipTicketTypes() {
+            const response = await apiFetch("/api/vip-ticket-types");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                vipTypeAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Ticket-Arten konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+            allVipTicketTypes = data.ticketTypes || [];
+            renderVipTypeAdmin();
+        }
+
+        function renderVipTicketAdmin() {
+            if (!allVipTickets.length) {
+                vipTicketAdminList.innerHTML = '<div class="empty-state">Noch keine Ticket-Inhaber eingetragen.</div>';
+                applyReadOnly(vipTicketAdminList, "vip");
+                return;
+            }
+
+            vipTicketAdminList.innerHTML = allVipTickets.map((ticket) => `
+                <form class="menu-editor" data-vip-ticket-form data-id="${ticket.id}">
+                    <div><label>Besitzer</label><input name="holderName" maxlength="160" value="${escapeAttribute(ticket.holderName)}" required></div>
+                    <div>
+                        <label>Ticket-Art</label>
+                        <select name="ticketTypeId" required>
+                            ${allVipTicketTypes.map((type) => `<option value="${type.id}"${type.id === ticket.ticketTypeId ? " selected" : ""}>${escapeHtml(type.name)}</option>`).join("")}
+                        </select>
+                    </div>
+                    <div><label>Ausgestellt am</label><input name="issuedAt" type="date" value="${escapeAttribute(ticket.issuedAt)}" required></div>
+                    <div class="full admin-meta">Gültig bis: ${escapeHtml(ticket.validUntil)} &middot; Tage Rest: ${ticket.daysRemaining} &middot; ${ticket.active ? "Aktiv" : "Abgelaufen"}</div>
+                    <div class="full"><label>Notiz</label><textarea name="notes" maxlength="1000">${escapeHtml(ticket.notes || "")}</textarea></div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-vip-ticket>Ticket löschen</button>
+                    </div>
+                </form>
+            `).join("");
+            applyReadOnly(vipTicketAdminList, "vip");
+        }
+
+        async function loadVipTickets() {
+            const response = await apiFetch("/api/vip-tickets");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                vipTicketAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Tickets konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+            allVipTickets = data.tickets || [];
+            renderVipTicketAdmin();
+        }
+
+        function renderFinanceAdmin(balance) {
+            financeBalance.textContent = formatPrice(balance);
+            financeBalance.className = balance < 0 ? "balance-negative" : "balance-positive";
+
+            if (!allFinanceEntries.length) {
+                financeAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden.</div>';
+                applyReadOnly(financeAdminList, "finance");
+                return;
+            }
+
+            financeAdminList.innerHTML = allFinanceEntries.map((entry) => `
+                <form class="menu-editor" data-finance-form data-id="${entry.id}">
+                    <div><label>Datum</label><input name="entryDate" type="date" value="${escapeAttribute(entry.entryDate)}" required></div>
+                    <div class="full"><label>Beschreibung</label><input name="description" maxlength="240" value="${escapeAttribute(entry.description)}" required></div>
+                    <div><label>Betrag in $</label><input name="amount" type="number" step="1" value="${Number(entry.amount) || 0}" required></div>
+                    <div class="full admin-meta">Saldo nach diesem Eintrag: ${formatPrice(entry.balanceAfter)}</div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-finance-entry>Eintrag löschen</button>
+                    </div>
+                </form>
+            `).join("");
+            applyReadOnly(financeAdminList, "finance");
+        }
+
+        async function loadFinance() {
+            const response = await apiFetch("/api/finance");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                financeAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Finanzen konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+            allFinanceEntries = data.entries || [];
+            renderFinanceAdmin(data.balance || 0);
+        }
+
+        function renderInfoAdmin() {
+            if (!allInfoNotes.length) {
+                infoAdminList.innerHTML = '<div class="empty-state">Noch keine Hinweise vorhanden.</div>';
+                applyReadOnly(infoAdminList, "info");
+                return;
+            }
+
+            infoAdminList.innerHTML = allInfoNotes.map((note) => `
+                <form class="menu-editor" data-info-form data-id="${note.id}">
+                    <div><label>Titel</label><input name="title" maxlength="160" value="${escapeAttribute(note.title)}" required></div>
+                    <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(note.sortOrder) || 0}" required></div>
+                    <div class="checkbox-field"><label><input type="checkbox" name="pinned" value="true" ${note.pinned ? "checked" : ""}> Angepinnt</label></div>
+                    <div class="full"><label>Text</label><textarea name="body" maxlength="5000">${escapeHtml(note.body || "")}</textarea></div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        <button type="button" class="danger" data-delete-info-note>Hinweis löschen</button>
+                    </div>
+                </form>
+            `).join("");
+            applyReadOnly(infoAdminList, "info");
+        }
+
+        async function loadInfoNotes() {
+            const response = await apiFetch("/api/info-notes");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                infoAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Hinweise konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+            allInfoNotes = data.notes || [];
+            renderInfoAdmin();
+        }
+
+        function renderPermissionEditor(container, selected) {
+            container.innerHTML = CATEGORIES.map((category) => `
+                <div class="permission-row" data-permission-row data-category="${category}">
+                    <span class="permission-label">${CATEGORY_LABELS[category]}</span>
+                    <label><input type="radio" name="perm-${category}" value="none" ${!selected[category] || selected[category] === "none" ? "checked" : ""}> Kein Zugriff</label>
+                    <label><input type="radio" name="perm-${category}" value="view" ${selected[category] === "view" ? "checked" : ""}> Sehen</label>
+                    <label><input type="radio" name="perm-${category}" value="edit" ${selected[category] === "edit" ? "checked" : ""}> Bearbeiten</label>
+                </div>
+            `).join("");
+        }
+
+        function readPermissionEditor(container) {
+            const result = {};
+            CATEGORIES.forEach((category) => {
+                const checked = container.querySelector(`input[name="perm-${category}"]:checked`);
+                if (checked && checked.value !== "none") result[category] = checked.value;
+            });
+            return result;
+        }
+
+        function renderUsersAdmin() {
+            if (!allUsers.length) {
+                usersAdminList.innerHTML = '<div class="empty-state">Noch keine Nutzer vorhanden.</div>';
+                return;
+            }
+
+            usersAdminList.innerHTML = allUsers.map((user) => `
+                <form class="user-editor" data-user-form data-id="${user.id}">
+                    <div><label>Benutzername</label><input value="${escapeAttribute(user.username)}" disabled></div>
+                    <div><label>Neues Passwort (optional)</label><input name="password" type="password" minlength="8" placeholder="Leer lassen, um nicht zu ändern"></div>
+                    <div class="full">
+                        <h3>Rechte</h3>
+                        <div class="permission-grid" data-permission-editor></div>
+                    </div>
+                    <div class="full team-editor-actions">
+                        <button type="submit">Änderungen speichern</button>
+                        ${user.isSelf ? "" : '<button type="button" class="danger" data-delete-user>Nutzer löschen</button>'}
+                    </div>
+                </form>
+            `).join("");
+
+            allUsers.forEach((user) => {
+                const form = usersAdminList.querySelector(`[data-user-form][data-id="${user.id}"]`);
+                const editor = form?.querySelector("[data-permission-editor]");
+                if (editor) renderPermissionEditor(editor, user.permissions || {});
+            });
+
+            applyReadOnly(usersAdminList, "users");
+        }
+
+        async function loadUsers() {
+            const response = await apiFetch("/api/users");
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                usersAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Nutzer konnten nicht geladen werden.")}</div>`;
+                return;
+            }
+            allUsers = data.users || [];
+            renderUsersAdmin();
+        }
+
         function renderTeamAdmin() {
             if (!allTeamMembers.length) {
                 teamAdminList.innerHTML = '<div class="empty-state">Noch keine Mitarbeiter vorhanden. Lege oben den ersten Eintrag an.</div>';
+
                 return;
             }
 
@@ -1782,6 +2284,7 @@
                     </div>
                 </form>
             `).join("");
+            applyReadOnly(teamAdminList, "team");
         }
 
         async function loadTeam(forAdmin = false) {
@@ -1903,7 +2406,12 @@
             loginSubmit.disabled = true;
 
             try {
-                const { email, password } = getFormPayload(loginForm);
+                const { username, password } = getFormPayload(loginForm);
+                const trimmed = username.trim();
+                // Bestehende Accounts mit "echter" E-Mail (z.B. der allererste
+                // Account) funktionieren weiterhin, wenn man die volle E-Mail
+                // eintippt. Neue Accounts nutzen nur den Benutzernamen.
+                const email = trimmed.includes("@") ? trimmed : `${trimmed.toLowerCase()}${USERNAME_EMAIL_SUFFIX}`;
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 loginForm.reset();
@@ -1915,46 +2423,21 @@
             }
         });
 
-        recoverButton.addEventListener("click", async () => {
-            clearMessage(loginMessage);
-            const email = document.querySelector("#login-email").value.trim();
-
-            if (!email) {
-                showMessage(loginMessage, "Bitte zuerst deine E-Mail eintragen.", "error");
-                return;
-            }
-
-            recoverButton.disabled = true;
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.href.split("#")[0]
-                });
-                if (error) throw error;
-                showMessage(loginMessage, "Passwort-Mail wurde gesendet.", "success");
-            } catch (error) {
-                showMessage(loginMessage, authErrorText(error), "error");
-            } finally {
-                recoverButton.disabled = false;
-            }
-        });
-
-        passwordSetupForm.addEventListener("submit", async (event) => {
+        ownPasswordForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            clearMessage(loginMessage);
-            passwordSetupSubmit.disabled = true;
+            clearMessage(ownPasswordMessage);
+            ownPasswordSubmit.disabled = true;
 
             try {
-                const { password } = getFormPayload(passwordSetupForm);
-                const { data, error } = await supabase.auth.updateUser({ password });
+                const { password } = getFormPayload(ownPasswordForm);
+                const { error } = await supabase.auth.updateUser({ password });
                 if (error) throw error;
-
-                passwordSetupForm.reset();
-                showMessage(loginMessage, "Passwort wurde gespeichert.", "success");
-                await renderLoggedIn(data.user);
+                ownPasswordForm.reset();
+                showMessage(ownPasswordMessage, "Passwort wurde geändert.", "success");
             } catch (error) {
-                showMessage(loginMessage, authErrorText(error), "error");
+                showMessage(ownPasswordMessage, authErrorText(error), "error");
             } finally {
-                passwordSetupSubmit.disabled = false;
+                ownPasswordSubmit.disabled = false;
             }
         });
 
@@ -1964,8 +2447,8 @@
         });
 
         refreshAdmin.addEventListener("click", async () => {
-            await loadContent(true);
-            await Promise.all([loadApplications(), loadContactRequests(), loadTeam(true), loadMenu(true), loadEvents(true)]);
+            const { data } = await supabase.auth.getUser();
+            if (data.user) await renderLoggedIn(data.user);
         });
 
         adminToolbar.addEventListener("click", (event) => {
@@ -2162,6 +2645,363 @@
             }
         });
 
+        vipTypeCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            vipTypeCreateSubmit.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-ticket-types", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(vipTypeCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket-Art konnte nicht hinzugefügt werden.");
+                vipTypeCreateForm.reset();
+                await loadVipTicketTypes();
+                vipAdminHelp.textContent = "Ticket-Art wurde hinzugefügt.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+            } finally {
+                vipTypeCreateSubmit.disabled = false;
+            }
+        });
+
+        vipTypeAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-vip-type-form]");
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-ticket-types", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket-Art konnte nicht gespeichert werden.");
+                await loadVipTicketTypes();
+                await loadVipTickets();
+                vipAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        vipTypeAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-vip-type]");
+            if (!button) return;
+            if (!confirm("Diese Ticket-Art wirklich löschen?")) return;
+            const form = button.closest("[data-vip-type-form]");
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-ticket-types", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket-Art konnte nicht gelöscht werden.");
+                await loadVipTicketTypes();
+                vipAdminHelp.textContent = "Ticket-Art wurde gelöscht.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        vipTicketCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            vipTicketCreateSubmit.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-tickets", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(vipTicketCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket konnte nicht eingetragen werden.");
+                vipTicketCreateForm.reset();
+                await loadVipTickets();
+                vipAdminHelp.textContent = "Ticket wurde eingetragen.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+            } finally {
+                vipTicketCreateSubmit.disabled = false;
+            }
+        });
+
+        vipTicketAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-vip-ticket-form]");
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-tickets", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket konnte nicht gespeichert werden.");
+                await loadVipTickets();
+                vipAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        vipTicketAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-vip-ticket]");
+            if (!button) return;
+            if (!confirm("Dieses Ticket wirklich löschen?")) return;
+            const form = button.closest("[data-vip-ticket-form]");
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/vip-tickets", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Ticket konnte nicht gelöscht werden.");
+                await loadVipTickets();
+                vipAdminHelp.textContent = "Ticket wurde gelöscht.";
+            } catch (error) {
+                vipAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        financeCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            financeCreateSubmit.disabled = true;
+            try {
+                const response = await apiFetch("/api/finance", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(financeCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht hinzugefügt werden.");
+                financeCreateForm.reset();
+                allFinanceEntries = data.entries || [];
+                renderFinanceAdmin(data.balance || 0);
+                financeAdminHelp.textContent = "Eintrag wurde hinzugefügt.";
+            } catch (error) {
+                financeAdminHelp.textContent = error.message;
+            } finally {
+                financeCreateSubmit.disabled = false;
+            }
+        });
+
+        financeAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-finance-form]");
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/finance", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gespeichert werden.");
+                allFinanceEntries = data.entries || [];
+                renderFinanceAdmin(data.balance || 0);
+                financeAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                financeAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        financeAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-finance-entry]");
+            if (!button) return;
+            if (!confirm("Diesen Eintrag wirklich löschen?")) return;
+            const form = button.closest("[data-finance-form]");
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/finance", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gelöscht werden.");
+                allFinanceEntries = data.entries || [];
+                renderFinanceAdmin(data.balance || 0);
+                financeAdminHelp.textContent = "Eintrag wurde gelöscht.";
+            } catch (error) {
+                financeAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        infoCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            infoCreateSubmit.disabled = true;
+            try {
+                const response = await apiFetch("/api/info-notes", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(infoCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Hinweis konnte nicht hinzugefügt werden.");
+                infoCreateForm.reset();
+                await loadInfoNotes();
+                infoAdminHelp.textContent = "Hinweis wurde hinzugefügt.";
+            } catch (error) {
+                infoAdminHelp.textContent = error.message;
+            } finally {
+                infoCreateSubmit.disabled = false;
+            }
+        });
+
+        infoAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-info-form]");
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/info-notes", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Hinweis konnte nicht gespeichert werden.");
+                await loadInfoNotes();
+                infoAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                infoAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        infoAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-info-note]");
+            if (!button) return;
+            if (!confirm("Diesen Hinweis wirklich löschen?")) return;
+            const form = button.closest("[data-info-form]");
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/info-notes", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Hinweis konnte nicht gelöscht werden.");
+                await loadInfoNotes();
+                infoAdminHelp.textContent = "Hinweis wurde gelöscht.";
+            } catch (error) {
+                infoAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        userCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            userCreateSubmit.disabled = true;
+            try {
+                const payload = getFormPayload(userCreateForm);
+                const permissions = readPermissionEditor(userNewPermissions);
+                const response = await apiFetch("/api/users", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ ...payload, permissions })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Nutzer konnte nicht angelegt werden.");
+                userCreateForm.reset();
+                await loadUsers();
+                usersAdminHelp.textContent = "Nutzer wurde angelegt.";
+            } catch (error) {
+                usersAdminHelp.textContent = error.message;
+            } finally {
+                userCreateSubmit.disabled = false;
+            }
+        });
+
+        usersAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-user-form]");
+            if (!form) return;
+            event.preventDefault();
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const permissionEditor = form.querySelector("[data-permission-editor]");
+                const permissions = readPermissionEditor(permissionEditor);
+                const password = form.querySelector('[name="password"]').value;
+                const payload = { id: form.dataset.id, permissions };
+                if (password) payload.password = password;
+
+                const response = await apiFetch("/api/users", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Nutzer konnte nicht gespeichert werden.");
+                await loadUsers();
+                usersAdminHelp.textContent = "Änderungen wurden gespeichert.";
+            } catch (error) {
+                usersAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        usersAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-user]");
+            if (!button) return;
+            if (!confirm("Diesen Nutzer wirklich unwiderruflich löschen?")) return;
+            const form = button.closest("[data-user-form]");
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/users", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: form.dataset.id })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Nutzer konnte nicht gelöscht werden.");
+                await loadUsers();
+                usersAdminHelp.textContent = "Nutzer wurde gelöscht.";
+            } catch (error) {
+                usersAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
         menuCreateForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             menuCreateSubmit.disabled = true;
@@ -2235,6 +3075,129 @@
                 if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gelöscht werden.");
                 await loadMenu(true);
                 menuAdminHelp.textContent = "Eintrag wurde gelöscht.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        menuAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+
+            const addButton = target?.closest("[data-add-recipe-item]");
+            if (addButton) {
+                const row = addButton.closest("[data-recipe-add]");
+                const menuItemId = Number(row.dataset.menuItemId);
+                const ingredientId = Number(row.querySelector("[data-recipe-ingredient]").value);
+                const amount = Number(row.querySelector("[data-recipe-amount]").value);
+
+                addButton.disabled = true;
+                try {
+                    const response = await apiFetch("/api/recipes", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "same-origin",
+                        body: JSON.stringify({ menuItemId, ingredientId, amount })
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.error || "Zutat konnte nicht zugeordnet werden.");
+                    await loadMenu(true);
+                } catch (error) {
+                    menuAdminHelp.textContent = error.message;
+                } finally {
+                    addButton.disabled = false;
+                }
+                return;
+            }
+
+            const deleteRecipeButton = target?.closest("[data-delete-recipe-item]");
+            if (deleteRecipeButton) {
+                deleteRecipeButton.disabled = true;
+                try {
+                    const response = await apiFetch("/api/recipes", {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "same-origin",
+                        body: JSON.stringify({ id: Number(deleteRecipeButton.dataset.recipeId) })
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.error || "Zutat konnte nicht entfernt werden.");
+                    await loadMenu(true);
+                } catch (error) {
+                    menuAdminHelp.textContent = error.message;
+                    deleteRecipeButton.disabled = false;
+                }
+            }
+        });
+
+        ingredientCreateForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            ingredientCreateSubmit.disabled = true;
+
+            try {
+                const response = await apiFetch("/api/ingredients", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(getFormPayload(ingredientCreateForm))
+                });
+                const data = await response.json().catch(() => ({}));
+
+                if (!response.ok) throw new Error(data.error || "Zutat konnte nicht hinzugefügt werden.");
+                ingredientCreateForm.reset();
+                await loadIngredients();
+                menuAdminHelp.textContent = "Zutat wurde hinzugefügt.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+            } finally {
+                ingredientCreateSubmit.disabled = false;
+            }
+        });
+
+        ingredientAdminList.addEventListener("submit", async (event) => {
+            const form = event.target.closest("[data-ingredient-form]");
+            if (!form) return;
+            event.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/ingredients", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Zutat konnte nicht gespeichert werden.");
+                await loadIngredients();
+                menuAdminHelp.textContent = "Zutat wurde aktualisiert.";
+            } catch (error) {
+                menuAdminHelp.textContent = error.message;
+                button.disabled = false;
+            }
+        });
+
+        ingredientAdminList.addEventListener("click", async (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-delete-ingredient]");
+            if (!button) return;
+
+            const form = button.closest("[data-ingredient-form]");
+            if (!confirm("Diese Zutat wirklich löschen?")) return;
+
+            button.disabled = true;
+            try {
+                const response = await apiFetch("/api/ingredients", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || "Zutat konnte nicht gelöscht werden.");
+                await loadIngredients();
+                menuAdminHelp.textContent = "Zutat wurde gelöscht.";
             } catch (error) {
                 menuAdminHelp.textContent = error.message;
                 button.disabled = false;
@@ -2486,17 +3449,6 @@
                 await loadContent();
                 await Promise.all([loadTeam(), loadMenu(), loadEvents()]);
 
-                // Supabase hängt bei Einladungs-/Passwort-Wiederherstellungs-Links
-                // einen "type"-Parameter an den URL-Hash an (#access_token=...&type=recovery
-                // bzw. type=invite). supabase-js liest die Session daraus automatisch aus.
-                const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
-                const linkType = hashParams.get("type");
-
-                if (linkType === "invite" || linkType === "recovery") {
-                    showPasswordSetup(linkType === "invite" ? "invite" : "recovery");
-                    return;
-                }
-
                 const { data } = await supabase.auth.getUser();
                 if (data.user) await renderLoggedIn(data.user);
                 else renderLoggedOut();
@@ -2511,6 +3463,7 @@
             else renderLoggedOut();
         });
 
+        renderPermissionEditor(userNewPermissions, {});
         bootAuth();
     </script>
 </body>

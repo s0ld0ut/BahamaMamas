@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { asc, eq } from "drizzle-orm";
 import { db } from "../db/index.js";
 import { contentBlocks, siteSettings } from "../db/schema.js";
-import { requireAdmin } from "./_lib/auth.js";
+import { requirePermission } from "./_lib/auth.js";
 
 const defaultSettings = {
   homeTitle: "Willkommen im Neon Paradise",
@@ -52,7 +52,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ settings: { ...defaultSettings, ...storedSettings }, blocks });
   }
 
-  const user = await requireAdmin(req, res);
+  const user = await requirePermission(req, res, "content", "edit");
   if (!user) return;
 
   const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as Record<string, unknown> | null;
