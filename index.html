@@ -457,20 +457,23 @@
             background: #0b0b12;
             border: 1px dashed rgba(0, 212, 255, 0.5);
             border-radius: 10px;
-            padding: 24px;
+            padding: 20px;
             font-family: "Courier New", ui-monospace, monospace;
             position: sticky;
             top: 20px;
+            max-width: 300px;
+            margin: 0 auto;
         }
-        .pos-receipt-header { text-align: center; margin-bottom: 14px; }
-        .pos-receipt-header .pos-company { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; }
-        .pos-receipt-header .pos-location, .pos-receipt-header .pos-datetime { color: var(--muted); font-size: 0.85rem; }
-        .pos-receipt-divider { border: none; border-top: 1px dashed rgba(0, 212, 255, 0.4); margin: 12px 0; }
-        .pos-receipt-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.9rem; margin: 4px 0; }
+        .pos-receipt-header { text-align: center; margin-bottom: 10px; }
+        .pos-receipt-header .pos-company { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.04em; }
+        .pos-receipt-header .pos-tagline { color: var(--muted); font-size: 0.75rem; letter-spacing: 0.03em; margin-top: 2px; }
+        .pos-receipt-header .pos-location, .pos-receipt-header .pos-datetime, .pos-receipt-header .pos-meta { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+        .pos-receipt-divider { border: none; border-top: 1px dashed rgba(0, 212, 255, 0.4); margin: 10px 0; }
+        .pos-receipt-line { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; margin: 4px 0; }
         .pos-receipt-line .pos-receipt-name { flex: 1; }
-        .pos-receipt-empty { color: var(--muted); text-align: center; padding: 10px 0; }
-        .pos-receipt-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; margin-top: 10px; }
-        .pos-receipt-footer { text-align: center; margin-top: 18px; color: var(--muted); font-size: 0.85rem; }
+        .pos-receipt-empty { color: var(--muted); text-align: center; padding: 10px 0; font-size: 0.82rem; }
+        .pos-receipt-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.95rem; margin-top: 8px; }
+        .pos-receipt-footer { text-align: center; margin-top: 16px; color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
 
         .data-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
         .data-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid rgba(0, 212, 255, 0.4); color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -3766,8 +3769,18 @@
 
         const posSavePngButton = document.querySelector("#pos-save-png");
 
+        let posServerNumber = 1;
+        let posTransactionId = "";
+
+        function startNewPosSession() {
+            posServerNumber = 1 + Math.floor(Math.random() * 100);
+            const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+            posTransactionId = `BM-${Date.now().toString().slice(-6)}-${random}`;
+        }
+
         function computePosReceiptData() {
-            const now = new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(new Date());
+            const now = new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date());
+            const time = new Intl.DateTimeFormat("de-DE", { timeStyle: "short" }).format(new Date());
             const lines = [];
             let total = 0;
 
@@ -3783,17 +3796,20 @@
                 });
             });
 
-            return { now, lines, total };
+            return { now, time, lines, total, serverNumber: posServerNumber, transactionId: posTransactionId };
         }
 
         function renderPosReceipt() {
-            const { now, lines, total } = computePosReceiptData();
+            const { now, time, lines, total, serverNumber, transactionId } = computePosReceiptData();
 
             posReceipt.innerHTML = `
                 <div class="pos-receipt-header">
                     <div class="pos-company">BAHAMA MAMAS</div>
-                    <div class="pos-location">Rockford Hills</div>
-                    <div class="pos-datetime">${now}</div>
+                    <div class="pos-tagline">NEON PARADISE &bull; ROCKFORD HILLS</div>
+                    <div class="pos-location">Rockford Hills, Los Santos</div>
+                    <div class="pos-datetime">Datum: ${now} | ${time}</div>
+                    <div class="pos-meta">Bedienung: Nr. ${serverNumber}</div>
+                    <div class="pos-meta">Transaktions-ID: ${transactionId}</div>
                 </div>
                 <hr class="pos-receipt-divider">
                 ${lines.length
@@ -3806,7 +3822,8 @@
                     : '<div class="pos-receipt-empty">Noch keine Posten ausgewählt.</div>'}
                 <hr class="pos-receipt-divider">
                 <div class="pos-receipt-total"><span>Gesamt</span><span>${formatPrice(total)}</span></div>
-                <div class="pos-receipt-footer">Vielen Dank für Ihre Bestellung</div>
+                <hr class="pos-receipt-divider">
+                <div class="pos-receipt-footer">Vielen Dank für Ihre Bestellung<br>Bis zum nächsten Mal im Bahama Mamas</div>
             `;
         }
 
@@ -3822,14 +3839,14 @@
         }
 
         function savePosReceiptAsPng() {
-            const { now, lines, total } = computePosReceiptData();
+            const { now, time, lines, total, serverNumber, transactionId } = computePosReceiptData();
 
-            const width = 380;
-            const paddingX = 24;
-            const lineHeight = 22;
-            const headerHeight = 96;
-            const footerHeight = 70;
-            const bodyHeight = (lines.length ? lines.length * lineHeight : lineHeight) + 46;
+            const width = 300;
+            const paddingX = 20;
+            const lineHeight = 20;
+            const headerHeight = 150;
+            const footerHeight = 74;
+            const bodyHeight = (lines.length ? lines.length * lineHeight : lineHeight) + 44;
             const height = headerHeight + bodyHeight + footerHeight;
 
             const canvas = document.createElement("canvas");
@@ -3844,24 +3861,30 @@
             ctx.fillStyle = "#111111";
             ctx.textBaseline = "alphabetic";
 
-            let y = 28;
+            let y = 24;
             ctx.textAlign = "center";
-            ctx.font = "bold 16px 'Courier New', monospace";
+            ctx.font = "bold 15px 'Courier New', monospace";
             ctx.fillText("BAHAMA MAMAS", width / 2, y);
-            y += 18;
-            ctx.font = "12px 'Courier New', monospace";
-            ctx.fillStyle = "#555555";
-            ctx.fillText("Rockford Hills", width / 2, y);
             y += 16;
-            ctx.fillText(now, width / 2, y);
+            ctx.font = "10px 'Courier New', monospace";
+            ctx.fillStyle = "#555555";
+            ctx.fillText("NEON PARADISE • ROCKFORD HILLS", width / 2, y);
             y += 14;
+            ctx.fillText("Rockford Hills, Los Santos", width / 2, y);
+            y += 14;
+            ctx.fillText(`Datum: ${now} | ${time}`, width / 2, y);
+            y += 14;
+            ctx.fillText(`Bedienung: Nr. ${serverNumber}`, width / 2, y);
+            y += 14;
+            ctx.fillText(`Transaktions-ID: ${transactionId}`, width / 2, y);
+            y += 12;
 
             drawDashedLine(ctx, paddingX, y, width - paddingX);
-            y += 20;
+            y += 18;
 
             ctx.textAlign = "left";
             ctx.fillStyle = "#111111";
-            ctx.font = "13px 'Courier New', monospace";
+            ctx.font = "12px 'Courier New', monospace";
 
             if (lines.length) {
                 lines.forEach((line) => {
@@ -3882,20 +3905,25 @@
 
             y += 4;
             drawDashedLine(ctx, paddingX, y, width - paddingX);
-            y += 22;
+            y += 20;
 
-            ctx.font = "bold 14px 'Courier New', monospace";
+            ctx.font = "bold 13px 'Courier New', monospace";
             ctx.fillStyle = "#111111";
             ctx.textAlign = "left";
             ctx.fillText("Gesamt", paddingX, y);
             ctx.textAlign = "right";
             ctx.fillText(formatPrice(total), width - paddingX, y);
-            y += 30;
+            y += 14;
 
-            ctx.font = "12px 'Courier New', monospace";
+            drawDashedLine(ctx, paddingX, y, width - paddingX);
+            y += 22;
+
+            ctx.font = "11px 'Courier New', monospace";
             ctx.fillStyle = "#555555";
             ctx.textAlign = "center";
             ctx.fillText("Vielen Dank für Ihre Bestellung", width / 2, y);
+            y += 14;
+            ctx.fillText("Bis zum nächsten Mal im Bahama Mamas", width / 2, y);
 
             const link = document.createElement("a");
             const stamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -3905,6 +3933,7 @@
         }
 
         function initPosSystem() {
+            startNewPosSession();
             renderPosProductList();
             renderPosReceipt();
 
@@ -3917,6 +3946,7 @@
 
             posResetButton.addEventListener("click", () => {
                 posProductList.querySelectorAll("[data-pos-qty]").forEach((input) => { input.value = 0; });
+                startNewPosSession();
                 renderPosReceipt();
             });
 
