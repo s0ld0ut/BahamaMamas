@@ -2918,13 +2918,26 @@
                     scale: 2,
                     useCORS: true
                 });
-                const link = document.createElement("a");
+                if (!canvas || !canvas.width || !canvas.height) {
+                    throw new Error("Leere Canvas beim Bild-Export.");
+                }
+                const blob = await new Promise((resolve, reject) => {
+                    canvas.toBlob((result) => {
+                        if (result) resolve(result);
+                        else reject(new Error("toBlob lieferte kein Ergebnis."));
+                    }, "image/png");
+                });
+                const objectUrl = URL.createObjectURL(blob);
                 const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+                const link = document.createElement("a");
                 link.download = `kassenbon-${timestamp}.png`;
-                link.href = canvas.toDataURL("image/png");
+                link.href = objectUrl;
+                document.body.appendChild(link);
                 link.click();
+                link.remove();
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 2000);
             } catch (error) {
-                alert("Der Kassenbon konnte nicht als Bild gespeichert werden.");
+                alert("Der Kassenbon konnte nicht als Bild gespeichert werden. Bitte erneut versuchen.");
             } finally {
                 cashierSaveImage.disabled = false;
                 cashierSaveImage.textContent = originalLabel;
