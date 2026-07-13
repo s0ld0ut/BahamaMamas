@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bahama Mamas | Official</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <style>
         :root {
             --pink: #ff00ff;
@@ -382,86 +381,6 @@
 
         .admin-panel[hidden] { display: none; }
         .admin-panel > .card { margin: 0; }
-
-        /* Kassensystem */
-        .cashier-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
-            gap: 22px;
-            align-items: start;
-        }
-        .cashier-toolbar { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 4px; }
-        .cashier-toolbar button { margin-top: 0; }
-        .cashier-group {
-            border: 1px solid rgba(0, 212, 255, 0.34);
-            border-radius: 12px;
-            padding: 16px 18px 6px;
-            margin: 0 0 18px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-        .cashier-group h3 {
-            margin: 0 0 12px;
-            color: var(--cyan);
-            font-size: 0.92rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-        .cashier-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 90px 84px;
-            gap: 12px;
-            align-items: center;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .cashier-row:first-of-type { border-top: 0; }
-        .cashier-row .cashier-name { font-weight: 600; }
-        .cashier-row .cashier-price { color: var(--muted); font-size: 0.88rem; text-align: right; }
-        .cashier-row input[type="number"] {
-            min-height: 40px;
-            padding: 8px 10px;
-            text-align: center;
-        }
-        .cashier-receipt-wrap { position: sticky; top: 84px; }
-        .receipt {
-            background: #0c0c0c;
-            border: 1px dashed rgba(0, 212, 255, 0.5);
-            border-radius: 10px;
-            padding: 22px 20px;
-            font-family: 'Courier New', Courier, monospace;
-            color: #e9e9e9;
-            box-shadow: 0 0 24px rgba(255, 0, 255, 0.14);
-        }
-        .receipt-header { text-align: center; }
-        .receipt-company { font-weight: 800; letter-spacing: 0.12em; font-size: 1.1rem; color: #fff; }
-        .receipt-location { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
-        .receipt-datetime { color: var(--muted); font-size: 0.8rem; margin-top: 6px; }
-        .receipt-divider {
-            border-top: 1px dashed rgba(255, 255, 255, 0.3);
-            margin: 14px 0;
-        }
-        .receipt-items { display: grid; gap: 6px; min-height: 24px; }
-        .receipt-item-row {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: 10px;
-            font-size: 0.92rem;
-        }
-        .receipt-item-qty { color: var(--muted); }
-        .receipt-empty { color: var(--muted); font-size: 0.88rem; text-align: center; padding: 6px 0; }
-        .receipt-total-row {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 800;
-            font-size: 1.05rem;
-            color: #fff;
-        }
-        .receipt-footer {
-            text-align: center;
-            margin-top: 16px;
-            color: var(--cyan);
-            font-size: 0.9rem;
-        }
         .content-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
         .content-settings-grid .full { grid-column: 1 / -1; }
         .list-editor { display: grid; gap: 10px; }
@@ -521,6 +440,37 @@
         @media (max-width: 900px) {
             .menu-split { grid-template-columns: 1fr; }
         }
+
+        .pos-split { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
+        .pos-column { min-width: 0; }
+        @media (max-width: 900px) {
+            .pos-split { grid-template-columns: 1fr; }
+        }
+
+        .pos-category { margin-bottom: 22px; }
+        .pos-category h3 { color: var(--accent, #00d4ff); margin-bottom: 8px; }
+        .pos-product-row { display: grid; grid-template-columns: 1fr auto 90px; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0, 212, 255, 0.15); }
+        .pos-product-row .pos-product-price { color: var(--muted); white-space: nowrap; }
+        .pos-product-row input[type="number"] { width: 90px; }
+
+        .pos-receipt {
+            background: #0b0b12;
+            border: 1px dashed rgba(0, 212, 255, 0.5);
+            border-radius: 10px;
+            padding: 24px;
+            font-family: "Courier New", ui-monospace, monospace;
+            position: sticky;
+            top: 20px;
+        }
+        .pos-receipt-header { text-align: center; margin-bottom: 14px; }
+        .pos-receipt-header .pos-company { font-size: 1.2rem; font-weight: 700; letter-spacing: 0.04em; }
+        .pos-receipt-header .pos-location, .pos-receipt-header .pos-datetime { color: var(--muted); font-size: 0.85rem; }
+        .pos-receipt-divider { border: none; border-top: 1px dashed rgba(0, 212, 255, 0.4); margin: 12px 0; }
+        .pos-receipt-line { display: flex; justify-content: space-between; gap: 10px; font-size: 0.9rem; margin: 4px 0; }
+        .pos-receipt-line .pos-receipt-name { flex: 1; }
+        .pos-receipt-empty { color: var(--muted); text-align: center; padding: 10px 0; }
+        .pos-receipt-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.05rem; margin-top: 10px; }
+        .pos-receipt-footer { text-align: center; margin-top: 18px; color: var(--muted); font-size: 0.85rem; }
 
         .data-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
         .data-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid rgba(0, 212, 255, 0.4); color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -717,7 +667,7 @@
         .hidden { display: none !important; }
 
         @media (max-width: 820px) {
-            .grid-2, .grid-3, .form-grid, .admin-shell, .answer-grid, .admin-actions, .application-controls, .team-grid, .team-editor, .menu-board, .menu-editor, .event-editor, .content-settings-grid, .cashier-layout {
+            .grid-2, .grid-3, .form-grid, .admin-shell, .answer-grid, .admin-actions, .application-controls, .team-grid, .team-editor, .menu-board, .menu-editor, .event-editor, .content-settings-grid {
                 grid-template-columns: 1fr;
             }
             .content-settings-grid .full { grid-column: auto; }
@@ -994,12 +944,12 @@
                 <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
                 <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team &amp; Zugänge</button>
                 <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Lager &amp; Preisliste</button>
-                <button type="button" class="admin-tab" data-admin-panel="kassensystem" role="tab">Kassensystem</button>
                 <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
                 <button type="button" class="admin-tab" data-admin-panel="vip" role="tab">VIP-Tickets</button>
                 <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
                 <button type="button" class="admin-tab" data-admin-panel="info" role="tab">Wichtige Infos</button>
                 <button type="button" class="admin-tab" data-admin-panel="content" role="tab">Inhalte &amp; Felder</button>
+                <button type="button" class="admin-tab" data-admin-panel="pos" role="tab">Kassensystem</button>
             </div>
 
             <div class="admin-panel" data-admin-panel-content="applications">
@@ -1126,42 +1076,6 @@
                                     <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
                                 </form>
                             </details>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="admin-panel" data-admin-panel-content="kassensystem" hidden>
-                <div id="kassensystem-admin" class="card">
-                    <h2>Kassensystem</h2>
-                    <p class="hint">Preise zusammenstellen und automatisch einen Kassenbon erzeugen. Mengen eintragen - die Summe und der Bon aktualisieren sich sofort.</p>
-                    <div class="cashier-layout">
-                        <div class="cashier-products">
-                            <div class="cashier-toolbar">
-                                <button type="button" id="cashier-save-image" class="secondary">Als Bild speichern</button>
-                                <button type="button" id="cashier-reset" class="secondary">Reset</button>
-                            </div>
-                            <div id="cashier-product-groups"></div>
-                        </div>
-
-                        <div class="cashier-receipt-wrap">
-                            <div class="receipt" id="cashier-receipt">
-                                <div class="receipt-header">
-                                    <div class="receipt-company">BAHAMA MAMAS</div>
-                                    <div class="receipt-location">Rockford Hills, Los Santos</div>
-                                    <div class="receipt-datetime" id="receipt-datetime"></div>
-                                </div>
-                                <div class="receipt-divider"></div>
-                                <div class="receipt-items" id="receipt-items">
-                                    <div class="receipt-empty">Noch keine Artikel ausgewählt.</div>
-                                </div>
-                                <div class="receipt-divider"></div>
-                                <div class="receipt-total-row">
-                                    <span>Endsumme</span>
-                                    <span id="receipt-total">0 $</span>
-                                </div>
-                                <div class="receipt-footer">Vielen Dank für Ihre Bestellung</div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -1323,6 +1237,27 @@
                 </div>
             </div>
 
+            <div class="admin-panel" data-admin-panel-content="pos" hidden>
+                <div id="pos-admin" class="card hidden">
+                    <h2>Kassensystem</h2>
+                    <p class="hint">Preise zusammenstellen und automatisch berechnen lassen.</p>
+                    <div class="pos-split">
+                        <div class="pos-column">
+                            <div class="admin-action-row">
+                                <button type="button" id="pos-reset" class="secondary">Reset</button>
+                            </div>
+                            <div id="pos-product-list" class="pos-product-list"></div>
+                        </div>
+                        <div class="pos-column">
+                            <div id="pos-receipt" class="pos-receipt"></div>
+                            <div class="admin-action-row">
+                                <button type="button" id="pos-save-png" class="secondary">Bon speichern (.png)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -1419,6 +1354,10 @@
         const contentSettingsForm = document.querySelector("#content-settings-form");
         const contentSettingsSubmit = document.querySelector("#content-settings-submit");
         const applicationCustomFields = document.querySelector("#application-custom-fields");
+        const posAdmin = document.querySelector("#pos-admin");
+        const posProductList = document.querySelector("#pos-product-list");
+        const posReceipt = document.querySelector("#pos-receipt");
+        const posResetButton = document.querySelector("#pos-reset");
         let currentApplicationFolder = "neu";
         let currentContactFolder = "neu";
         let allApplications = [];
@@ -1447,6 +1386,7 @@
             info: "Wichtige Infos",
             content: "Inhalte & Felder",
             users: "Nutzer verwalten",
+            pos: "Kassensystem",
         };
         const CATEGORIES = Object.keys(CATEGORY_LABELS);
 
@@ -1672,6 +1612,7 @@
             usersAdmin.classList.add("hidden");
             usersAdminList.innerHTML = "";
             contentAdmin.classList.add("hidden");
+            posAdmin.classList.add("hidden");
         }
 
         function renderLoggedOut() {
@@ -1702,9 +1643,7 @@
                 const category = button.dataset.adminPanel;
                 // "team" und "users" teilen sich jetzt einen Tab - der Tab ist
                 // sichtbar, sobald mindestens einer der beiden Bereiche sichtbar ist.
-                // "kassensystem" ist ein reines Client-Tool ohne Datenbankzugriff und
-                // daher fuer jeden eingeloggten Account sichtbar.
-                const visible = category === "team" ? (canView("team") || canView("users")) : category === "kassensystem" ? true : canView(category);
+                const visible = category === "team" ? (canView("team") || canView("users")) : canView(category);
                 button.classList.toggle("hidden", !visible);
             });
 
@@ -1718,6 +1657,7 @@
                 info: infoAdmin,
                 content: contentAdmin,
                 users: usersAdmin,
+                pos: posAdmin,
             };
             Object.entries(cardByCategory).forEach(([category, element]) => {
                 element.classList.toggle("hidden", !canView(category));
@@ -2791,176 +2731,6 @@
             showAdminPanel(button.dataset.adminPanel);
         });
 
-        // ===== Kassensystem (Preisrechner) =====
-        const CASHIER_CATALOG = [
-            { group: "Signature", items: [
-                { name: "Tequila Sunrise", price: 900 },
-                { name: "Dirty Talk", price: 900 },
-                { name: "Samt & Sünde", price: 800 },
-                { name: "Ice Lagoon", price: 700 },
-                { name: "Sex on the Beach", price: 700 },
-            ] },
-            { group: "Spirits", items: [
-                { name: "Bier", price: 300 },
-                { name: "Weizenbier", price: 400 },
-                { name: "Sekt", price: 300 },
-                { name: "Vodka", price: 700 },
-                { name: "Whiskey", price: 700 },
-                { name: "Tequila", price: 700 },
-            ] },
-            { group: "Fresh & Virgin", items: [
-                { name: "Säfte", price: 200 },
-                { name: "Wasser", price: 70 },
-                { name: "Cola", price: 90 },
-                { name: "Zitronenlimo", price: 90 },
-                { name: "Kaffee", price: 80 },
-            ] },
-            { group: "Bar Bites", items: [
-                { name: "Schokolinsen", price: 100 },
-                { name: "Früchteteller", price: 300 },
-                { name: "Erdbeeren m. Sahne", price: 200 },
-                { name: "Salzstangen", price: 100 },
-                { name: "Erdnüsse", price: 100 },
-            ] },
-            { group: "VIP-Tickets", items: [
-                { name: "Bronze / 1 Monat", price: 50000 },
-                { name: "Silber / 2 Monate", price: 90000 },
-                { name: "Gold / 3 Monate", price: 125000 },
-            ] },
-            { group: "Specials", items: [
-                { name: "Champagner", price: 1000 },
-                { name: "Champagner Gold", price: 2500 },
-                { name: "Champagner Platin", price: 4000 },
-            ] },
-        ];
-        CASHIER_CATALOG.forEach((group) => {
-            group.items.forEach((item) => { item.id = `cashier-${slugify(item.name)}`; });
-        });
-
-        const cashierProductGroups = document.querySelector("#cashier-product-groups");
-        const cashierReset = document.querySelector("#cashier-reset");
-        const receiptItemsEl = document.querySelector("#receipt-items");
-        const receiptTotalEl = document.querySelector("#receipt-total");
-        const receiptDatetimeEl = document.querySelector("#receipt-datetime");
-
-        function renderCashierProducts() {
-            if (!cashierProductGroups) return;
-            cashierProductGroups.innerHTML = CASHIER_CATALOG.map((group) => `
-                <div class="cashier-group">
-                    <h3>${escapeHtml(group.group)}</h3>
-                    ${group.items.map((item) => `
-                        <div class="cashier-row">
-                            <span class="cashier-name">${escapeHtml(item.name)}</span>
-                            <input type="number" min="0" max="999" step="1" value="0" id="${item.id}" data-cashier-qty="${item.id}" aria-label="Menge ${escapeAttribute(item.name)}">
-                            <span class="cashier-price">${formatPrice(item.price)}</span>
-                        </div>
-                    `).join("")}
-                </div>
-            `).join("");
-        }
-
-        function updateCashierReceipt() {
-            if (!receiptItemsEl) return;
-            const selected = [];
-            let total = 0;
-            CASHIER_CATALOG.forEach((group) => {
-                group.items.forEach((item) => {
-                    const input = document.querySelector(`#${item.id}`);
-                    const qty = Math.max(0, Math.floor(Number(input?.value) || 0));
-                    if (qty > 0) {
-                        const lineTotal = qty * item.price;
-                        total += lineTotal;
-                        selected.push({ name: item.name, qty, lineTotal });
-                    }
-                });
-            });
-
-            receiptDatetimeEl.textContent = formatDate(new Date());
-
-            receiptItemsEl.innerHTML = selected.length === 0
-                ? '<div class="receipt-empty">Noch keine Artikel ausgewählt.</div>'
-                : selected.map((entry) => `
-                    <div class="receipt-item-row">
-                        <span>${escapeHtml(entry.name)} <span class="receipt-item-qty">x${entry.qty}</span></span>
-                        <span>${formatPrice(entry.lineTotal)}</span>
-                    </div>
-                `).join("");
-
-            receiptTotalEl.textContent = formatPrice(total);
-        }
-
-        cashierProductGroups?.addEventListener("input", (event) => {
-            const target = event.target instanceof Element ? event.target : null;
-            if (!target?.matches("[data-cashier-qty]")) return;
-            if (Number(target.value) < 0) target.value = "0";
-            updateCashierReceipt();
-        });
-
-        cashierReset?.addEventListener("click", () => {
-            document.querySelectorAll("[data-cashier-qty]").forEach((input) => { input.value = "0"; });
-            updateCashierReceipt();
-        });
-
-        const cashierSaveImage = document.querySelector("#cashier-save-image");
-        const cashierReceiptEl = document.querySelector("#cashier-receipt");
-
-        cashierSaveImage?.addEventListener("click", async () => {
-            if (typeof html2canvas !== "function") {
-                alert("Der Bild-Export konnte nicht geladen werden. Bitte Internetverbindung prüfen und Seite neu laden.");
-                return;
-            }
-            cashierSaveImage.disabled = true;
-            const originalLabel = cashierSaveImage.textContent;
-            cashierSaveImage.textContent = "Wird erzeugt...";
-
-            // html2canvas berechnet die Größe von "position: sticky"-Elementen
-            // manchmal fehlerhaft (Breite/Höhe 0). Während der Erzeugung daher
-            // kurzzeitig auf "static" schalten und die Maße explizit vorgeben.
-            const receiptWrap = cashierReceiptEl.closest(".cashier-receipt-wrap");
-            const originalWrapPosition = receiptWrap ? receiptWrap.style.position : "";
-            if (receiptWrap) receiptWrap.style.position = "static";
-            const rect = cashierReceiptEl.getBoundingClientRect();
-
-            try {
-                const canvas = await html2canvas(cashierReceiptEl, {
-                    backgroundColor: "#0c0c0c",
-                    scale: 2,
-                    logging: false,
-                    width: Math.ceil(rect.width),
-                    height: Math.ceil(rect.height),
-                    windowWidth: document.documentElement.scrollWidth
-                });
-                if (!canvas || !canvas.width || !canvas.height) {
-                    throw new Error("Leere Canvas beim Bild-Export.");
-                }
-                const blob = await new Promise((resolve, reject) => {
-                    canvas.toBlob((result) => {
-                        if (result) resolve(result);
-                        else reject(new Error("toBlob lieferte kein Ergebnis."));
-                    }, "image/png");
-                });
-                const objectUrl = URL.createObjectURL(blob);
-                const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-                const link = document.createElement("a");
-                link.download = `kassenbon-${timestamp}.png`;
-                link.href = objectUrl;
-                document.body.appendChild(link);
-                link.click();
-                link.remove();
-                setTimeout(() => URL.revokeObjectURL(objectUrl), 2000);
-            } catch (error) {
-                console.error("Kassenbon-Bild-Export fehlgeschlagen:", error);
-                alert("Der Kassenbon konnte nicht als Bild gespeichert werden. Bitte erneut versuchen.");
-            } finally {
-                if (receiptWrap) receiptWrap.style.position = originalWrapPosition;
-                cashierSaveImage.disabled = false;
-                cashierSaveImage.textContent = originalLabel;
-            }
-        });
-
-        renderCashierProducts();
-        updateCashierReceipt();
-
         contentSettingsForm.addEventListener("click", (event) => {
             const target = event.target instanceof Element ? event.target : null;
             const addListButton = target?.closest("[data-add-list-item]");
@@ -3916,6 +3686,244 @@
                 showMessage(loginMessage, authErrorText(error), "error");
             }
         }
+
+        // --- Kassensystem (reiner Rechner, keine Datenbank) ---
+
+        const POS_CATALOG = [
+            {
+                category: "Signature Drinks",
+                items: [
+                    { id: "sig-tequila-sunrise", name: "Tequila Sunrise", price: 900 },
+                    { id: "sig-dirtytalk", name: "DirtyTalk", price: 900 },
+                    { id: "sig-samt-suende", name: "Samt & Sünde", price: 800 },
+                    { id: "sig-icelagoon", name: "IceLagoon", price: 700 },
+                    { id: "sig-sotb", name: "Sex on the Beach", price: 700 },
+                ],
+            },
+            {
+                category: "Spirits",
+                items: [
+                    { id: "spi-bier", name: "Bier", price: 300 },
+                    { id: "spi-weizenbier", name: "Weizenbier", price: 400 },
+                    { id: "spi-sekt", name: "Sekt", price: 300 },
+                    { id: "spi-vodka", name: "Vodka", price: 700 },
+                    { id: "spi-whiskey", name: "Whiskey", price: 700 },
+                    { id: "spi-tequila", name: "Tequila", price: 700 },
+                ],
+            },
+            {
+                category: "Fresh & Virgin",
+                items: [
+                    { id: "fre-saefte", name: "Säfte", price: 200 },
+                    { id: "fre-wasser", name: "Wasser", price: 70 },
+                    { id: "fre-cola", name: "Cola", price: 90 },
+                    { id: "fre-zitronenlimo", name: "Zitronenlimo", price: 90 },
+                    { id: "fre-kaffee", name: "Kaffee", price: 80 },
+                ],
+            },
+            {
+                category: "Bar Bites",
+                items: [
+                    { id: "bar-schokolinsen", name: "Schokolinsen", price: 100 },
+                    { id: "bar-fruechteteller", name: "Früchteteller", price: 300 },
+                    { id: "bar-erdbeeren", name: "Erdbeeren mit Sahne", price: 200 },
+                    { id: "bar-salzstangen", name: "Salzstangen", price: 100 },
+                    { id: "bar-erdnuesse", name: "Erdnüsse", price: 100 },
+                ],
+            },
+            {
+                category: "VIP-Tickets",
+                items: [
+                    { id: "vip-bronze", name: "Bronze / 1 Monat", price: 50000 },
+                    { id: "vip-silber", name: "Silber / 2 Monate", price: 90000 },
+                    { id: "vip-gold", name: "Gold / 3 Monate", price: 125000 },
+                ],
+            },
+            {
+                category: "Specials",
+                items: [
+                    { id: "spe-champagner", name: "Champagner", price: 1000 },
+                    { id: "spe-champagner-gold", name: "Champagner Gold", price: 2500 },
+                    { id: "spe-champagner-platin", name: "Champagner Platin", price: 4000 },
+                ],
+            },
+        ];
+
+        function renderPosProductList() {
+            posProductList.innerHTML = POS_CATALOG.map((group) => `
+                <div class="pos-category">
+                    <h3>${escapeHtml(group.category)}</h3>
+                    ${group.items.map((item) => `
+                        <div class="pos-product-row">
+                            <span>${escapeHtml(item.name)}</span>
+                            <span class="pos-product-price">${formatPrice(item.price)}</span>
+                            <input type="number" min="0" max="9999" step="1" value="0" data-pos-qty="${item.id}">
+                        </div>
+                    `).join("")}
+                </div>
+            `).join("");
+        }
+
+        const posSavePngButton = document.querySelector("#pos-save-png");
+
+        function computePosReceiptData() {
+            const now = new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(new Date());
+            const lines = [];
+            let total = 0;
+
+            POS_CATALOG.forEach((group) => {
+                group.items.forEach((item) => {
+                    const input = posProductList.querySelector(`[data-pos-qty="${item.id}"]`);
+                    const qty = Math.max(0, Math.floor(Number(input?.value) || 0));
+                    if (qty > 0) {
+                        const lineTotal = qty * item.price;
+                        total += lineTotal;
+                        lines.push({ name: item.name, qty, lineTotal });
+                    }
+                });
+            });
+
+            return { now, lines, total };
+        }
+
+        function renderPosReceipt() {
+            const { now, lines, total } = computePosReceiptData();
+
+            posReceipt.innerHTML = `
+                <div class="pos-receipt-header">
+                    <div class="pos-company">BAHAMA MAMAS</div>
+                    <div class="pos-location">Rockford Hills</div>
+                    <div class="pos-datetime">${now}</div>
+                </div>
+                <hr class="pos-receipt-divider">
+                ${lines.length
+                    ? lines.map((line) => `
+                        <div class="pos-receipt-line">
+                            <span class="pos-receipt-name">${line.qty}x ${escapeHtml(line.name)}</span>
+                            <span>${formatPrice(line.lineTotal)}</span>
+                        </div>
+                    `).join("")
+                    : '<div class="pos-receipt-empty">Noch keine Posten ausgewählt.</div>'}
+                <hr class="pos-receipt-divider">
+                <div class="pos-receipt-total"><span>Gesamt</span><span>${formatPrice(total)}</span></div>
+                <div class="pos-receipt-footer">Vielen Dank für Ihre Bestellung</div>
+            `;
+        }
+
+        function drawDashedLine(context, x1, y, x2) {
+            context.save();
+            context.setLineDash([4, 4]);
+            context.strokeStyle = "#00000055";
+            context.beginPath();
+            context.moveTo(x1, y);
+            context.lineTo(x2, y);
+            context.stroke();
+            context.restore();
+        }
+
+        function savePosReceiptAsPng() {
+            const { now, lines, total } = computePosReceiptData();
+
+            const width = 380;
+            const paddingX = 24;
+            const lineHeight = 22;
+            const headerHeight = 96;
+            const footerHeight = 70;
+            const bodyHeight = (lines.length ? lines.length * lineHeight : lineHeight) + 46;
+            const height = headerHeight + bodyHeight + footerHeight;
+
+            const canvas = document.createElement("canvas");
+            const scale = 2; // schärferes Bild
+            canvas.width = width * scale;
+            canvas.height = height * scale;
+            const ctx = canvas.getContext("2d");
+            ctx.scale(scale, scale);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "#111111";
+            ctx.textBaseline = "alphabetic";
+
+            let y = 28;
+            ctx.textAlign = "center";
+            ctx.font = "bold 16px 'Courier New', monospace";
+            ctx.fillText("BAHAMA MAMAS", width / 2, y);
+            y += 18;
+            ctx.font = "12px 'Courier New', monospace";
+            ctx.fillStyle = "#555555";
+            ctx.fillText("Rockford Hills", width / 2, y);
+            y += 16;
+            ctx.fillText(now, width / 2, y);
+            y += 14;
+
+            drawDashedLine(ctx, paddingX, y, width - paddingX);
+            y += 20;
+
+            ctx.textAlign = "left";
+            ctx.fillStyle = "#111111";
+            ctx.font = "13px 'Courier New', monospace";
+
+            if (lines.length) {
+                lines.forEach((line) => {
+                    const label = `${line.qty}x ${line.name}`;
+                    const priceText = formatPrice(line.lineTotal);
+                    ctx.textAlign = "left";
+                    ctx.fillText(label, paddingX, y);
+                    ctx.textAlign = "right";
+                    ctx.fillText(priceText, width - paddingX, y);
+                    y += lineHeight;
+                });
+            } else {
+                ctx.textAlign = "center";
+                ctx.fillStyle = "#777777";
+                ctx.fillText("Noch keine Posten ausgewählt.", width / 2, y);
+                y += lineHeight;
+            }
+
+            y += 4;
+            drawDashedLine(ctx, paddingX, y, width - paddingX);
+            y += 22;
+
+            ctx.font = "bold 14px 'Courier New', monospace";
+            ctx.fillStyle = "#111111";
+            ctx.textAlign = "left";
+            ctx.fillText("Gesamt", paddingX, y);
+            ctx.textAlign = "right";
+            ctx.fillText(formatPrice(total), width - paddingX, y);
+            y += 30;
+
+            ctx.font = "12px 'Courier New', monospace";
+            ctx.fillStyle = "#555555";
+            ctx.textAlign = "center";
+            ctx.fillText("Vielen Dank für Ihre Bestellung", width / 2, y);
+
+            const link = document.createElement("a");
+            const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+            link.download = `bahama-mamas-bon-${stamp}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        function initPosSystem() {
+            renderPosProductList();
+            renderPosReceipt();
+
+            posProductList.addEventListener("input", (event) => {
+                if (event.target instanceof Element && event.target.matches("[data-pos-qty]")) {
+                    if (Number(event.target.value) < 0) event.target.value = 0;
+                    renderPosReceipt();
+                }
+            });
+
+            posResetButton.addEventListener("click", () => {
+                posProductList.querySelectorAll("[data-pos-qty]").forEach((input) => { input.value = 0; });
+                renderPosReceipt();
+            });
+
+            posSavePngButton.addEventListener("click", savePosReceiptAsPng);
+        }
+
+        initPosSystem();
 
         supabase.auth.onAuthStateChange((_event, session) => {
             if (session?.user) renderLoggedIn(session.user);

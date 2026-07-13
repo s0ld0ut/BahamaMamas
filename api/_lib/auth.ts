@@ -45,6 +45,7 @@ export const CATEGORIES = [
   "info",
   "content",
   "users",
+  "pos",
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];
@@ -66,6 +67,7 @@ const CATEGORY_LABELS: Record<Category, string> = {
   info: "Wichtige Infos",
   content: "Inhalte & Felder",
   users: "Nutzer verwalten",
+  pos: "Kassensystem",
 };
 
 export function categoryLabel(category: Category) {
