@@ -2916,7 +2916,7 @@
                 const canvas = await html2canvas(cashierReceiptEl, {
                     backgroundColor: "#0c0c0c",
                     scale: 2,
-                    useCORS: true
+                    logging: false
                 });
                 if (!canvas || !canvas.width || !canvas.height) {
                     throw new Error("Leere Canvas beim Bild-Export.");
@@ -2937,6 +2937,7 @@
                 link.remove();
                 setTimeout(() => URL.revokeObjectURL(objectUrl), 2000);
             } catch (error) {
+                console.error("Kassenbon-Bild-Export fehlgeschlagen:", error);
                 alert("Der Kassenbon konnte nicht als Bild gespeichert werden. Bitte erneut versuchen.");
             } finally {
                 cashierSaveImage.disabled = false;
