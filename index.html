@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bahama Mamas | Official</title>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <style>
         :root {
             --pink: #ff00ff;
@@ -389,7 +390,7 @@
             gap: 22px;
             align-items: start;
         }
-        .cashier-toolbar { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+        .cashier-toolbar { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 4px; }
         .cashier-toolbar button { margin-top: 0; }
         .cashier-group {
             border: 1px solid rgba(0, 212, 255, 0.34);
@@ -1137,6 +1138,7 @@
                     <div class="cashier-layout">
                         <div class="cashier-products">
                             <div class="cashier-toolbar">
+                                <button type="button" id="cashier-save-image" class="secondary">Als Bild speichern</button>
                                 <button type="button" id="cashier-reset" class="secondary">Reset</button>
                             </div>
                             <div id="cashier-product-groups"></div>
@@ -2897,6 +2899,36 @@
         cashierReset?.addEventListener("click", () => {
             document.querySelectorAll("[data-cashier-qty]").forEach((input) => { input.value = "0"; });
             updateCashierReceipt();
+        });
+
+        const cashierSaveImage = document.querySelector("#cashier-save-image");
+        const cashierReceiptEl = document.querySelector("#cashier-receipt");
+
+        cashierSaveImage?.addEventListener("click", async () => {
+            if (typeof html2canvas !== "function") {
+                alert("Der Bild-Export konnte nicht geladen werden. Bitte Internetverbindung prüfen und Seite neu laden.");
+                return;
+            }
+            cashierSaveImage.disabled = true;
+            const originalLabel = cashierSaveImage.textContent;
+            cashierSaveImage.textContent = "Wird erzeugt...";
+            try {
+                const canvas = await html2canvas(cashierReceiptEl, {
+                    backgroundColor: "#0c0c0c",
+                    scale: 2,
+                    useCORS: true
+                });
+                const link = document.createElement("a");
+                const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+                link.download = `kassenbon-${timestamp}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            } catch (error) {
+                alert("Der Kassenbon konnte nicht als Bild gespeichert werden.");
+            } finally {
+                cashierSaveImage.disabled = false;
+                cashierSaveImage.textContent = originalLabel;
+            }
         });
 
         renderCashierProducts();
