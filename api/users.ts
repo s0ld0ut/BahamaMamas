@@ -13,13 +13,12 @@ import { db } from "../db/index.js";
 import { teamMembers } from "../db/schema.js";
 
 // ============== TEAM MANAGEMENT ==============
-// (Vormals: api/team.ts)
 
 function cleanTeam(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function cleanSortOrder(value: unknown) {
+function cleanSortOrder(value: unknown): number {
   const sortOrder = Number(value);
   return Number.isInteger(sortOrder) && sortOrder >= 0 && sortOrder <= 10000
     ? sortOrder
@@ -35,7 +34,7 @@ async function handleTeamGet(req: VercelRequest, res: VercelResponse) {
     sortOrder: item.sortOrder ?? 10,
   }));
   res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
-  res.status(200).json(cleanedResponse);
+  return res.status(200).json(cleanedResponse);
 }
 
 async function handleTeamPost(req: VercelRequest, res: VercelResponse) {
@@ -53,7 +52,7 @@ async function handleTeamPost(req: VercelRequest, res: VercelResponse) {
   const description = cleanTeam(body.description);
   const sortOrder = cleanSortOrder(body.sortOrder);
 
-  const newTeamMember = await db.insert(teamMembers).values({
+  await db.insert(teamMembers).values({
     name,
     role,
     expertise,
@@ -61,7 +60,7 @@ async function handleTeamPost(req: VercelRequest, res: VercelResponse) {
     sortOrder,
   });
 
-  res.status(201).json(newTeamMember);
+  return res.status(201).json({ success: true });
 }
 
 async function handleTeamPatch(req: VercelRequest, res: VercelResponse) {
@@ -82,12 +81,12 @@ async function handleTeamPatch(req: VercelRequest, res: VercelResponse) {
   const description = cleanTeam(body.description);
   const sortOrder = cleanSortOrder(body.sortOrder);
 
-  const updatedRow = await db
+  await db
     .update(teamMembers)
     .set({ name, role, expertise, description, sortOrder })
     .where(eq(teamMembers.id, id));
 
-  res.status(200).json(updatedRow);
+  return res.status(200).json({ success: true });
 }
 
 async function handleTeamDelete(req: VercelRequest, res: VercelResponse) {
@@ -97,15 +96,14 @@ async function handleTeamDelete(req: VercelRequest, res: VercelResponse) {
   const id = Number(req.query.id);
   if (!id) return void res.status(400).json({ error: "id required" });
 
-  const deletedRow = await db
+  await db
     .delete(teamMembers)
     .where(eq(teamMembers.id, id));
 
-  res.status(200).json(deletedRow);
+  return res.status(204).end();
 }
 
 // ============== USERS MANAGEMENT ==============
-// (Vormals: api/users.ts)
 
 function cleanUsername(value: unknown) {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
@@ -145,10 +143,10 @@ async function handleUsersGet(req: VercelRequest, res: VercelResponse) {
     );
 
     res.setHeader("Cache-Control", "s-maxage=10, stale-while-revalidate=30");
-    res.status(200).json(usersData);
+    return res.status(200).json(usersData);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Failed to fetch users" });
+    return res.status(500).json({ error: "Failed to fetch users" });
   }
 }
 
@@ -185,7 +183,6 @@ async function handleUsersPost(req: VercelRequest, res: VercelResponse) {
 
     const userId = newUser.user.id;
 
-    // Save custom claims/permissions
     const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
       userId,
       {
@@ -198,10 +195,10 @@ async function handleUsersPost(req: VercelRequest, res: VercelResponse) {
       return void res.status(500).json({ error: "Could not save permissions" });
     }
 
-    res.status(201).json(newUser);
+    return res.status(201).json(newUser);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -245,10 +242,10 @@ async function handleUsersPatch(req: VercelRequest, res: VercelResponse) {
       updatedUser = result.user;
     }
 
-    res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -263,10 +260,10 @@ async function handleUsersDelete(req: VercelRequest, res: VercelResponse) {
 
   try {
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    res.status(204).send("");
+    return res.status(204).end();
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Internal server error" });
+    return res.status(500).json({ error: "Internal server error" });
   }
 }
 
@@ -276,7 +273,7 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  const target = req.query.target as string || "users";
+  const target = (req.query.target as string) || "users";
 
   if (target === "team") {
     if (req.method === "GET") return handleTeamGet(req, res);
