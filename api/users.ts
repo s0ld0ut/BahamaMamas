@@ -8,102 +8,6 @@ import {
   usernameToEmail,
   type PermissionMap,
 } from "./_lib/auth.js";
-import { asc, eq } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { teamMembers } from "../db/schema.js";
-
-// ============== TEAM MANAGEMENT ==============
-
-function cleanTeam(value: unknown) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function cleanSortOrder(value: unknown): number {
-  const sortOrder = Number(value);
-  return Number.isInteger(sortOrder) && sortOrder >= 0 && sortOrder <= 10000
-    ? sortOrder
-    : 10;
-}
-
-async function handleTeamGet(req: VercelRequest, res: VercelResponse) {
-  const response = await db.query.teamMembers.findMany({
-    orderBy: asc(teamMembers.sortOrder),
-  });
-  const cleanedResponse = response.map((item) => ({
-    ...item,
-    sortOrder: item.sortOrder ?? 10,
-  }));
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=120");
-  return res.status(200).json(cleanedResponse);
-}
-
-async function handleTeamPost(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "team", "edit");
-  if (!user) return;
-
-  const body =
-    typeof req.body === "object" && req.body !== null ? req.body : {};
-
-  const name = cleanTeam(body.name);
-  if (!name) return void res.status(400).json({ error: "name required" });
-
-  const role = cleanTeam(body.role);
-  const expertise = cleanTeam(body.expertise);
-  const description = cleanTeam(body.description);
-  const sortOrder = cleanSortOrder(body.sortOrder);
-
-  await db.insert(teamMembers).values({
-    name,
-    role,
-    expertise,
-    description,
-    sortOrder,
-  });
-
-  return res.status(201).json({ success: true });
-}
-
-async function handleTeamPatch(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "team", "edit");
-  if (!user) return;
-
-  const body =
-    typeof req.body === "object" && req.body !== null ? req.body : {};
-  const id = Number(req.query.id);
-
-  if (!id) return void res.status(400).json({ error: "id required" });
-
-  const name = cleanTeam(body.name);
-  if (!name) return void res.status(400).json({ error: "name required" });
-
-  const role = cleanTeam(body.role);
-  const expertise = cleanTeam(body.expertise);
-  const description = cleanTeam(body.description);
-  const sortOrder = cleanSortOrder(body.sortOrder);
-
-  await db
-    .update(teamMembers)
-    .set({ name, role, expertise, description, sortOrder })
-    .where(eq(teamMembers.id, id));
-
-  return res.status(200).json({ success: true });
-}
-
-async function handleTeamDelete(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "team", "edit");
-  if (!user) return;
-
-  const id = Number(req.query.id);
-  if (!id) return void res.status(400).json({ error: "id required" });
-
-  await db
-    .delete(teamMembers)
-    .where(eq(teamMembers.id, id));
-
-  return res.status(204).end();
-}
-
-// ============== USERS MANAGEMENT ==============
 
 function cleanUsername(value: unknown) {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
@@ -111,182 +15,134 @@ function cleanUsername(value: unknown) {
 
 function cleanPermissions(value: unknown): PermissionMap {
   const result: PermissionMap = {};
-  if (!value || typeof value !== "object" || Array.isArray(value))
-    return result;
-  const obj = value as Record<string, unknown>;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return result;
+  const input = value as Record<string, unknown>;
   for (const category of CATEGORIES) {
-    const perm = obj[category];
-    if (perm === "none" || perm === "view" || perm === "edit") {
-      result[category as keyof PermissionMap] = perm;
-    }
+    const level = input[category];
+    if (level === "view" || level === "edit") result[category] = level;
   }
   return result;
 }
 
-async function handleUsersGet(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "users", "view");
-  if (!user) return;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  res.setHeader("Cache-Control", "no-store");
 
-  try {
-    const { data, error } = await supabaseAdmin.auth.admin.listUsers();
-    if (error) {
-      console.error(error);
-      return void res.status(500).json({ error: "Failed to fetch users" });
-    }
+  if (req.method === "GET") {
+    const currentUser = await requirePermission(req, res, "users", "view");
+    if (!currentUser) return;
 
-    const usersData = await Promise.all(
-      data.users.map(async (authUser) => ({
-        ...authUser,
-        username: emailToUsername(authUser.email || ""),
-        permissions: await getPermissions(authUser.id),
+    const { data, error } = await supabaseAdmin.auth.admin.listUsers({ perPage: 1000 });
+    if (error) return res.status(500).json({ error: "Nutzer konnten nicht geladen werden." });
+
+    const users = data.users
+      .map((user) => ({
+        id: user.id,
+        username: emailToUsername(user.email || "", user.app_metadata as any),
+        permissions: getPermissions(user as any),
+        createdAt: user.created_at,
+        isSelf: user.id === currentUser.id,
       }))
-    );
+      .sort((a, b) => a.username.localeCompare(b.username));
 
-    res.setHeader("Cache-Control", "s-maxage=10, stale-while-revalidate=30");
-    return res.status(200).json(usersData);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Failed to fetch users" });
+    return res.status(200).json({ users });
   }
-}
 
-async function handleUsersPost(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "users", "edit");
-  if (!user) return;
+  const currentUser = await requirePermission(req, res, "users", "edit");
+  if (!currentUser) return;
 
-  const body =
-    typeof req.body === "object" && req.body !== null ? req.body : {};
-  const username = cleanUsername(body.username);
-  const password = typeof body.password === "string" ? body.password : "";
+  const body = (typeof req.body === "object" && req.body !== null ? req.body : null) as Record<string, unknown> | null;
 
-  if (!username)
-    return void res.status(400).json({ error: "username required" });
-  if (!password)
-    return void res.status(400).json({ error: "password required" });
+  if (req.method === "POST") {
+    const username = cleanUsername(body?.username);
+    const password = typeof body?.password === "string" ? body.password : "";
+    const permissions = cleanPermissions(body?.permissions);
 
-  const permissions = cleanPermissions(body.permissions);
+    if (!/^[a-z0-9_.-]{3,32}$/.test(username)) {
+      return res.status(422).json({ error: "Benutzername muss 3-32 Zeichen lang sein (nur Buchstaben, Zahlen, . _ -)." });
+    }
+    if (password.length < 8) {
+      return res.status(422).json({ error: "Passwort muss mindestens 8 Zeichen lang sein." });
+    }
 
-  const email = usernameToEmail(username);
-
-  try {
-    const { data: newUser, error } =
-      await supabaseAdmin.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: true,
-      });
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email: usernameToEmail(username),
+      password,
+      email_confirm: true,
+      app_metadata: { role: "admin", username, permissions },
+    });
 
     if (error) {
-      console.error(error);
-      return void res.status(400).json({ error: error.message });
+      const message = /already.*registered|already exists/i.test(error.message || "")
+        ? "Dieser Benutzername ist bereits vergeben."
+        : "Nutzer konnte nicht angelegt werden.";
+      return res.status(422).json({ error: message });
     }
 
-    const userId = newUser.user.id;
+    return res.status(201).json({
+      user: {
+        id: data.user!.id,
+        username,
+        permissions,
+        createdAt: data.user!.created_at,
+        isSelf: false,
+      },
+    });
+  }
 
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
-      userId,
-      {
-        user_metadata: { permissions },
-      }
-    );
+  if (req.method === "PATCH") {
+    const id = typeof body?.id === "string" ? body.id : "";
+    if (!id) return res.status(400).json({ error: "Ungültiger Nutzer." });
 
-    if (updateError) {
-      console.error(updateError);
-      return void res.status(500).json({ error: "Could not save permissions" });
+    const { data: existing, error: fetchError } = await supabaseAdmin.auth.admin.getUserById(id);
+    if (fetchError || !existing?.user) {
+      return res.status(404).json({ error: "Nutzer nicht gefunden." });
     }
 
-    return res.status(201).json(newUser);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-}
+    const existingUsername = emailToUsername(existing.user.email || "", existing.user.app_metadata as any);
+    const updates: Record<string, unknown> = {};
 
-async function handleUsersPatch(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "users", "edit");
-  if (!user) return;
-
-  const body =
-    typeof req.body === "object" && req.body !== null ? req.body : {};
-  const userId = typeof body.userId === "string" ? body.userId : "";
-  const password = typeof body.password === "string" ? body.password : "";
-  const permissions = cleanPermissions(body.permissions);
-
-  if (!userId) return void res.status(400).json({ error: "userId required" });
-
-  try {
-    let updatedUser;
-
-    if (password) {
-      const { data: result, error } =
-        await supabaseAdmin.auth.admin.updateUserById(userId, {
-          password,
-          user_metadata: { permissions },
-        });
-
-      if (error) {
-        console.error(error);
-        return void res.status(400).json({ error: error.message });
-      }
-      updatedUser = result.user;
-    } else {
-      const { data: result, error } =
-        await supabaseAdmin.auth.admin.updateUserById(userId, {
-          user_metadata: { permissions },
-        });
-
-      if (error) {
-        console.error(error);
-        return void res.status(400).json({ error: error.message });
-      }
-      updatedUser = result.user;
+    if (body && "permissions" in body) {
+      const permissions = cleanPermissions(body.permissions);
+      updates.app_metadata = { role: "admin", username: existingUsername, permissions };
     }
 
-    return res.status(200).json(updatedUser);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
+    if (body && typeof body.password === "string" && body.password) {
+      if (body.password.length < 8) {
+        return res.status(422).json({ error: "Passwort muss mindestens 8 Zeichen lang sein." });
+      }
+      updates.password = body.password;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: "Keine Änderungen übergeben." });
+    }
+
+    const { data, error } = await supabaseAdmin.auth.admin.updateUserById(id, updates as any);
+    if (error) return res.status(422).json({ error: "Nutzer konnte nicht aktualisiert werden." });
+
+    return res.status(200).json({
+      user: {
+        id: data.user!.id,
+        username: emailToUsername(data.user!.email || "", data.user!.app_metadata as any),
+        permissions: getPermissions(data.user as any),
+        isSelf: data.user!.id === currentUser.id,
+      },
+    });
   }
-}
 
-async function handleUsersDelete(req: VercelRequest, res: VercelResponse) {
-  const user = await requirePermission(req, "users", "edit");
-  if (!user) return;
+  if (req.method === "DELETE") {
+    const id = typeof body?.id === "string" ? body.id : "";
+    if (!id) return res.status(400).json({ error: "Ungültiger Nutzer." });
+    if (id === currentUser.id) {
+      return res.status(400).json({ error: "Du kannst dich nicht selbst löschen." });
+    }
 
-  const userId = typeof req.query.userId === "string" ? req.query.userId : "";
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(id);
+    if (error) return res.status(422).json({ error: "Nutzer konnte nicht gelöscht werden." });
 
-  if (!userId)
-    return void res.status(400).json({ error: "userId required" });
-
-  try {
-    await supabaseAdmin.auth.admin.deleteUser(userId);
-    return res.status(204).end();
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-}
-
-// ============== MAIN HANDLER ==============
-
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
-  const target = (req.query.target as string) || "users";
-
-  if (target === "team") {
-    if (req.method === "GET") return handleTeamGet(req, res);
-    if (req.method === "POST") return handleTeamPost(req, res);
-    if (req.method === "PATCH") return handleTeamPatch(req, res);
-    if (req.method === "DELETE") return handleTeamDelete(req, res);
-  } else if (target === "users") {
-    if (req.method === "GET") return handleUsersGet(req, res);
-    if (req.method === "POST") return handleUsersPost(req, res);
-    if (req.method === "PATCH") return handleUsersPatch(req, res);
-    if (req.method === "DELETE") return handleUsersDelete(req, res);
+    return res.status(200).json({ deleted: true, id });
   }
 
   res.setHeader("Allow", "GET, POST, PATCH, DELETE");
-  return res.status(405).json({ error: "Method not allowed" });
+  return res.status(405).end("Method not allowed");
 }

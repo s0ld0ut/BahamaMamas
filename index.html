@@ -918,7 +918,7 @@
                 <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
                 <button type="button" class="admin-tab" data-admin-panel="info" role="tab">Wichtige Infos</button>
                 <button type="button" class="admin-tab" data-admin-panel="content" role="tab">Inhalte &amp; Felder</button>
-                <button type="button" class="admin-tab" data-admin-panel="team-users" role="tab">Mitarbeiter & Rechte</button>
+                <button type="button" class="admin-tab" data-admin-panel="users" role="tab">Nutzer verwalten</button>
             </div>
 
             <div class="admin-panel" data-admin-panel-content="applications">
@@ -943,44 +943,253 @@
                 </div>
             </div>
 
-            <div class="admin-panel" data-admin-panel-content="team-users" hidden>
-                <div class="card team-admin-card hidden">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                        <!-- Linke Seite: Nutzer/Accounts verwalten -->
+            <div class="admin-panel" data-admin-panel-content="team" hidden>
+                <div id="team-admin" class="card team-admin-card hidden">
+                    <h2>Team verwalten</h2>
+                    <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter anlegen, bearbeiten, sortieren und löschen.</p>
+                    <form id="team-create-form" class="team-editor" data-permission-category="team">
+                        <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
                         <div>
-                            <h2>Nutzer verwalten</h2>
-                            <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten anlegen.</p>
-                            <div id="users-admin-list" class="menu-editor-list"></div>
+                            <label for="team-role">Position</label>
+                            <select id="team-role" name="role" required>
+                                <option value="">Bitte auswählen</option><option>Owner</option><option>Co-Owner</option><option>Event Director</option><option>DJ</option><option>Bar Manager</option><option>Service Manager</option><option>Nightlife Talent</option><option>Security Team</option><option>Rising Star</option>
+                            </select>
+                        </div>
+                        <div><label for="team-expertise">Expertise</label><input id="team-expertise" name="expertise" maxlength="240"></div>
+                        <div><label for="team-sort-order">Reihenfolge</label><input id="team-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                        <div class="full"><label for="team-description">Beschreibung</label><textarea id="team-description" name="description" maxlength="1200"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="team-create-submit">Mitarbeiter hinzufügen</button></div>
+                    </form>
+                    <div id="team-admin-list" class="team-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="menu" hidden>
+                <div id="menu-admin" class="card menu-admin-card hidden">
+                    <h2>Lager &amp; Preisliste</h2>
+                    <p class="hint" id="menu-admin-help">Getränke und Snacks mit Preis, Einkaufspreis und Lagerbestand verwalten. "MAX WIN" und "Fehlt" werden automatisch berechnet.</p>
+                    <div class="menu-split">
+                        <div class="menu-column">
+                            <h3>Speisekarte (öffentlich sichtbar)</h3>
+                            <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
                             <details class="content-section">
-                                <summary>Neuen Nutzer hinzufügen</summary>
-                                <form id="user-create-form" class="menu-editor content-section-body" data-permission-category="users">
-                                    <div><label for="user-username">Benutzername</label><input id="user-username" name="username" pattern="[a-z0-9_.-]{3,32}" required></div>
-                                    <div><label for="user-password">Passwort</label><input id="user-password" name="password" type="password" minlength="8" required></div>
-                                    <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer hinzufügen</button></div>
+                                <summary>Neuen Speisekarten-Eintrag hinzufügen</summary>
+                                <form id="menu-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                                    <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
+                                    <div>
+                                        <label for="menu-category">Kategorie</label>
+                                        <select id="menu-category" name="category" required>
+                                            <option value="">Bitte auswählen</option>
+                                            <option value="signature-drinks">SIGNATURE DRINKS</option>
+                                            <option value="spirits">SPIRITS</option>
+                                            <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
+                                            <option value="bar-bites">BAR BITES</option>
+                                            <option value="extras">EXTRA'S</option>
+                                        </select>
+                                    </div>
+                                    <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                                    <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                                    <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
+                                    <div class="full checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
+                                    <details class="content-section">
+                                        <summary>Lager-Daten für diesen Eintrag</summary>
+                                        <div class="content-section-body">
+                                            <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
+                                            <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                            <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                        </div>
+                                    </details>
+                                    <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
                                 </form>
                             </details>
                         </div>
 
-                        <!-- Rechte Seite: Team/Steckbriefe verwalten -->
-                        <div>
-                            <h2>Team verwalten</h2>
-                            <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter anlegen, bearbeiten, sortieren und löschen.</p>
-                            <div id="team-admin-list" class="team-editor-list"></div>
+                        <div class="menu-column">
+                            <h3>Zutaten-Lager (intern, Rohstoffe)</h3>
+                            <p class="hint">"Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
+                            <div id="ingredient-admin-list" class="menu-editor-list"></div>
                             <details class="content-section">
-                                <summary>Neuen Mitarbeiter hinzufügen</summary>
-                                <form id="team-create-form" class="team-editor content-section-body" data-permission-category="team">
-                                    <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
-                                    <div><label for="team-role">Position</label><select id="team-role" name="role" required></select></div>
-                                    <div><label for="team-expertise">Expertise</label><input id="team-expertise" name="expertise" maxlength="240"></div>
-                                    <div><label for="team-sort">Reihenfolge</label><input id="team-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                                    <div class="full"><label for="team-description">Beschreibung</label><textarea id="team-description" name="description" maxlength="1200"></textarea></div>
-                                    <div class="full team-editor-actions"><button type="submit" id="team-create-submit">Mitarbeiter hinzufügen</button></div>
+                                <summary>Neue Zutat hinzufügen</summary>
+                                <form id="ingredient-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                                    <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
+                                    <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                    <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
+                                    <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                    <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
                                 </form>
                             </details>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="admin-panel" data-admin-panel-content="events" hidden>
+                <div id="event-admin" class="card hidden">
+                    <h2>Events verwalten</h2>
+                    <p class="hint" id="event-admin-help">Events mit Datum, Startzeit, Beschreibung und aktuellem Status verwalten.</p>
+                    <form id="event-create-form" class="event-editor" data-permission-category="events">
+                        <div><label for="event-date">Datum</label><input id="event-date" name="eventDate" type="date" required></div>
+                        <div><label for="event-start-time">Startzeit</label><input id="event-start-time" name="startTime" type="time" required></div>
+                        <div><label for="event-name">Event Name</label><input id="event-name" name="name" maxlength="140" required></div>
+                        <div>
+                            <label for="event-status">Status</label>
+                            <select id="event-status" name="status" required>
+                                <option value="soon">Soon</option>
+                                <option value="aktiv">Aktiv</option>
+                                <option value="beendet">Beendet</option>
+                                <option value="in-planung" selected>In Planung</option>
+                            </select>
+                        </div>
+                        <div class="full"><label for="event-description">Beschreibung</label><textarea id="event-description" name="description" maxlength="1200"></textarea></div>
+                        <div class="full team-editor-actions"><button type="submit" id="event-create-submit">Event hinzufügen</button></div>
+                    </form>
+                    <div id="event-admin-list" class="event-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="vip" hidden>
+                <div id="vip-admin" class="card hidden">
+                    <h2>VIP-Tickets</h2>
+                    <p class="hint" id="vip-admin-help">Ticket-Arten mit Preis und Laufzeit verwalten, sowie Ticket-Inhaber eintragen. "Gültig bis", "Tage Rest" und "Aktiv" werden automatisch berechnet.</p>
+
+                    <h3>Ticket-Arten</h3>
+                    <div id="vip-type-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neue Ticket-Art hinzufügen</summary>
+                        <form id="vip-type-create-form" class="menu-editor content-section-body" data-permission-category="vip">
+                            <div><label for="vip-type-name">Name</label><input id="vip-type-name" name="name" maxlength="120" required></div>
+                            <div><label for="vip-type-duration">Laufzeit in Tagen</label><input id="vip-type-duration" name="durationDays" type="number" min="1" max="3650" value="30" required></div>
+                            <div><label for="vip-type-price">Preis in $</label><input id="vip-type-price" name="price" type="number" min="0" max="100000000" value="50000" required></div>
+                            <div><label for="vip-type-sort">Reihenfolge</label><input id="vip-type-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                            <div class="full team-editor-actions"><button type="submit" id="vip-type-create-submit">Ticket-Art hinzufügen</button></div>
+                        </form>
+                    </details>
+
+                    <hr>
+                    <h3>Ticket-Inhaber</h3>
+                    <div id="vip-ticket-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neues Ticket eintragen</summary>
+                        <form id="vip-ticket-create-form" class="menu-editor content-section-body" data-permission-category="vip">
+                            <div><label for="vip-ticket-holder">Besitzer</label><input id="vip-ticket-holder" name="holderName" maxlength="160" required></div>
+                            <div>
+                                <label for="vip-ticket-type">Ticket-Art</label>
+                                <select id="vip-ticket-type" name="ticketTypeId" required></select>
+                            </div>
+                            <div><label for="vip-ticket-issued">Ausgestellt am</label><input id="vip-ticket-issued" name="issuedAt" type="date" required></div>
+                            <div class="full"><label for="vip-ticket-notes">Notiz</label><textarea id="vip-ticket-notes" name="notes" maxlength="1000"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="vip-ticket-create-submit">Ticket eintragen</button></div>
+                        </form>
+                    </details>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="finance" hidden>
+                <div id="finance-admin" class="card hidden">
+                    <h2>Finanzen</h2>
+                    <p class="hint" id="finance-admin-help">Ein- und Ausgaben erfassen. Der laufende Kontostand wird automatisch berechnet.</p>
+                    <p class="admin-meta">Kontostand: <span id="finance-balance">0 $</span></p>
+                    <div id="finance-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Eintrag hinzufügen</summary>
+                        <form id="finance-create-form" class="menu-editor content-section-body" data-permission-category="finance">
+                            <div><label for="finance-date">Datum</label><input id="finance-date" name="entryDate" type="date" required></div>
+                            <div><label for="finance-description">Beschreibung</label><input id="finance-description" name="description" maxlength="240" required></div>
+                            <div><label for="finance-amount">Betrag in $ (negativ = Ausgabe)</label><input id="finance-amount" name="amount" type="number" step="1" required></div>
+                            <div class="full team-editor-actions"><button type="submit" id="finance-create-submit">Eintrag hinzufügen</button></div>
+                        </form>
+                    </details>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="info" hidden>
+                <div id="info-admin" class="card hidden">
+                    <h2>Wichtige Infos</h2>
+                    <p class="hint" id="info-admin-help">Interne Hinweise für Mitarbeiter (nur im Admin-Bereich sichtbar, nicht öffentlich).</p>
+                    <div id="info-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Hinweis hinzufügen</summary>
+                        <form id="info-create-form" class="menu-editor content-section-body" data-permission-category="info">
+                            <div><label for="info-title">Titel</label><input id="info-title" name="title" maxlength="160" required></div>
+                            <div><label for="info-sort">Reihenfolge</label><input id="info-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                            <div class="checkbox-field"><label><input type="checkbox" id="info-pinned" name="pinned" value="true"> Angepinnt (oben anzeigen)</label></div>
+                            <div class="full"><label for="info-body">Text</label><textarea id="info-body" name="body" maxlength="5000"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="info-create-submit">Hinweis hinzufügen</button></div>
+                        </form>
+                    </details>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="content" hidden>
+                <div id="content-admin" class="card hidden">
+                    <h2>Inhalte &amp; Felder verwalten</h2>
+                    <p class="hint" id="content-admin-help">Texte, Dropdown-Optionen und zusätzliche Felder zentral bearbeiten.</p>
+                    <form id="content-settings-form" class="content-settings-grid">
+                        <details class="content-section" open>
+                            <summary>Startseite &amp; Bewerbung &amp; Kontakt (Texte)</summary>
+                            <div class="content-section-body">
+                                <div><label for="setting-home-title">Startseiten-Titel</label><input id="setting-home-title" name="homeTitle" maxlength="160" required></div>
+                                <div><label for="setting-application-title">Bewerbungs-Titel</label><input id="setting-application-title" name="applicationTitle" maxlength="160" required></div>
+                                <div class="full"><label for="setting-home-text">Startseiten-Text</label><textarea id="setting-home-text" name="homeText" maxlength="5000" required></textarea></div>
+                                <div class="full"><label for="setting-application-intro">Bewerbungs-Einleitung</label><textarea id="setting-application-intro" name="applicationIntro" maxlength="5000" required></textarea></div>
+                                <div><label for="setting-contact-title">Kontakt-Titel</label><input id="setting-contact-title" name="contactTitle" maxlength="160" required></div>
+                                <div><label for="setting-contact-intro">Kontakt-Einleitung</label><textarea id="setting-contact-intro" name="contactIntro" maxlength="5000" required></textarea></div>
+                            </div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Bewerbungspositionen</summary>
+                            <div class="content-section-body full"><div id="application-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="applicationPositions">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Arten von Kontaktanfragen</summary>
+                            <div class="content-section-body full"><div id="contact-type-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="contactRequestTypes">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Team-Positionen</summary>
+                            <div class="content-section-body full"><div id="team-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="teamPositions">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Speisekarten-Kategorien</summary>
+                            <div class="content-section-body full"><div id="menu-category-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="menuCategories">Kategorie hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Event-Status</summary>
+                            <div class="content-section-body full"><div id="event-status-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="eventStatuses">Status hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Zusätzliche Bewerbungsfelder</summary>
+                            <div class="content-section-body full">
+                                <p class="hint">Freie Textfelder oder Dropdowns ergänzen. Dropdown-Optionen mit Komma trennen.</p>
+                                <div id="application-field-editor" class="list-editor"></div>
+                                <button type="button" class="secondary" id="add-application-field">Feld hinzufügen</button>
+                            </div>
+                        </details>
+
+                        <div class="full team-editor-actions"><button type="submit" id="content-settings-submit">Einstellungen speichern</button></div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="users" hidden>
+                <div id="users-admin" class="card hidden">
+                    <h2>Nutzer verwalten</h2>
+                    <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten anlegen.</p>
+                    <div id="users-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Nutzer anlegen</summary>
+                        <form id="user-create-form" class="user-editor content-section-body" data-permission-category="users">
+                            <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
+                            <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
+                            <div class="full">
+                                <h3>Rechte</h3>
+                                <div id="user-new-permissions" class="permission-grid"></div>
+                            </div>
                             <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
                         </form>
                     </details>
@@ -1256,10 +1465,6 @@
             if (!container) return;
             const readOnly = !canEdit(category);
             container.querySelectorAll("button, input, textarea, select").forEach((element) => {
-                // Auge-Icons (Ansehen-Button) auch für Nutzer mit Leserechten erlauben
-                if (element.tagName === "BUTTON" && element.dataset.toggleEdit && element.dataset.toggleEdit.startsWith("view-")) {
-                    return; // Button nicht deaktivieren
-                }
                 element.disabled = readOnly;
             });
         }
@@ -2278,7 +2483,7 @@
         async function loadTeam(forAdmin = false) {
             if (forAdmin) teamAdminHelp.textContent = "Team wird geladen.";
 
-            const response = await apiFetch("/api/users?target=team");
+            const response = await apiFetch("/api/team");
             const data = await response.json().catch(() => ({}));
 
             if (!response.ok) {
@@ -3153,7 +3358,7 @@
             teamCreateSubmit.disabled = true;
 
             try {
-                const response = await apiFetch("/api/users?target=team", {
+                const response = await apiFetch("/api/team", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
@@ -3182,7 +3387,7 @@
             button.disabled = true;
 
             try {
-                const response = await apiFetch("/api/users?target=team", {
+                const response = await apiFetch("/api/team", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
@@ -3210,7 +3415,7 @@
 
             button.disabled = true;
             try {
-                const response = await apiFetch("/api/users?target=team", {
+                const response = await apiFetch("/api/team", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
