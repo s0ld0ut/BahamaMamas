@@ -401,6 +401,8 @@
 
         .menu-editor .full { grid-column: 1 / -1; }
 
+        .menu-column .menu-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
         .checkbox-field { grid-column: 1 / -1; display: flex; align-items: center; }
         .checkbox-field label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 400; }
 
@@ -969,47 +971,53 @@
                     <div class="menu-split">
                         <div class="menu-column">
                             <h3>Speisekarte (öffentlich sichtbar)</h3>
-                            <form id="menu-create-form" class="menu-editor" data-permission-category="menu">
-                                <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
-                                <div>
-                                    <label for="menu-category">Kategorie</label>
-                                    <select id="menu-category" name="category" required>
-                                        <option value="">Bitte auswählen</option>
-                                        <option value="signature-drinks">SIGNATURE DRINKS</option>
-                                        <option value="spirits">SPIRITS</option>
-                                        <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
-                                        <option value="bar-bites">BAR BITES</option>
-                                        <option value="extras">EXTRA'S</option>
-                                    </select>
-                                </div>
-                                <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
-                                <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                                <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
-                                <div class="full checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
-                                <details class="content-section">
-                                    <summary>Lager-Daten für diesen Eintrag</summary>
-                                    <div class="content-section-body">
-                                        <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
-                                        <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                                        <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                                    </div>
-                                </details>
-                                <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
-                            </form>
                             <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                            <details class="content-section">
+                                <summary>Neuen Speisekarten-Eintrag hinzufügen</summary>
+                                <form id="menu-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                                    <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
+                                    <div>
+                                        <label for="menu-category">Kategorie</label>
+                                        <select id="menu-category" name="category" required>
+                                            <option value="">Bitte auswählen</option>
+                                            <option value="signature-drinks">SIGNATURE DRINKS</option>
+                                            <option value="spirits">SPIRITS</option>
+                                            <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
+                                            <option value="bar-bites">BAR BITES</option>
+                                            <option value="extras">EXTRA'S</option>
+                                        </select>
+                                    </div>
+                                    <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                                    <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                                    <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
+                                    <div class="full checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
+                                    <details class="content-section">
+                                        <summary>Lager-Daten für diesen Eintrag</summary>
+                                        <div class="content-section-body">
+                                            <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
+                                            <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                            <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                        </div>
+                                    </details>
+                                    <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
+                                </form>
+                            </details>
                         </div>
 
                         <div class="menu-column">
                             <h3>Zutaten-Lager (intern, Rohstoffe)</h3>
                             <p class="hint">"Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
-                            <form id="ingredient-create-form" class="menu-editor" data-permission-category="menu">
-                                <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
-                                <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                                <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
-                                <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                                <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
-                            </form>
                             <div id="ingredient-admin-list" class="menu-editor-list"></div>
+                            <details class="content-section">
+                                <summary>Neue Zutat hinzufügen</summary>
+                                <form id="ingredient-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                                    <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
+                                    <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                    <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
+                                    <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                    <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
+                                </form>
+                            </details>
                         </div>
                     </div>
                 </div>
@@ -1045,28 +1053,34 @@
                     <p class="hint" id="vip-admin-help">Ticket-Arten mit Preis und Laufzeit verwalten, sowie Ticket-Inhaber eintragen. "Gültig bis", "Tage Rest" und "Aktiv" werden automatisch berechnet.</p>
 
                     <h3>Ticket-Arten</h3>
-                    <form id="vip-type-create-form" class="menu-editor" data-permission-category="vip">
-                        <div><label for="vip-type-name">Name</label><input id="vip-type-name" name="name" maxlength="120" required></div>
-                        <div><label for="vip-type-duration">Laufzeit in Tagen</label><input id="vip-type-duration" name="durationDays" type="number" min="1" max="3650" value="30" required></div>
-                        <div><label for="vip-type-price">Preis in $</label><input id="vip-type-price" name="price" type="number" min="0" max="100000000" value="50000" required></div>
-                        <div><label for="vip-type-sort">Reihenfolge</label><input id="vip-type-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <div class="full team-editor-actions"><button type="submit" id="vip-type-create-submit">Ticket-Art hinzufügen</button></div>
-                    </form>
                     <div id="vip-type-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neue Ticket-Art hinzufügen</summary>
+                        <form id="vip-type-create-form" class="menu-editor content-section-body" data-permission-category="vip">
+                            <div><label for="vip-type-name">Name</label><input id="vip-type-name" name="name" maxlength="120" required></div>
+                            <div><label for="vip-type-duration">Laufzeit in Tagen</label><input id="vip-type-duration" name="durationDays" type="number" min="1" max="3650" value="30" required></div>
+                            <div><label for="vip-type-price">Preis in $</label><input id="vip-type-price" name="price" type="number" min="0" max="100000000" value="50000" required></div>
+                            <div><label for="vip-type-sort">Reihenfolge</label><input id="vip-type-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                            <div class="full team-editor-actions"><button type="submit" id="vip-type-create-submit">Ticket-Art hinzufügen</button></div>
+                        </form>
+                    </details>
 
                     <hr>
                     <h3>Ticket-Inhaber</h3>
-                    <form id="vip-ticket-create-form" class="menu-editor" data-permission-category="vip">
-                        <div><label for="vip-ticket-holder">Besitzer</label><input id="vip-ticket-holder" name="holderName" maxlength="160" required></div>
-                        <div>
-                            <label for="vip-ticket-type">Ticket-Art</label>
-                            <select id="vip-ticket-type" name="ticketTypeId" required></select>
-                        </div>
-                        <div><label for="vip-ticket-issued">Ausgestellt am</label><input id="vip-ticket-issued" name="issuedAt" type="date" required></div>
-                        <div class="full"><label for="vip-ticket-notes">Notiz</label><textarea id="vip-ticket-notes" name="notes" maxlength="1000"></textarea></div>
-                        <div class="full team-editor-actions"><button type="submit" id="vip-ticket-create-submit">Ticket eintragen</button></div>
-                    </form>
                     <div id="vip-ticket-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neues Ticket eintragen</summary>
+                        <form id="vip-ticket-create-form" class="menu-editor content-section-body" data-permission-category="vip">
+                            <div><label for="vip-ticket-holder">Besitzer</label><input id="vip-ticket-holder" name="holderName" maxlength="160" required></div>
+                            <div>
+                                <label for="vip-ticket-type">Ticket-Art</label>
+                                <select id="vip-ticket-type" name="ticketTypeId" required></select>
+                            </div>
+                            <div><label for="vip-ticket-issued">Ausgestellt am</label><input id="vip-ticket-issued" name="issuedAt" type="date" required></div>
+                            <div class="full"><label for="vip-ticket-notes">Notiz</label><textarea id="vip-ticket-notes" name="notes" maxlength="1000"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="vip-ticket-create-submit">Ticket eintragen</button></div>
+                        </form>
+                    </details>
                 </div>
             </div>
 
@@ -1075,13 +1089,16 @@
                     <h2>Finanzen</h2>
                     <p class="hint" id="finance-admin-help">Ein- und Ausgaben erfassen. Der laufende Kontostand wird automatisch berechnet.</p>
                     <p class="admin-meta">Kontostand: <span id="finance-balance">0 $</span></p>
-                    <form id="finance-create-form" class="menu-editor" data-permission-category="finance">
-                        <div><label for="finance-date">Datum</label><input id="finance-date" name="entryDate" type="date" required></div>
-                        <div><label for="finance-description">Beschreibung</label><input id="finance-description" name="description" maxlength="240" required></div>
-                        <div><label for="finance-amount">Betrag in $ (negativ = Ausgabe)</label><input id="finance-amount" name="amount" type="number" step="1" required></div>
-                        <div class="full team-editor-actions"><button type="submit" id="finance-create-submit">Eintrag hinzufügen</button></div>
-                    </form>
                     <div id="finance-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Eintrag hinzufügen</summary>
+                        <form id="finance-create-form" class="menu-editor content-section-body" data-permission-category="finance">
+                            <div><label for="finance-date">Datum</label><input id="finance-date" name="entryDate" type="date" required></div>
+                            <div><label for="finance-description">Beschreibung</label><input id="finance-description" name="description" maxlength="240" required></div>
+                            <div><label for="finance-amount">Betrag in $ (negativ = Ausgabe)</label><input id="finance-amount" name="amount" type="number" step="1" required></div>
+                            <div class="full team-editor-actions"><button type="submit" id="finance-create-submit">Eintrag hinzufügen</button></div>
+                        </form>
+                    </details>
                 </div>
             </div>
 
@@ -1089,14 +1106,17 @@
                 <div id="info-admin" class="card hidden">
                     <h2>Wichtige Infos</h2>
                     <p class="hint" id="info-admin-help">Interne Hinweise für Mitarbeiter (nur im Admin-Bereich sichtbar, nicht öffentlich).</p>
-                    <form id="info-create-form" class="menu-editor" data-permission-category="info">
-                        <div><label for="info-title">Titel</label><input id="info-title" name="title" maxlength="160" required></div>
-                        <div><label for="info-sort">Reihenfolge</label><input id="info-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <div class="checkbox-field"><label><input type="checkbox" id="info-pinned" name="pinned" value="true"> Angepinnt (oben anzeigen)</label></div>
-                        <div class="full"><label for="info-body">Text</label><textarea id="info-body" name="body" maxlength="5000"></textarea></div>
-                        <div class="full team-editor-actions"><button type="submit" id="info-create-submit">Hinweis hinzufügen</button></div>
-                    </form>
                     <div id="info-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Hinweis hinzufügen</summary>
+                        <form id="info-create-form" class="menu-editor content-section-body" data-permission-category="info">
+                            <div><label for="info-title">Titel</label><input id="info-title" name="title" maxlength="160" required></div>
+                            <div><label for="info-sort">Reihenfolge</label><input id="info-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                            <div class="checkbox-field"><label><input type="checkbox" id="info-pinned" name="pinned" value="true"> Angepinnt (oben anzeigen)</label></div>
+                            <div class="full"><label for="info-body">Text</label><textarea id="info-body" name="body" maxlength="5000"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="info-create-submit">Hinweis hinzufügen</button></div>
+                        </form>
+                    </details>
                 </div>
             </div>
 
@@ -1160,16 +1180,19 @@
                 <div id="users-admin" class="card hidden">
                     <h2>Nutzer verwalten</h2>
                     <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten anlegen.</p>
-                    <form id="user-create-form" class="user-editor" data-permission-category="users">
-                        <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
-                        <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
-                        <div class="full">
-                            <h3>Rechte</h3>
-                            <div id="user-new-permissions" class="permission-grid"></div>
-                        </div>
-                        <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
-                    </form>
                     <div id="users-admin-list" class="menu-editor-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Nutzer anlegen</summary>
+                        <form id="user-create-form" class="user-editor content-section-body" data-permission-category="users">
+                            <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
+                            <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
+                            <div class="full">
+                                <h3>Rechte</h3>
+                                <div id="user-new-permissions" class="permission-grid"></div>
+                            </div>
+                            <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
+                        </form>
+                    </details>
                 </div>
             </div>
         </div>
@@ -2286,9 +2309,13 @@
                                 <td>${note.pinned ? '<span class="badge badge-on">Angepinnt</span>' : '<span class="badge badge-off">Nein</span>'}</td>
                                 <td>${Number(note.sortOrder) || 0}</td>
                                 <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="view-${note.id}" title="Text ansehen">&#128065;</button>
                                     <button type="button" class="icon-button" data-toggle-edit="${note.id}" title="Bearbeiten">&#9998;</button>
                                     <button type="button" class="icon-button danger" data-delete-info-note data-id="${note.id}" title="Löschen">&#128465;</button>
                                 </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="view-${note.id}">
+                                <td colspan="4"><p class="hint" style="white-space: pre-wrap;">${note.body ? escapeHtml(note.body) : "Kein Text hinterlegt."}</p></td>
                             </tr>
                             <tr class="edit-row hidden" data-edit-row="${note.id}">
                                 <td colspan="4">
