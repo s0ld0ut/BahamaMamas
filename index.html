@@ -401,7 +401,7 @@
 
         .menu-editor .full { grid-column: 1 / -1; }
 
-        .menu-column .menu-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .menu-column .menu-editor, .menu-column .user-editor, .menu-column .team-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
         .checkbox-field { grid-column: 1 / -1; display: flex; align-items: center; }
         .checkbox-field label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-weight: 400; }
@@ -911,14 +911,13 @@
             <div id="admin-toolbar" class="admin-toolbar hidden" role="tablist" aria-label="Admin Unterkategorien">
                 <button type="button" class="admin-tab active" data-admin-panel="applications" role="tab">Bewerbungen</button>
                 <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
-                <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team Verwaltung</button>
+                <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team &amp; Zugänge</button>
                 <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Lager &amp; Preisliste</button>
                 <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
                 <button type="button" class="admin-tab" data-admin-panel="vip" role="tab">VIP-Tickets</button>
                 <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
                 <button type="button" class="admin-tab" data-admin-panel="info" role="tab">Wichtige Infos</button>
                 <button type="button" class="admin-tab" data-admin-panel="content" role="tab">Inhalte &amp; Felder</button>
-                <button type="button" class="admin-tab" data-admin-panel="users" role="tab">Nutzer verwalten</button>
             </div>
 
             <div class="admin-panel" data-admin-panel-content="applications">
@@ -944,23 +943,50 @@
             </div>
 
             <div class="admin-panel" data-admin-panel-content="team" hidden>
-                <div id="team-admin" class="card team-admin-card hidden">
-                    <h2>Team verwalten</h2>
-                    <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter anlegen, bearbeiten, sortieren und löschen.</p>
-                    <form id="team-create-form" class="team-editor" data-permission-category="team">
-                        <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
-                        <div>
-                            <label for="team-role">Position</label>
-                            <select id="team-role" name="role" required>
-                                <option value="">Bitte auswählen</option><option>Owner</option><option>Co-Owner</option><option>Event Director</option><option>DJ</option><option>Bar Manager</option><option>Service Manager</option><option>Nightlife Talent</option><option>Security Team</option><option>Rising Star</option>
-                            </select>
+                <div class="menu-split">
+                    <div class="menu-column">
+                        <div id="team-admin" class="card team-admin-card hidden">
+                            <h2>Team (öffentlich sichtbar)</h2>
+                            <p class="hint" id="team-admin-help">Hier kannst du Mitarbeiter-Profile anlegen, bearbeiten, sortieren und löschen - erscheinen auf der öffentlichen Team-Seite.</p>
+                            <div id="team-admin-list" class="team-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                            <details class="content-section">
+                                <summary>Neues Teammitglied hinzufügen</summary>
+                                <form id="team-create-form" class="team-editor content-section-body" data-permission-category="team">
+                                    <div><label for="team-name">Name</label><input id="team-name" name="name" maxlength="120" required></div>
+                                    <div>
+                                        <label for="team-role">Position</label>
+                                        <select id="team-role" name="role" required>
+                                            <option value="">Bitte auswählen</option><option>Owner</option><option>Co-Owner</option><option>Event Director</option><option>DJ</option><option>Bar Manager</option><option>Service Manager</option><option>Nightlife Talent</option><option>Security Team</option><option>Rising Star</option>
+                                        </select>
+                                    </div>
+                                    <div><label for="team-expertise">Expertise</label><input id="team-expertise" name="expertise" maxlength="240"></div>
+                                    <div><label for="team-sort-order">Reihenfolge</label><input id="team-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                                    <div class="full"><label for="team-description">Beschreibung</label><textarea id="team-description" name="description" maxlength="1200"></textarea></div>
+                                    <div class="full team-editor-actions"><button type="submit" id="team-create-submit">Mitarbeiter hinzufügen</button></div>
+                                </form>
+                            </details>
                         </div>
-                        <div><label for="team-expertise">Expertise</label><input id="team-expertise" name="expertise" maxlength="240"></div>
-                        <div><label for="team-sort-order">Reihenfolge</label><input id="team-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <div class="full"><label for="team-description">Beschreibung</label><textarea id="team-description" name="description" maxlength="1200"></textarea></div>
-                        <div class="full team-editor-actions"><button type="submit" id="team-create-submit">Mitarbeiter hinzufügen</button></div>
-                    </form>
-                    <div id="team-admin-list" class="team-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                    </div>
+
+                    <div class="menu-column">
+                        <div id="users-admin" class="card hidden">
+                            <h2>Login-Zugänge (intern)</h2>
+                            <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten für den Admin-Bereich - unabhängig von den öffentlichen Team-Profilen links.</p>
+                            <div id="users-admin-list" class="menu-editor-list"></div>
+                            <details class="content-section">
+                                <summary>Neuen Nutzer anlegen</summary>
+                                <form id="user-create-form" class="user-editor content-section-body" data-permission-category="users">
+                                    <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
+                                    <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
+                                    <div class="full">
+                                        <h3>Rechte</h3>
+                                        <div id="user-new-permissions" class="permission-grid"></div>
+                                    </div>
+                                    <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
+                                </form>
+                            </details>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1027,23 +1053,26 @@
                 <div id="event-admin" class="card hidden">
                     <h2>Events verwalten</h2>
                     <p class="hint" id="event-admin-help">Events mit Datum, Startzeit, Beschreibung und aktuellem Status verwalten.</p>
-                    <form id="event-create-form" class="event-editor" data-permission-category="events">
-                        <div><label for="event-date">Datum</label><input id="event-date" name="eventDate" type="date" required></div>
-                        <div><label for="event-start-time">Startzeit</label><input id="event-start-time" name="startTime" type="time" required></div>
-                        <div><label for="event-name">Event Name</label><input id="event-name" name="name" maxlength="140" required></div>
-                        <div>
-                            <label for="event-status">Status</label>
-                            <select id="event-status" name="status" required>
-                                <option value="soon">Soon</option>
-                                <option value="aktiv">Aktiv</option>
-                                <option value="beendet">Beendet</option>
-                                <option value="in-planung" selected>In Planung</option>
-                            </select>
-                        </div>
-                        <div class="full"><label for="event-description">Beschreibung</label><textarea id="event-description" name="description" maxlength="1200"></textarea></div>
-                        <div class="full team-editor-actions"><button type="submit" id="event-create-submit">Event hinzufügen</button></div>
-                    </form>
                     <div id="event-admin-list" class="event-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
+                    <details class="content-section">
+                        <summary>Neues Event hinzufügen</summary>
+                        <form id="event-create-form" class="event-editor content-section-body" data-permission-category="events">
+                            <div><label for="event-date">Datum</label><input id="event-date" name="eventDate" type="date" required></div>
+                            <div><label for="event-start-time">Startzeit</label><input id="event-start-time" name="startTime" type="time" required></div>
+                            <div><label for="event-name">Event Name</label><input id="event-name" name="name" maxlength="140" required></div>
+                            <div>
+                                <label for="event-status">Status</label>
+                                <select id="event-status" name="status" required>
+                                    <option value="soon">Soon</option>
+                                    <option value="aktiv">Aktiv</option>
+                                    <option value="beendet">Beendet</option>
+                                    <option value="in-planung" selected>In Planung</option>
+                                </select>
+                            </div>
+                            <div class="full"><label for="event-description">Beschreibung</label><textarea id="event-description" name="description" maxlength="1200"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="event-create-submit">Event hinzufügen</button></div>
+                        </form>
+                    </details>
                 </div>
             </div>
 
@@ -1176,25 +1205,6 @@
                 </div>
             </div>
 
-            <div class="admin-panel" data-admin-panel-content="users" hidden>
-                <div id="users-admin" class="card hidden">
-                    <h2>Nutzer verwalten</h2>
-                    <p class="hint" id="users-admin-help">Mitarbeiter-Accounts mit Benutzername und individuellen Rechten anlegen.</p>
-                    <div id="users-admin-list" class="menu-editor-list"></div>
-                    <details class="content-section">
-                        <summary>Neuen Nutzer anlegen</summary>
-                        <form id="user-create-form" class="user-editor content-section-body" data-permission-category="users">
-                            <div><label for="user-new-username">Benutzername</label><input id="user-new-username" name="username" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required placeholder="z.B. isaac.miller"></div>
-                            <div><label for="user-new-password">Passwort</label><input id="user-new-password" name="password" type="password" minlength="8" required></div>
-                            <div class="full">
-                                <h3>Rechte</h3>
-                                <div id="user-new-permissions" class="permission-grid"></div>
-                            </div>
-                            <div class="full team-editor-actions"><button type="submit" id="user-create-submit">Nutzer anlegen</button></div>
-                        </form>
-                    </details>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -1464,7 +1474,13 @@
         function applyReadOnly(container, category) {
             if (!container) return;
             const readOnly = !canEdit(category);
-            container.querySelectorAll("button, input, textarea, select").forEach((element) => {
+            // Auf-/Zuklapp-Buttons (Auge zum Ansehen, Stift zum Bearbeiten) bleiben
+            // immer klickbar - nur echte Änderungen (Speichern, Löschen, Eingabefelder)
+            // werden für reine "Sehen"-Rechte gesperrt.
+            container.querySelectorAll("input, textarea, select").forEach((element) => {
+                element.disabled = readOnly;
+            });
+            container.querySelectorAll("button:not([data-toggle-edit])").forEach((element) => {
                 element.disabled = readOnly;
             });
         }
@@ -1566,7 +1582,10 @@
 
             document.querySelectorAll("[data-admin-panel]").forEach((button) => {
                 const category = button.dataset.adminPanel;
-                button.classList.toggle("hidden", !canView(category));
+                // "team" und "users" teilen sich jetzt einen Tab - der Tab ist
+                // sichtbar, sobald mindestens einer der beiden Bereiche sichtbar ist.
+                const visible = category === "team" ? (canView("team") || canView("users")) : canView(category);
+                button.classList.toggle("hidden", !visible);
             });
 
             const cardByCategory = {
@@ -1605,7 +1624,8 @@
             await Promise.all(loaders);
 
             const firstCategory = visibleCategories.includes("applications") ? "applications" : visibleCategories[0];
-            showAdminPanel(firstCategory);
+            const firstPanel = firstCategory === "users" ? "team" : firstCategory;
+            showAdminPanel(firstPanel);
         }
 
         function showAdminPanel(panelName) {
@@ -2428,7 +2448,7 @@
         }
 
         async function loadUsers() {
-            const response = await apiFetch("/api/users");
+            const response = await apiFetch("/api/team?resource=users");
             const data = await response.json().catch(() => ({}));
             if (!response.ok) {
                 usersAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Nutzer konnten nicht geladen werden.")}</div>`;
@@ -3081,7 +3101,7 @@
             try {
                 const payload = getFormPayload(userCreateForm);
                 const permissions = readPermissionEditor(userNewPermissions);
-                const response = await apiFetch("/api/users", {
+                const response = await apiFetch("/api/team?resource=users", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
@@ -3112,7 +3132,7 @@
                 const payload = { id: form.dataset.id, permissions };
                 if (password) payload.password = password;
 
-                const response = await apiFetch("/api/users", {
+                const response = await apiFetch("/api/team?resource=users", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
@@ -3135,7 +3155,7 @@
             if (!confirm("Diesen Nutzer wirklich unwiderruflich löschen?")) return;
             button.disabled = true;
             try {
-                const response = await apiFetch("/api/users", {
+                const response = await apiFetch("/api/team?resource=users", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
