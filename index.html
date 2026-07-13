@@ -381,6 +381,86 @@
 
         .admin-panel[hidden] { display: none; }
         .admin-panel > .card { margin: 0; }
+
+        /* Kassensystem */
+        .cashier-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
+            gap: 22px;
+            align-items: start;
+        }
+        .cashier-toolbar { display: flex; justify-content: flex-end; margin-bottom: 4px; }
+        .cashier-toolbar button { margin-top: 0; }
+        .cashier-group {
+            border: 1px solid rgba(0, 212, 255, 0.34);
+            border-radius: 12px;
+            padding: 16px 18px 6px;
+            margin: 0 0 18px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .cashier-group h3 {
+            margin: 0 0 12px;
+            color: var(--cyan);
+            font-size: 0.92rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .cashier-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 90px 84px;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .cashier-row:first-of-type { border-top: 0; }
+        .cashier-row .cashier-name { font-weight: 600; }
+        .cashier-row .cashier-price { color: var(--muted); font-size: 0.88rem; text-align: right; }
+        .cashier-row input[type="number"] {
+            min-height: 40px;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        .cashier-receipt-wrap { position: sticky; top: 84px; }
+        .receipt {
+            background: #0c0c0c;
+            border: 1px dashed rgba(0, 212, 255, 0.5);
+            border-radius: 10px;
+            padding: 22px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #e9e9e9;
+            box-shadow: 0 0 24px rgba(255, 0, 255, 0.14);
+        }
+        .receipt-header { text-align: center; }
+        .receipt-company { font-weight: 800; letter-spacing: 0.12em; font-size: 1.1rem; color: #fff; }
+        .receipt-location { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+        .receipt-datetime { color: var(--muted); font-size: 0.8rem; margin-top: 6px; }
+        .receipt-divider {
+            border-top: 1px dashed rgba(255, 255, 255, 0.3);
+            margin: 14px 0;
+        }
+        .receipt-items { display: grid; gap: 6px; min-height: 24px; }
+        .receipt-item-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 10px;
+            font-size: 0.92rem;
+        }
+        .receipt-item-qty { color: var(--muted); }
+        .receipt-empty { color: var(--muted); font-size: 0.88rem; text-align: center; padding: 6px 0; }
+        .receipt-total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #fff;
+        }
+        .receipt-footer {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--cyan);
+            font-size: 0.9rem;
+        }
         .content-settings-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
         .content-settings-grid .full { grid-column: 1 / -1; }
         .list-editor { display: grid; gap: 10px; }
@@ -636,7 +716,7 @@
         .hidden { display: none !important; }
 
         @media (max-width: 820px) {
-            .grid-2, .grid-3, .form-grid, .admin-shell, .answer-grid, .admin-actions, .application-controls, .team-grid, .team-editor, .menu-board, .menu-editor, .event-editor, .content-settings-grid {
+            .grid-2, .grid-3, .form-grid, .admin-shell, .answer-grid, .admin-actions, .application-controls, .team-grid, .team-editor, .menu-board, .menu-editor, .event-editor, .content-settings-grid, .cashier-layout {
                 grid-template-columns: 1fr;
             }
             .content-settings-grid .full { grid-column: auto; }
@@ -913,6 +993,7 @@
                 <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
                 <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team &amp; Zugänge</button>
                 <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Lager &amp; Preisliste</button>
+                <button type="button" class="admin-tab" data-admin-panel="kassensystem" role="tab">Kassensystem</button>
                 <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
                 <button type="button" class="admin-tab" data-admin-panel="vip" role="tab">VIP-Tickets</button>
                 <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
@@ -1044,6 +1125,41 @@
                                     <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
                                 </form>
                             </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-panel" data-admin-panel-content="kassensystem" hidden>
+                <div id="kassensystem-admin" class="card">
+                    <h2>Kassensystem</h2>
+                    <p class="hint">Preise zusammenstellen und automatisch einen Kassenbon erzeugen. Mengen eintragen - die Summe und der Bon aktualisieren sich sofort.</p>
+                    <div class="cashier-layout">
+                        <div class="cashier-products">
+                            <div class="cashier-toolbar">
+                                <button type="button" id="cashier-reset" class="secondary">Reset</button>
+                            </div>
+                            <div id="cashier-product-groups"></div>
+                        </div>
+
+                        <div class="cashier-receipt-wrap">
+                            <div class="receipt" id="cashier-receipt">
+                                <div class="receipt-header">
+                                    <div class="receipt-company">BAHAMA MAMAS</div>
+                                    <div class="receipt-location">Rockford Hills, Los Santos</div>
+                                    <div class="receipt-datetime" id="receipt-datetime"></div>
+                                </div>
+                                <div class="receipt-divider"></div>
+                                <div class="receipt-items" id="receipt-items">
+                                    <div class="receipt-empty">Noch keine Artikel ausgewählt.</div>
+                                </div>
+                                <div class="receipt-divider"></div>
+                                <div class="receipt-total-row">
+                                    <span>Endsumme</span>
+                                    <span id="receipt-total">0 $</span>
+                                </div>
+                                <div class="receipt-footer">Vielen Dank für Ihre Bestellung</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1584,7 +1700,9 @@
                 const category = button.dataset.adminPanel;
                 // "team" und "users" teilen sich jetzt einen Tab - der Tab ist
                 // sichtbar, sobald mindestens einer der beiden Bereiche sichtbar ist.
-                const visible = category === "team" ? (canView("team") || canView("users")) : canView(category);
+                // "kassensystem" ist ein reines Client-Tool ohne Datenbankzugriff und
+                // daher fuer jeden eingeloggten Account sichtbar.
+                const visible = category === "team" ? (canView("team") || canView("users")) : category === "kassensystem" ? true : canView(category);
                 button.classList.toggle("hidden", !visible);
             });
 
@@ -2670,6 +2788,119 @@
             if (!button) return;
             showAdminPanel(button.dataset.adminPanel);
         });
+
+        // ===== Kassensystem (Preisrechner) =====
+        const CASHIER_CATALOG = [
+            { group: "Signature", items: [
+                { name: "Tequila Sunrise", price: 900 },
+                { name: "Dirty Talk", price: 900 },
+                { name: "Samt & Sünde", price: 800 },
+                { name: "Ice Lagoon", price: 700 },
+                { name: "Sex on the Beach", price: 700 },
+            ] },
+            { group: "Spirits", items: [
+                { name: "Bier", price: 300 },
+                { name: "Weizenbier", price: 400 },
+                { name: "Sekt", price: 300 },
+                { name: "Vodka", price: 700 },
+                { name: "Whiskey", price: 700 },
+                { name: "Tequila", price: 700 },
+            ] },
+            { group: "Fresh & Virgin", items: [
+                { name: "Säfte", price: 200 },
+                { name: "Wasser", price: 70 },
+                { name: "Cola", price: 90 },
+                { name: "Zitronenlimo", price: 90 },
+                { name: "Kaffee", price: 80 },
+            ] },
+            { group: "Bar Bites", items: [
+                { name: "Schokolinsen", price: 100 },
+                { name: "Früchteteller", price: 300 },
+                { name: "Erdbeeren m. Sahne", price: 200 },
+                { name: "Salzstangen", price: 100 },
+                { name: "Erdnüsse", price: 100 },
+            ] },
+            { group: "VIP-Tickets", items: [
+                { name: "Bronze / 1 Monat", price: 50000 },
+                { name: "Silber / 2 Monate", price: 90000 },
+                { name: "Gold / 3 Monate", price: 125000 },
+            ] },
+            { group: "Specials", items: [
+                { name: "Champagner", price: 1000 },
+                { name: "Champagner Gold", price: 2500 },
+                { name: "Champagner Platin", price: 4000 },
+            ] },
+        ];
+        CASHIER_CATALOG.forEach((group) => {
+            group.items.forEach((item) => { item.id = `cashier-${slugify(item.name)}`; });
+        });
+
+        const cashierProductGroups = document.querySelector("#cashier-product-groups");
+        const cashierReset = document.querySelector("#cashier-reset");
+        const receiptItemsEl = document.querySelector("#receipt-items");
+        const receiptTotalEl = document.querySelector("#receipt-total");
+        const receiptDatetimeEl = document.querySelector("#receipt-datetime");
+
+        function renderCashierProducts() {
+            if (!cashierProductGroups) return;
+            cashierProductGroups.innerHTML = CASHIER_CATALOG.map((group) => `
+                <div class="cashier-group">
+                    <h3>${escapeHtml(group.group)}</h3>
+                    ${group.items.map((item) => `
+                        <div class="cashier-row">
+                            <span class="cashier-name">${escapeHtml(item.name)}</span>
+                            <input type="number" min="0" max="999" step="1" value="0" id="${item.id}" data-cashier-qty="${item.id}" aria-label="Menge ${escapeAttribute(item.name)}">
+                            <span class="cashier-price">${formatPrice(item.price)}</span>
+                        </div>
+                    `).join("")}
+                </div>
+            `).join("");
+        }
+
+        function updateCashierReceipt() {
+            if (!receiptItemsEl) return;
+            const selected = [];
+            let total = 0;
+            CASHIER_CATALOG.forEach((group) => {
+                group.items.forEach((item) => {
+                    const input = document.querySelector(`#${item.id}`);
+                    const qty = Math.max(0, Math.floor(Number(input?.value) || 0));
+                    if (qty > 0) {
+                        const lineTotal = qty * item.price;
+                        total += lineTotal;
+                        selected.push({ name: item.name, qty, lineTotal });
+                    }
+                });
+            });
+
+            receiptDatetimeEl.textContent = formatDate(new Date());
+
+            receiptItemsEl.innerHTML = selected.length === 0
+                ? '<div class="receipt-empty">Noch keine Artikel ausgewählt.</div>'
+                : selected.map((entry) => `
+                    <div class="receipt-item-row">
+                        <span>${escapeHtml(entry.name)} <span class="receipt-item-qty">x${entry.qty}</span></span>
+                        <span>${formatPrice(entry.lineTotal)}</span>
+                    </div>
+                `).join("");
+
+            receiptTotalEl.textContent = formatPrice(total);
+        }
+
+        cashierProductGroups?.addEventListener("input", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            if (!target?.matches("[data-cashier-qty]")) return;
+            if (Number(target.value) < 0) target.value = "0";
+            updateCashierReceipt();
+        });
+
+        cashierReset?.addEventListener("click", () => {
+            document.querySelectorAll("[data-cashier-qty]").forEach((input) => { input.value = "0"; });
+            updateCashierReceipt();
+        });
+
+        renderCashierProducts();
+        updateCashierReceipt();
 
         contentSettingsForm.addEventListener("click", (event) => {
             const target = event.target instanceof Element ? event.target : null;
