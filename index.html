@@ -2912,11 +2912,23 @@
             cashierSaveImage.disabled = true;
             const originalLabel = cashierSaveImage.textContent;
             cashierSaveImage.textContent = "Wird erzeugt...";
+
+            // html2canvas berechnet die Größe von "position: sticky"-Elementen
+            // manchmal fehlerhaft (Breite/Höhe 0). Während der Erzeugung daher
+            // kurzzeitig auf "static" schalten und die Maße explizit vorgeben.
+            const receiptWrap = cashierReceiptEl.closest(".cashier-receipt-wrap");
+            const originalWrapPosition = receiptWrap ? receiptWrap.style.position : "";
+            if (receiptWrap) receiptWrap.style.position = "static";
+            const rect = cashierReceiptEl.getBoundingClientRect();
+
             try {
                 const canvas = await html2canvas(cashierReceiptEl, {
                     backgroundColor: "#0c0c0c",
                     scale: 2,
-                    logging: false
+                    logging: false,
+                    width: Math.ceil(rect.width),
+                    height: Math.ceil(rect.height),
+                    windowWidth: document.documentElement.scrollWidth
                 });
                 if (!canvas || !canvas.width || !canvas.height) {
                     throw new Error("Leere Canvas beim Bild-Export.");
@@ -2940,6 +2952,7 @@
                 console.error("Kassenbon-Bild-Export fehlgeschlagen:", error);
                 alert("Der Kassenbon konnte nicht als Bild gespeichert werden. Bitte erneut versuchen.");
             } finally {
+                if (receiptWrap) receiptWrap.style.position = originalWrapPosition;
                 cashierSaveImage.disabled = false;
                 cashierSaveImage.textContent = originalLabel;
             }
