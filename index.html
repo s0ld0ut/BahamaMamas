@@ -424,6 +424,35 @@
         .recipe-chip button { background: none; border: none; color: inherit; cursor: pointer; padding: 0; font-size: 1rem; line-height: 1; }
         .recipe-add-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .recipe-add-row select, .recipe-add-row input { width: auto; }
+
+        .content-section { grid-column: 1 / -1; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 4px 16px; margin-bottom: 4px; background: var(--panel-strong); }
+        .content-section summary { cursor: pointer; padding: 12px 0; font-weight: 700; color: var(--accent, #00d4ff); list-style: none; }
+        .content-section summary::-webkit-details-marker { display: none; }
+        .content-section summary::before { content: "▸ "; }
+        .content-section[open] summary::before { content: "▾ "; }
+        .content-section-body { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-bottom: 16px; }
+        .content-section-body.full, .content-section-body > .full { grid-column: 1 / -1; }
+
+        .menu-split { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+        .menu-column { min-width: 0; }
+        @media (max-width: 900px) {
+            .menu-split { grid-template-columns: 1fr; }
+        }
+
+        .data-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+        .data-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid rgba(0, 212, 255, 0.4); color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
+        .data-table td { padding: 10px 12px; border-bottom: 1px solid rgba(0, 212, 255, 0.15); vertical-align: middle; }
+        .data-table tbody tr.data-row:hover { background: rgba(0, 212, 255, 0.05); }
+        .icon-button { background: none; border: 1px solid rgba(0, 212, 255, 0.4); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 1rem; color: inherit; }
+        .icon-button:hover { background: rgba(0, 212, 255, 0.15); }
+        .icon-button.danger { border-color: rgba(255, 107, 107, 0.5); }
+        .row-actions { display: flex; gap: 8px; }
+        .edit-row td { background: var(--panel-strong); padding: 18px; }
+        .edit-row.hidden { display: none; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+        .badge-on { background: rgba(74, 222, 128, 0.18); color: #4ade80; }
+        .badge-off { background: rgba(148, 163, 184, 0.18); color: var(--muted); }
+        .badge-danger { background: rgba(255, 107, 107, 0.18); color: #ff6b6b; }
         .event-editor-list { display: grid; gap: 16px; margin-top: 22px; }
         .event-editor {
             display: grid;
@@ -658,7 +687,6 @@
             <p id="home-text">Das Bahama Mamas ist das Juwel von Rockford Hills. Wir bieten eine Flucht aus der Realität durch erstklassigen Service, exklusive Drinks und unvergessliche Nächte.</p>
         </div>
 
-        <div id="custom-home-blocks" class="custom-blocks" aria-live="polite"></div>
 
         <div class="grid-3">
             <div class="card">
@@ -730,8 +758,8 @@
 
     <section id="team">
         <div class="card">
-            <h2>Das Herz des Bahama Mamas</h2>
-            <p class="hint">Ein stetig wachsendes Team, das mit Leidenschaft und Präzision neue Maßstäbe im Nightlife setzt.</p>
+            <h2>Unser Management Board</h2>
+            <p class="hint">Die Menschen hinter den Nächten im Neon Paradise.</p>
             <div id="team-list" class="team-grid" aria-live="polite">
                 <div class="empty-state">Team wird geladen...</div>
             </div>
@@ -938,41 +966,52 @@
                 <div id="menu-admin" class="card menu-admin-card hidden">
                     <h2>Lager &amp; Preisliste</h2>
                     <p class="hint" id="menu-admin-help">Getränke und Snacks mit Preis, Einkaufspreis und Lagerbestand verwalten. "MAX WIN" und "Fehlt" werden automatisch berechnet.</p>
-                    <form id="menu-create-form" class="menu-editor" data-permission-category="menu">
-                        <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
-                        <div>
-                            <label for="menu-category">Kategorie</label>
-                            <select id="menu-category" name="category" required>
-                                <option value="">Bitte auswählen</option>
-                                <option value="signature-drinks">SIGNATURE DRINKS</option>
-                                <option value="spirits">SPIRITS</option>
-                                <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
-                                <option value="bar-bites">BAR BITES</option>
-                                <option value="extras">EXTRA'S</option>
-                            </select>
+                    <div class="menu-split">
+                        <div class="menu-column">
+                            <h3>Speisekarte (öffentlich sichtbar)</h3>
+                            <form id="menu-create-form" class="menu-editor" data-permission-category="menu">
+                                <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
+                                <div>
+                                    <label for="menu-category">Kategorie</label>
+                                    <select id="menu-category" name="category" required>
+                                        <option value="">Bitte auswählen</option>
+                                        <option value="signature-drinks">SIGNATURE DRINKS</option>
+                                        <option value="spirits">SPIRITS</option>
+                                        <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
+                                        <option value="bar-bites">BAR BITES</option>
+                                        <option value="extras">EXTRA'S</option>
+                                    </select>
+                                </div>
+                                <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                                <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                                <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
+                                <div class="full checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
+                                <details class="content-section">
+                                    <summary>Lager-Daten für diesen Eintrag</summary>
+                                    <div class="content-section-body">
+                                        <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
+                                        <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                        <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                    </div>
+                                </details>
+                                <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
+                            </form>
+                            <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
                         </div>
-                        <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
-                        <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
-                        <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                        <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                        <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <div class="checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
-                        <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
-                        <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
-                    </form>
-                    <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
 
-                    <hr>
-                    <h3>Zutaten-Lager (Rohstoffe)</h3>
-                    <p class="hint">Rohstoffe für Rezepte. "Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
-                    <form id="ingredient-create-form" class="menu-editor" data-permission-category="menu">
-                        <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
-                        <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                        <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
-                        <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                        <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
-                    </form>
-                    <div id="ingredient-admin-list" class="menu-editor-list"></div>
+                        <div class="menu-column">
+                            <h3>Zutaten-Lager (intern, Rohstoffe)</h3>
+                            <p class="hint">"Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
+                            <form id="ingredient-create-form" class="menu-editor" data-permission-category="menu">
+                                <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
+                                <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                                <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
+                                <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                                <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
+                            </form>
+                            <div id="ingredient-admin-list" class="menu-editor-list"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1066,32 +1105,54 @@
                     <h2>Inhalte &amp; Felder verwalten</h2>
                     <p class="hint" id="content-admin-help">Texte, Dropdown-Optionen und zusätzliche Felder zentral bearbeiten.</p>
                     <form id="content-settings-form" class="content-settings-grid">
-                        <div><label for="setting-home-title">Startseiten-Titel</label><input id="setting-home-title" name="homeTitle" maxlength="160" required></div>
-                        <div><label for="setting-application-title">Bewerbungs-Titel</label><input id="setting-application-title" name="applicationTitle" maxlength="160" required></div>
-                        <div class="full"><label for="setting-home-text">Startseiten-Text</label><textarea id="setting-home-text" name="homeText" maxlength="5000" required></textarea></div>
-                        <div class="full"><label for="setting-application-intro">Bewerbungs-Einleitung</label><textarea id="setting-application-intro" name="applicationIntro" maxlength="5000" required></textarea></div>
-                        <div><label for="setting-contact-title">Kontakt-Titel</label><input id="setting-contact-title" name="contactTitle" maxlength="160" required></div>
-                        <div><label for="setting-contact-intro">Kontakt-Einleitung</label><textarea id="setting-contact-intro" name="contactIntro" maxlength="5000" required></textarea></div>
-                        <div class="full"><h3>Bewerbungspositionen</h3><div id="application-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="applicationPositions">Option hinzufügen</button></div>
-                        <div class="full"><h3>Arten von Kontaktanfragen</h3><div id="contact-type-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="contactRequestTypes">Option hinzufügen</button></div>
-                        <div class="full"><h3>Team-Positionen</h3><div id="team-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="teamPositions">Option hinzufügen</button></div>
-                        <div class="full"><h3>Speisekarten-Kategorien</h3><div id="menu-category-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="menuCategories">Kategorie hinzufügen</button></div>
-                        <div class="full"><h3>Event-Status</h3><div id="event-status-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="eventStatuses">Status hinzufügen</button></div>
-                        <div class="full"><h3>Zusätzliche Bewerbungsfelder</h3><p class="hint">Freie Textfelder oder Dropdowns ergänzen. Dropdown-Optionen mit Komma trennen.</p><div id="application-field-editor" class="list-editor"></div><button type="button" class="secondary" id="add-application-field">Feld hinzufügen</button></div>
-                        <div class="full"><button type="submit" id="content-settings-submit">Einstellungen speichern</button></div>
-                    </form>
+                        <details class="content-section" open>
+                            <summary>Startseite &amp; Bewerbung &amp; Kontakt (Texte)</summary>
+                            <div class="content-section-body">
+                                <div><label for="setting-home-title">Startseiten-Titel</label><input id="setting-home-title" name="homeTitle" maxlength="160" required></div>
+                                <div><label for="setting-application-title">Bewerbungs-Titel</label><input id="setting-application-title" name="applicationTitle" maxlength="160" required></div>
+                                <div class="full"><label for="setting-home-text">Startseiten-Text</label><textarea id="setting-home-text" name="homeText" maxlength="5000" required></textarea></div>
+                                <div class="full"><label for="setting-application-intro">Bewerbungs-Einleitung</label><textarea id="setting-application-intro" name="applicationIntro" maxlength="5000" required></textarea></div>
+                                <div><label for="setting-contact-title">Kontakt-Titel</label><input id="setting-contact-title" name="contactTitle" maxlength="160" required></div>
+                                <div><label for="setting-contact-intro">Kontakt-Einleitung</label><textarea id="setting-contact-intro" name="contactIntro" maxlength="5000" required></textarea></div>
+                            </div>
+                        </details>
 
-                    <hr>
-                    <h3>Eigene Inhaltsblöcke</h3>
-                    <p class="hint">Zusätzliche Karten erscheinen auf der Startseite und können jederzeit geändert oder gelöscht werden.</p>
-                    <form id="content-block-create-form" class="content-settings-grid">
-                        <div><label for="content-block-title">Titel</label><input id="content-block-title" name="title" maxlength="160" required></div>
-                        <div><label for="content-block-sort">Reihenfolge</label><input id="content-block-sort" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                        <input type="hidden" name="section" value="home">
-                        <div class="full"><label for="content-block-body">Text</label><textarea id="content-block-body" name="body" maxlength="5000"></textarea></div>
-                        <div class="full"><button type="submit">Inhaltsblock hinzufügen</button></div>
+                        <details class="content-section">
+                            <summary>Bewerbungspositionen</summary>
+                            <div class="content-section-body full"><div id="application-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="applicationPositions">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Arten von Kontaktanfragen</summary>
+                            <div class="content-section-body full"><div id="contact-type-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="contactRequestTypes">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Team-Positionen</summary>
+                            <div class="content-section-body full"><div id="team-position-editor" class="list-editor"></div><button type="button" class="secondary" data-add-list-item="teamPositions">Option hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Speisekarten-Kategorien</summary>
+                            <div class="content-section-body full"><div id="menu-category-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="menuCategories">Kategorie hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Event-Status</summary>
+                            <div class="content-section-body full"><div id="event-status-editor" class="list-editor"></div><button type="button" class="secondary" data-add-paired-item="eventStatuses">Status hinzufügen</button></div>
+                        </details>
+
+                        <details class="content-section">
+                            <summary>Zusätzliche Bewerbungsfelder</summary>
+                            <div class="content-section-body full">
+                                <p class="hint">Freie Textfelder oder Dropdowns ergänzen. Dropdown-Optionen mit Komma trennen.</p>
+                                <div id="application-field-editor" class="list-editor"></div>
+                                <button type="button" class="secondary" id="add-application-field">Feld hinzufügen</button>
+                            </div>
+                        </details>
+
+                        <div class="full team-editor-actions"><button type="submit" id="content-settings-submit">Einstellungen speichern</button></div>
                     </form>
-                    <div id="content-block-admin-list" class="custom-blocks"></div>
                 </div>
             </div>
 
@@ -1206,10 +1267,7 @@
         const contentAdminHelp = document.querySelector("#content-admin-help");
         const contentSettingsForm = document.querySelector("#content-settings-form");
         const contentSettingsSubmit = document.querySelector("#content-settings-submit");
-        const contentBlockCreateForm = document.querySelector("#content-block-create-form");
-        const contentBlockAdminList = document.querySelector("#content-block-admin-list");
         const applicationCustomFields = document.querySelector("#application-custom-fields");
-        const customHomeBlocks = document.querySelector("#custom-home-blocks");
         let currentApplicationFolder = "neu";
         let currentContactFolder = "neu";
         let allApplications = [];
@@ -1387,6 +1445,25 @@
                 element.disabled = readOnly;
             });
         }
+
+        // Generischer Auf-/Zuklapp-Mechanismus für die Bearbeiten-Zeilen in
+        // den Übersichtstabellen (Finanzen, Wichtige Infos, VIP-Tickets, Nutzer).
+        document.addEventListener("click", (event) => {
+            const target = event.target instanceof Element ? event.target : null;
+            const button = target?.closest("[data-toggle-edit]");
+            if (!button) return;
+
+            const id = button.dataset.toggleEdit;
+            const table = button.closest("table, .user-list");
+            if (!table) return;
+
+            const editRow = table.querySelector(`[data-edit-row="${id}"]`);
+            if (!editRow) return;
+
+            const willOpen = editRow.classList.contains("hidden");
+            table.querySelectorAll("[data-edit-row]").forEach((row) => row.classList.add("hidden"));
+            if (willOpen) editRow.classList.remove("hidden");
+        });
 
         async function getIdentityAccessToken() {
             const { data } = await supabase.auth.getSession();
@@ -1697,20 +1774,6 @@
             }).join("");
         }
 
-        function renderContentBlocks() {
-            const homeBlocks = contentBlocks.filter((block) => block.section === "home");
-            customHomeBlocks.innerHTML = homeBlocks.map((block) => `<article class="card"><h2>${escapeHtml(block.title)}</h2>${block.body ? `<p>${escapeHtml(block.body)}</p>` : ""}</article>`).join("");
-            contentBlockAdminList.innerHTML = homeBlocks.length ? homeBlocks.map((block) => `
-                <form class="content-settings-grid card" data-content-block-form data-id="${block.id}">
-                    <div><label for="block-title-${block.id}">Titel</label><input id="block-title-${block.id}" name="title" maxlength="160" value="${escapeAttribute(block.title)}" required></div>
-                    <div><label for="block-sort-${block.id}">Reihenfolge</label><input id="block-sort-${block.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(block.sortOrder) || 0}" required></div>
-                    <input type="hidden" name="section" value="home">
-                    <div class="full"><label for="block-body-${block.id}">Text</label><textarea id="block-body-${block.id}" name="body" maxlength="5000">${escapeHtml(block.body || "")}</textarea></div>
-                    <div class="full team-editor-actions"><button type="submit">Block speichern</button><button type="button" class="danger" data-delete-content-block>Block löschen</button></div>
-                </form>
-            `).join("") : '<div class="empty-state">Noch keine eigenen Inhaltsblöcke angelegt.</div>';
-        }
-
         function renderSimpleListEditor(containerId, key) {
             const container = document.querySelector(containerId);
             const values = Array.isArray(siteSettings[key]) ? siteSettings[key] : [];
@@ -1741,7 +1804,6 @@
             renderPairedListEditor("#menu-category-editor", "menuCategories");
             renderPairedListEditor("#event-status-editor", "eventStatuses");
             renderApplicationFieldEditor();
-            renderContentBlocks();
         }
 
         function applyContentSettings() {
@@ -1760,7 +1822,6 @@
             renderSelectOptions(document.querySelector("#menu-category"), menuCategories);
             renderSelectOptions(document.querySelector("#event-status"), eventStatuses, false);
             renderApplicationFields();
-            renderContentBlocks();
             renderPublicMenu();
         }
 
@@ -1837,13 +1898,17 @@
                         </select>
                     </div>
                     <div><label for="menu-item-price-${item.id}">VK-Preis in $</label><input id="menu-item-price-${item.id}" name="price" type="number" min="0" max="10000000" step="1" value="${Number(item.price) || 0}" required></div>
-                    <div><label for="menu-item-cost-${item.id}">EK-Preis in $</label><input id="menu-item-cost-${item.id}" name="costPrice" type="number" min="0" max="10000000" step="1" value="${Number(item.costPrice) || 0}" required></div>
-                    <div><label for="menu-item-stock-target-${item.id}">Soll-Bestand</label><input id="menu-item-stock-target-${item.id}" name="stockTarget" type="number" min="0" max="1000000" step="1" value="${Number(item.stockTarget) || 0}" required></div>
-                    <div><label for="menu-item-stock-current-${item.id}">Ist-Bestand</label><input id="menu-item-stock-current-${item.id}" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="${Number(item.stockCurrent) || 0}" required></div>
                     <div><label for="menu-item-sort-${item.id}">Reihenfolge</label><input id="menu-item-sort-${item.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(item.sortOrder) || 0}" required></div>
-                    <div class="checkbox-field"><label><input type="checkbox" name="recipeVisible" value="true" ${item.recipeVisible ? "checked" : ""}> Rezept öffentlich anzeigen</label></div>
                     <div class="full"><label for="menu-item-description-${item.id}">Beschreibung</label><textarea id="menu-item-description-${item.id}" name="description" maxlength="500">${escapeHtml(item.description || "")}</textarea></div>
-                    <div class="full admin-meta">MAX WIN: ${formatPrice(item.maxWin ?? 0)} &middot; Fehlt: ${item.stockMissing ?? 0}</div>
+                    <div class="full checkbox-field"><label><input type="checkbox" name="recipeVisible" value="true" ${item.recipeVisible ? "checked" : ""}> Rezept öffentlich anzeigen</label></div>
+                    <details class="content-section">
+                        <summary>Lager-Daten &middot; MAX WIN: ${formatPrice(item.maxWin ?? 0)} &middot; Fehlt: ${item.stockMissing ?? 0}</summary>
+                        <div class="content-section-body">
+                            <div><label for="menu-item-cost-${item.id}">EK-Preis in $</label><input id="menu-item-cost-${item.id}" name="costPrice" type="number" min="0" max="10000000" step="1" value="${Number(item.costPrice) || 0}" required></div>
+                            <div><label for="menu-item-stock-target-${item.id}">Soll-Bestand</label><input id="menu-item-stock-target-${item.id}" name="stockTarget" type="number" min="0" max="1000000" step="1" value="${Number(item.stockTarget) || 0}" required></div>
+                            <div><label for="menu-item-stock-current-${item.id}">Ist-Bestand</label><input id="menu-item-stock-current-${item.id}" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="${Number(item.stockCurrent) || 0}" required></div>
+                        </div>
+                    </details>
                     <div class="full">
                         <h3>Rezept</h3>
                         <div class="recipe-list" data-recipe-list data-menu-item-id="${item.id}">
@@ -2045,18 +2110,36 @@
             if (!allVipTicketTypes.length) {
                 vipTypeAdminList.innerHTML = '<div class="empty-state">Noch keine Ticket-Arten vorhanden.</div>';
             } else {
-                vipTypeAdminList.innerHTML = allVipTicketTypes.map((type) => `
-                    <form class="menu-editor" data-vip-type-form data-id="${type.id}">
-                        <div><label>Name</label><input name="name" maxlength="120" value="${escapeAttribute(type.name)}" required></div>
-                        <div><label>Laufzeit in Tagen</label><input name="durationDays" type="number" min="1" max="3650" value="${Number(type.durationDays) || 30}" required></div>
-                        <div><label>Preis in $</label><input name="price" type="number" min="0" max="100000000" value="${Number(type.price) || 0}" required></div>
-                        <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(type.sortOrder) || 0}" required></div>
-                        <div class="full team-editor-actions">
-                            <button type="submit">Änderungen speichern</button>
-                            <button type="button" class="danger" data-delete-vip-type>Ticket-Art löschen</button>
-                        </div>
-                    </form>
-                `).join("");
+                vipTypeAdminList.innerHTML = `
+                    <table class="data-table">
+                        <thead><tr><th>Name</th><th>Laufzeit</th><th>Preis</th><th>Reihenfolge</th><th></th></tr></thead>
+                        <tbody>
+                            ${allVipTicketTypes.map((type) => `
+                                <tr class="data-row" data-row-id="${type.id}">
+                                    <td>${escapeHtml(type.name)}</td>
+                                    <td>${Number(type.durationDays) || 0} Tage</td>
+                                    <td>${formatPrice(type.price)}</td>
+                                    <td>${Number(type.sortOrder) || 0}</td>
+                                    <td class="row-actions">
+                                        <button type="button" class="icon-button" data-toggle-edit="type-${type.id}" title="Bearbeiten">&#9998;</button>
+                                        <button type="button" class="icon-button danger" data-delete-vip-type data-id="${type.id}" title="Löschen">&#128465;</button>
+                                    </td>
+                                </tr>
+                                <tr class="edit-row hidden" data-edit-row="type-${type.id}">
+                                    <td colspan="5">
+                                        <form class="menu-editor" data-vip-type-form data-id="${type.id}">
+                                            <div><label>Name</label><input name="name" maxlength="120" value="${escapeAttribute(type.name)}" required></div>
+                                            <div><label>Laufzeit in Tagen</label><input name="durationDays" type="number" min="1" max="3650" value="${Number(type.durationDays) || 30}" required></div>
+                                            <div><label>Preis in $</label><input name="price" type="number" min="0" max="100000000" value="${Number(type.price) || 0}" required></div>
+                                            <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(type.sortOrder) || 0}" required></div>
+                                            <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                        </form>
+                                    </td>
+                                </tr>
+                            `).join("")}
+                        </tbody>
+                    </table>
+                `;
             }
             applyReadOnly(vipTypeAdminList, "vip");
 
@@ -2079,28 +2162,45 @@
         function renderVipTicketAdmin() {
             if (!allVipTickets.length) {
                 vipTicketAdminList.innerHTML = '<div class="empty-state">Noch keine Ticket-Inhaber eingetragen.</div>';
-                applyReadOnly(vipTicketAdminList, "vip");
                 return;
             }
 
-            vipTicketAdminList.innerHTML = allVipTickets.map((ticket) => `
-                <form class="menu-editor" data-vip-ticket-form data-id="${ticket.id}">
-                    <div><label>Besitzer</label><input name="holderName" maxlength="160" value="${escapeAttribute(ticket.holderName)}" required></div>
-                    <div>
-                        <label>Ticket-Art</label>
-                        <select name="ticketTypeId" required>
-                            ${allVipTicketTypes.map((type) => `<option value="${type.id}"${type.id === ticket.ticketTypeId ? " selected" : ""}>${escapeHtml(type.name)}</option>`).join("")}
-                        </select>
-                    </div>
-                    <div><label>Ausgestellt am</label><input name="issuedAt" type="date" value="${escapeAttribute(ticket.issuedAt)}" required></div>
-                    <div class="full admin-meta">Gültig bis: ${escapeHtml(ticket.validUntil)} &middot; Tage Rest: ${ticket.daysRemaining} &middot; ${ticket.active ? "Aktiv" : "Abgelaufen"}</div>
-                    <div class="full"><label>Notiz</label><textarea name="notes" maxlength="1000">${escapeHtml(ticket.notes || "")}</textarea></div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-vip-ticket>Ticket löschen</button>
-                    </div>
-                </form>
-            `).join("");
+            vipTicketAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Besitzer</th><th>Ticket-Art</th><th>Gültig bis</th><th>Tage Rest</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                        ${allVipTickets.map((ticket) => `
+                            <tr class="data-row" data-row-id="${ticket.id}">
+                                <td>${escapeHtml(ticket.holderName)}</td>
+                                <td>${escapeHtml(ticket.ticketTypeName)}</td>
+                                <td>${escapeHtml(ticket.validUntil)}</td>
+                                <td>${ticket.daysRemaining}</td>
+                                <td>${ticket.active ? '<span class="badge badge-on">Aktiv</span>' : '<span class="badge badge-danger">Abgelaufen</span>'}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="ticket-${ticket.id}" title="Bearbeiten">&#9998;</button>
+                                    <button type="button" class="icon-button danger" data-delete-vip-ticket data-id="${ticket.id}" title="Löschen">&#128465;</button>
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="ticket-${ticket.id}">
+                                <td colspan="6">
+                                    <form class="menu-editor" data-vip-ticket-form data-id="${ticket.id}">
+                                        <div><label>Besitzer</label><input name="holderName" maxlength="160" value="${escapeAttribute(ticket.holderName)}" required></div>
+                                        <div>
+                                            <label>Ticket-Art</label>
+                                            <select name="ticketTypeId" required>
+                                                ${allVipTicketTypes.map((type) => `<option value="${type.id}"${type.id === ticket.ticketTypeId ? " selected" : ""}>${escapeHtml(type.name)}</option>`).join("")}
+                                            </select>
+                                        </div>
+                                        <div><label>Ausgestellt am</label><input name="issuedAt" type="date" value="${escapeAttribute(ticket.issuedAt)}" required></div>
+                                        <div class="full"><label>Notiz</label><textarea name="notes" maxlength="1000">${escapeHtml(ticket.notes || "")}</textarea></div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
             applyReadOnly(vipTicketAdminList, "vip");
         }
 
@@ -2121,24 +2221,43 @@
 
             if (!allFinanceEntries.length) {
                 financeAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden.</div>';
-                applyReadOnly(financeAdminList, "finance");
                 return;
             }
 
-            financeAdminList.innerHTML = allFinanceEntries.map((entry) => `
-                <form class="menu-editor" data-finance-form data-id="${entry.id}">
-                    <div><label>Datum</label><input name="entryDate" type="date" value="${escapeAttribute(entry.entryDate)}" required></div>
-                    <div class="full"><label>Beschreibung</label><input name="description" maxlength="240" value="${escapeAttribute(entry.description)}" required></div>
-                    <div><label>Betrag in $</label><input name="amount" type="number" step="1" value="${Number(entry.amount) || 0}" required></div>
-                    <div class="full admin-meta">Saldo nach diesem Eintrag: ${formatPrice(entry.balanceAfter)}</div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-finance-entry>Eintrag löschen</button>
-                    </div>
-                </form>
-            `).join("");
+            financeAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead>
+                        <tr><th>Datum</th><th>Beschreibung</th><th>Betrag</th><th>Saldo danach</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        ${allFinanceEntries.map((entry) => `
+                            <tr class="data-row" data-row-id="${entry.id}">
+                                <td>${escapeHtml(entry.entryDate)}</td>
+                                <td>${escapeHtml(entry.description)}</td>
+                                <td class="${entry.amount < 0 ? "balance-negative" : "balance-positive"}">${formatPrice(entry.amount)}</td>
+                                <td>${formatPrice(entry.balanceAfter)}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="${entry.id}" title="Bearbeiten">&#9998;</button>
+                                    <button type="button" class="icon-button danger" data-delete-finance-entry data-id="${entry.id}" title="Löschen">&#128465;</button>
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="${entry.id}">
+                                <td colspan="5">
+                                    <form class="menu-editor" data-finance-form data-id="${entry.id}">
+                                        <div><label>Datum</label><input name="entryDate" type="date" value="${escapeAttribute(entry.entryDate)}" required></div>
+                                        <div class="full"><label>Beschreibung</label><input name="description" maxlength="240" value="${escapeAttribute(entry.description)}" required></div>
+                                        <div><label>Betrag in $</label><input name="amount" type="number" step="1" value="${Number(entry.amount) || 0}" required></div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
             applyReadOnly(financeAdminList, "finance");
         }
+
 
         async function loadFinance() {
             const response = await apiFetch("/api/finance");
@@ -2154,22 +2273,38 @@
         function renderInfoAdmin() {
             if (!allInfoNotes.length) {
                 infoAdminList.innerHTML = '<div class="empty-state">Noch keine Hinweise vorhanden.</div>';
-                applyReadOnly(infoAdminList, "info");
                 return;
             }
 
-            infoAdminList.innerHTML = allInfoNotes.map((note) => `
-                <form class="menu-editor" data-info-form data-id="${note.id}">
-                    <div><label>Titel</label><input name="title" maxlength="160" value="${escapeAttribute(note.title)}" required></div>
-                    <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(note.sortOrder) || 0}" required></div>
-                    <div class="checkbox-field"><label><input type="checkbox" name="pinned" value="true" ${note.pinned ? "checked" : ""}> Angepinnt</label></div>
-                    <div class="full"><label>Text</label><textarea name="body" maxlength="5000">${escapeHtml(note.body || "")}</textarea></div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-info-note>Hinweis löschen</button>
-                    </div>
-                </form>
-            `).join("");
+            infoAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Titel</th><th>Angepinnt</th><th>Reihenfolge</th><th></th></tr></thead>
+                    <tbody>
+                        ${allInfoNotes.map((note) => `
+                            <tr class="data-row" data-row-id="${note.id}">
+                                <td>${escapeHtml(note.title)}</td>
+                                <td>${note.pinned ? '<span class="badge badge-on">Angepinnt</span>' : '<span class="badge badge-off">Nein</span>'}</td>
+                                <td>${Number(note.sortOrder) || 0}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="${note.id}" title="Bearbeiten">&#9998;</button>
+                                    <button type="button" class="icon-button danger" data-delete-info-note data-id="${note.id}" title="Löschen">&#128465;</button>
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="${note.id}">
+                                <td colspan="4">
+                                    <form class="menu-editor" data-info-form data-id="${note.id}">
+                                        <div><label>Titel</label><input name="title" maxlength="160" value="${escapeAttribute(note.title)}" required></div>
+                                        <div><label>Reihenfolge</label><input name="sortOrder" type="number" min="0" max="10000" value="${Number(note.sortOrder) || 0}" required></div>
+                                        <div class="checkbox-field"><label><input type="checkbox" name="pinned" value="true" ${note.pinned ? "checked" : ""}> Angepinnt</label></div>
+                                        <div class="full"><label>Text</label><textarea name="body" maxlength="5000">${escapeHtml(note.body || "")}</textarea></div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
             applyReadOnly(infoAdminList, "info");
         }
 
@@ -2188,18 +2323,35 @@
             container.innerHTML = CATEGORIES.map((category) => `
                 <div class="permission-row" data-permission-row data-category="${category}">
                     <span class="permission-label">${CATEGORY_LABELS[category]}</span>
-                    <label><input type="radio" name="perm-${category}" value="none" ${!selected[category] || selected[category] === "none" ? "checked" : ""}> Kein Zugriff</label>
-                    <label><input type="radio" name="perm-${category}" value="view" ${selected[category] === "view" ? "checked" : ""}> Sehen</label>
-                    <label><input type="radio" name="perm-${category}" value="edit" ${selected[category] === "edit" ? "checked" : ""}> Bearbeiten</label>
+                    <label><input type="checkbox" data-perm-view="${category}" ${selected[category] === "view" || selected[category] === "edit" ? "checked" : ""}> Sehen</label>
+                    <label><input type="checkbox" data-perm-edit="${category}" ${selected[category] === "edit" ? "checked" : ""}> Bearbeiten</label>
                 </div>
             `).join("");
+
+            // "Bearbeiten" schaltet automatisch auch "Sehen" mit ein/aus.
+            container.querySelectorAll("[data-perm-edit]").forEach((editBox) => {
+                editBox.addEventListener("change", () => {
+                    const category = editBox.dataset.permEdit;
+                    const viewBox = container.querySelector(`[data-perm-view="${category}"]`);
+                    if (editBox.checked && viewBox) viewBox.checked = true;
+                });
+            });
+            container.querySelectorAll("[data-perm-view]").forEach((viewBox) => {
+                viewBox.addEventListener("change", () => {
+                    const category = viewBox.dataset.permView;
+                    const editBox = container.querySelector(`[data-perm-edit="${category}"]`);
+                    if (!viewBox.checked && editBox) editBox.checked = false;
+                });
+            });
         }
 
         function readPermissionEditor(container) {
             const result = {};
             CATEGORIES.forEach((category) => {
-                const checked = container.querySelector(`input[name="perm-${category}"]:checked`);
-                if (checked && checked.value !== "none") result[category] = checked.value;
+                const canEditBox = container.querySelector(`[data-perm-edit="${category}"]`);
+                const canViewBox = container.querySelector(`[data-perm-view="${category}"]`);
+                if (canEditBox?.checked) result[category] = "edit";
+                else if (canViewBox?.checked) result[category] = "view";
             });
             return result;
         }
@@ -2210,24 +2362,38 @@
                 return;
             }
 
-            usersAdminList.innerHTML = allUsers.map((user) => `
-                <form class="user-editor" data-user-form data-id="${user.id}">
-                    <div><label>Benutzername</label><input value="${escapeAttribute(user.username)}" disabled></div>
-                    <div><label>Neues Passwort (optional)</label><input name="password" type="password" minlength="8" placeholder="Leer lassen, um nicht zu ändern"></div>
-                    <div class="full">
-                        <h3>Rechte</h3>
-                        <div class="permission-grid" data-permission-editor></div>
-                    </div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        ${user.isSelf ? "" : '<button type="button" class="danger" data-delete-user>Nutzer löschen</button>'}
-                    </div>
-                </form>
-            `).join("");
+            usersAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Benutzername</th><th></th></tr></thead>
+                    <tbody>
+                        ${allUsers.map((user) => `
+                            <tr class="data-row" data-row-id="${user.id}">
+                                <td>${escapeHtml(user.username)}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="user-${user.id}" title="Bearbeiten">&#128295;</button>
+                                    ${user.isSelf ? "" : `<button type="button" class="icon-button danger" data-delete-user data-id="${user.id}" title="Löschen">&#128465;</button>`}
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="user-${user.id}">
+                                <td colspan="2">
+                                    <form class="user-editor" data-user-form data-id="${user.id}">
+                                        <div><label>Neues Passwort (optional)</label><input name="password" type="password" minlength="8" placeholder="Leer lassen, um nicht zu ändern"></div>
+                                        <div class="full">
+                                            <h3>Rechte</h3>
+                                            <div class="permission-grid" data-permission-editor></div>
+                                        </div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
 
             allUsers.forEach((user) => {
-                const form = usersAdminList.querySelector(`[data-user-form][data-id="${user.id}"]`);
-                const editor = form?.querySelector("[data-permission-editor]");
+                const editRow = usersAdminList.querySelector(`[data-edit-row="user-${user.id}"]`);
+                const editor = editRow?.querySelector("[data-permission-editor]");
                 if (editor) renderPermissionEditor(editor, user.permissions || {});
             });
 
@@ -2527,45 +2693,6 @@
             }
         });
 
-        contentBlockCreateForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const button = contentBlockCreateForm.querySelector('button[type="submit"]');
-            button.disabled = true;
-            try {
-                const response = await apiFetch("/api/content", { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify(getFormPayload(contentBlockCreateForm)) });
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(data.error || "Inhaltsblock konnte nicht angelegt werden.");
-                contentBlockCreateForm.reset();
-                document.querySelector("#content-block-sort").value = "10";
-                await loadContent(true);
-            } catch (error) {
-                contentAdminHelp.textContent = error.message;
-            } finally {
-                button.disabled = false;
-            }
-        });
-
-        contentBlockAdminList.addEventListener("submit", async (event) => {
-            const form = event.target.closest("[data-content-block-form]");
-            if (!form) return;
-            event.preventDefault();
-            const response = await apiFetch("/api/content", { method: "PATCH", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) }) });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) contentAdminHelp.textContent = data.error || "Block konnte nicht gespeichert werden.";
-            else await loadContent(true);
-        });
-
-        contentBlockAdminList.addEventListener("click", async (event) => {
-            const button = event.target instanceof Element ? event.target.closest("[data-delete-content-block]") : null;
-            if (!button) return;
-            const form = button.closest("[data-content-block-form]");
-            if (!confirm("Diesen Inhaltsblock wirklich löschen?")) return;
-            const response = await apiFetch("/api/content", { method: "DELETE", headers: { "Content-Type": "application/json" }, credentials: "same-origin", body: JSON.stringify({ id: Number(form.dataset.id) }) });
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) contentAdminHelp.textContent = data.error || "Block konnte nicht gelöscht werden.";
-            else await loadContent(true);
-        });
-
         eventCreateForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             eventCreateSubmit.disabled = true;
@@ -2696,14 +2823,13 @@
             const button = target?.closest("[data-delete-vip-type]");
             if (!button) return;
             if (!confirm("Diese Ticket-Art wirklich löschen?")) return;
-            const form = button.closest("[data-vip-type-form]");
             button.disabled = true;
             try {
                 const response = await apiFetch("/api/vip?resource=types", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || "Ticket-Art konnte nicht gelöscht werden.");
@@ -2765,14 +2891,13 @@
             const button = target?.closest("[data-delete-vip-ticket]");
             if (!button) return;
             if (!confirm("Dieses Ticket wirklich löschen?")) return;
-            const form = button.closest("[data-vip-ticket-form]");
             button.disabled = true;
             try {
                 const response = await apiFetch("/api/vip", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || "Ticket konnte nicht gelöscht werden.");
@@ -2836,14 +2961,13 @@
             const button = target?.closest("[data-delete-finance-entry]");
             if (!button) return;
             if (!confirm("Diesen Eintrag wirklich löschen?")) return;
-            const form = button.closest("[data-finance-form]");
             button.disabled = true;
             try {
                 const response = await apiFetch("/api/finance", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gelöscht werden.");
@@ -2906,14 +3030,13 @@
             const button = target?.closest("[data-delete-info-note]");
             if (!button) return;
             if (!confirm("Diesen Hinweis wirklich löschen?")) return;
-            const form = button.closest("[data-info-form]");
             button.disabled = true;
             try {
                 const response = await apiFetch("/api/info-notes", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || "Hinweis konnte nicht gelöscht werden.");
@@ -2983,14 +3106,13 @@
             const button = target?.closest("[data-delete-user]");
             if (!button) return;
             if (!confirm("Diesen Nutzer wirklich unwiderruflich löschen?")) return;
-            const form = button.closest("[data-user-form]");
             button.disabled = true;
             try {
                 const response = await apiFetch("/api/users", {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: form.dataset.id })
+                    body: JSON.stringify({ id: button.dataset.id })
                 });
                 const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.error || "Nutzer konnte nicht gelöscht werden.");
