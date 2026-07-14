@@ -478,6 +478,9 @@
         .pos-receipt-discount { color: #ff8a8a; }
         .pos-receipt-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.95rem; margin-top: 8px; }
         .pos-receipt-footer { text-align: center; margin-top: 16px; color: var(--muted); font-size: 0.78rem; line-height: 1.5; }
+        .pos-receipt-kundenbeleg { text-align: center; margin-top: 18px; padding-top: 12px; border-top: 1px dashed rgba(0, 212, 255, 0.4); }
+        .pos-receipt-kundenbeleg-title { letter-spacing: 0.08em; font-size: 0.8rem; margin-bottom: 8px; }
+        .pos-receipt-kundenbeleg .pos-meta { color: var(--muted); font-size: 0.78rem; margin-top: 3px; }
 
         .data-table { width: 100%; border-collapse: collapse; margin: 14px 0; }
         .data-table th { text-align: left; padding: 10px 12px; border-bottom: 2px solid rgba(0, 212, 255, 0.4); color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.03em; }
@@ -3790,8 +3793,10 @@
         let posServerNumber = 1;
         let posTransactionId = "";
 
+        const POS_SERVER_NUMBERS = [111, 222, 333, 444, 555];
+
         function startNewPosSession() {
-            posServerNumber = 1 + Math.floor(Math.random() * 5);
+            posServerNumber = POS_SERVER_NUMBERS[Math.floor(Math.random() * POS_SERVER_NUMBERS.length)];
             const random = Math.random().toString(36).slice(2, 8).toUpperCase();
             posTransactionId = `BM-${Date.now().toString().slice(-6)}-${random}`;
         }
@@ -3832,9 +3837,6 @@
                     <div class="pos-company">BAHAMA MAMAS</div>
                     <div class="pos-tagline">NEON PARADISE &bull; ROCKFORD HILLS</div>
                     <div class="pos-location">Rockford Hills, Los Santos</div>
-                    <div class="pos-datetime">Datum: ${now} | ${time}</div>
-                    <div class="pos-meta">Bedienung: Nr. ${serverNumber}</div>
-                    <div class="pos-meta">Transaktions-ID: ${transactionId}</div>
                 </div>
                 <hr class="pos-receipt-divider">
                 ${lines.length
@@ -3848,9 +3850,21 @@
                 <hr class="pos-receipt-divider">
                 <div class="pos-receipt-line"><span class="pos-receipt-name">Zwischensumme</span><span>${formatPrice(subtotal)}</span></div>
                 ${discountPercent > 0 ? `<div class="pos-receipt-line pos-receipt-discount"><span class="pos-receipt-name">Rabatt (${discountPercent}%)</span><span>-${formatPrice(discountAmount)}</span></div>` : ""}
+                <hr class="pos-receipt-divider">
                 <div class="pos-receipt-total"><span>Gesamt</span><span>${formatPrice(total)}</span></div>
                 <hr class="pos-receipt-divider">
-                <div class="pos-receipt-footer">Vielen Dank für Ihre Bestellung<br>Bis zum nächsten Mal im Bahama Mamas</div>
+                <div class="pos-receipt-footer">
+                    Vielen Dank für Ihre Bestellung<br>
+                    Bis zum nächsten Mal im<br>
+                    <strong>BAHAMA MAMAS</strong>
+                </div>
+                <div class="pos-receipt-kundenbeleg">
+                    <div class="pos-receipt-kundenbeleg-title">* * KUNDENBELEG * *</div>
+                    <div class="pos-meta">Datum: ${now}</div>
+                    <div class="pos-meta">Uhrzeit: ${time}</div>
+                    <div class="pos-meta">Transaktions-ID: ${transactionId}</div>
+                    <div class="pos-meta">Bediener: ${serverNumber}</div>
+                </div>
             `;
         }
 
@@ -3871,11 +3885,12 @@
             const width = 300;
             const paddingX = 20;
             const lineHeight = 20;
-            const headerHeight = 150;
-            const footerHeight = 74;
+            const headerHeight = 90;
             const summaryLines = 1 + (discountPercent > 0 ? 1 : 0); // Zwischensumme + ggf. Rabatt
-            const bodyHeight = (lines.length ? lines.length * lineHeight : lineHeight) + 44 + (summaryLines * lineHeight);
-            const height = headerHeight + bodyHeight + footerHeight;
+            const bodyHeight = (lines.length ? lines.length * lineHeight : lineHeight) + 20 + (summaryLines * lineHeight) + 34;
+            const footerHeight = 74;
+            const kundenbelegHeight = 108;
+            const height = headerHeight + bodyHeight + footerHeight + kundenbelegHeight;
 
             const canvas = document.createElement("canvas");
             const scale = 2; // schärferes Bild
@@ -3889,6 +3904,7 @@
             ctx.fillStyle = "#111111";
             ctx.textBaseline = "alphabetic";
 
+            // Kopf
             let y = 24;
             ctx.textAlign = "center";
             ctx.font = "bold 15px 'Courier New', monospace";
@@ -3899,17 +3915,12 @@
             ctx.fillText("NEON PARADISE • ROCKFORD HILLS", width / 2, y);
             y += 14;
             ctx.fillText("Rockford Hills, Los Santos", width / 2, y);
-            y += 14;
-            ctx.fillText(`Datum: ${now} | ${time}`, width / 2, y);
-            y += 14;
-            ctx.fillText(`Bedienung: Nr. ${serverNumber}`, width / 2, y);
-            y += 14;
-            ctx.fillText(`Transaktions-ID: ${transactionId}`, width / 2, y);
             y += 12;
 
             drawDashedLine(ctx, paddingX, y, width - paddingX);
             y += 18;
 
+            // Artikel
             ctx.textAlign = "left";
             ctx.fillStyle = "#111111";
             ctx.font = "12px 'Courier New', monospace";
@@ -3935,6 +3946,7 @@
             drawDashedLine(ctx, paddingX, y, width - paddingX);
             y += 18;
 
+            // Zwischensumme / Rabatt
             ctx.font = "12px 'Courier New', monospace";
             ctx.fillStyle = "#111111";
             ctx.textAlign = "left";
@@ -3953,6 +3965,11 @@
                 ctx.fillStyle = "#111111";
             }
 
+            y += 2;
+            drawDashedLine(ctx, paddingX, y, width - paddingX);
+            y += 20;
+
+            // Gesamt
             ctx.font = "bold 13px 'Courier New', monospace";
             ctx.textAlign = "left";
             ctx.fillText("Gesamt", paddingX, y);
@@ -3963,12 +3980,37 @@
             drawDashedLine(ctx, paddingX, y, width - paddingX);
             y += 22;
 
+            // Dankesgruß
             ctx.font = "11px 'Courier New', monospace";
             ctx.fillStyle = "#555555";
             ctx.textAlign = "center";
             ctx.fillText("Vielen Dank für Ihre Bestellung", width / 2, y);
             y += 14;
-            ctx.fillText("Bis zum nächsten Mal im Bahama Mamas", width / 2, y);
+            ctx.fillText("Bis zum nächsten Mal im", width / 2, y);
+            y += 16;
+            ctx.font = "bold 12px 'Courier New', monospace";
+            ctx.fillStyle = "#111111";
+            ctx.fillText("BAHAMA MAMAS", width / 2, y);
+            y += 16;
+
+            drawDashedLine(ctx, paddingX, y, width - paddingX);
+            y += 18;
+
+            // Kundenbeleg
+            ctx.font = "11px 'Courier New', monospace";
+            ctx.fillStyle = "#111111";
+            ctx.textAlign = "center";
+            ctx.fillText("* * KUNDENBELEG * *", width / 2, y);
+            y += 18;
+            ctx.font = "11px 'Courier New', monospace";
+            ctx.fillStyle = "#555555";
+            ctx.fillText(`Datum: ${now}`, width / 2, y);
+            y += 14;
+            ctx.fillText(`Uhrzeit: ${time}`, width / 2, y);
+            y += 14;
+            ctx.fillText(`Transaktions-ID: ${transactionId}`, width / 2, y);
+            y += 14;
+            ctx.fillText(`Bediener: ${serverNumber}`, width / 2, y);
 
             const link = document.createElement("a");
             const stamp = new Date().toISOString().replace(/[:.]/g, "-");
