@@ -1688,10 +1688,21 @@
 
             const firstCategory = visibleCategories.includes("applications") ? "applications" : visibleCategories[0];
             const firstPanel = firstCategory === "users" ? "team" : firstCategory;
-            showAdminPanel(firstPanel);
+
+            // Beim erneuten Login-Check (z.B. Tab-Wechsel/Token-Refresh) den
+            // zuletzt geöffneten Tab beibehalten, statt immer neu auf den
+            // ersten Tab zu springen - vorausgesetzt er ist noch sichtbar.
+            const currentPanelStillVisible = currentAdminPanel
+                && document.querySelector(`[data-admin-panel="${currentAdminPanel}"]`)
+                && !document.querySelector(`[data-admin-panel="${currentAdminPanel}"]`).classList.contains("hidden");
+
+            showAdminPanel(currentPanelStillVisible ? currentAdminPanel : firstPanel);
         }
 
+        let currentAdminPanel = null;
+
         function showAdminPanel(panelName) {
+            currentAdminPanel = panelName;
             document.querySelectorAll("[data-admin-panel-content]").forEach((panel) => {
                 panel.hidden = panel.dataset.adminPanelContent !== panelName;
             });
