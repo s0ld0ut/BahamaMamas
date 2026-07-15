@@ -953,7 +953,8 @@
                 <button type="button" class="admin-tab active" data-admin-panel="applications" role="tab">Bewerbungen</button>
                 <button type="button" class="admin-tab" data-admin-panel="contacts" role="tab">Kontaktanfragen</button>
                 <button type="button" class="admin-tab" data-admin-panel="team" role="tab">Team &amp; Zugänge</button>
-                <button type="button" class="admin-tab" data-admin-panel="menu" role="tab">Lager &amp; Preisliste</button>
+                <button type="button" class="admin-tab" data-admin-panel="pricelist" role="tab">Preisliste</button>
+                <button type="button" class="admin-tab" data-admin-panel="stock" role="tab">Lager</button>
                 <button type="button" class="admin-tab" data-admin-panel="events" role="tab">Events Verwalten</button>
                 <button type="button" class="admin-tab" data-admin-panel="vip" role="tab">VIP-Tickets</button>
                 <button type="button" class="admin-tab" data-admin-panel="finance" role="tab">Finanzen</button>
@@ -1032,62 +1033,59 @@
                 </div>
             </div>
 
-            <div class="admin-panel" data-admin-panel-content="menu" hidden>
-                <div id="menu-admin" class="card menu-admin-card hidden">
-                    <h2>Lager &amp; Preisliste</h2>
-                    <p class="hint" id="menu-admin-help">Getränke und Snacks mit Preis, Einkaufspreis und Lagerbestand verwalten. "MAX WIN" und "Fehlt" werden automatisch berechnet.</p>
-                    <div class="menu-split">
-                        <div class="menu-column">
-                            <h3>Speisekarte (öffentlich sichtbar)</h3>
-                            <div id="menu-admin-list" class="menu-editor-list"><div class="empty-state">Noch nicht eingeloggt.</div></div>
-                            <details class="content-section">
-                                <summary>Neuen Speisekarten-Eintrag hinzufügen</summary>
-                                <form id="menu-create-form" class="menu-editor content-section-body" data-permission-category="menu">
-                                    <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
-                                    <div>
-                                        <label for="menu-category">Kategorie</label>
-                                        <select id="menu-category" name="category" required>
-                                            <option value="">Bitte auswählen</option>
-                                            <option value="signature-drinks">SIGNATURE DRINKS</option>
-                                            <option value="spirits">SPIRITS</option>
-                                            <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
-                                            <option value="bar-bites">BAR BITES</option>
-                                            <option value="extras">EXTRA'S</option>
-                                        </select>
-                                    </div>
-                                    <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
-                                    <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
-                                    <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
-                                    <div class="full checkbox-field"><label><input type="checkbox" id="menu-recipe-visible" name="recipeVisible" value="true"> Rezept öffentlich auf der Speisekarte anzeigen</label></div>
-                                    <details class="content-section">
-                                        <summary>Lager-Daten für diesen Eintrag</summary>
-                                        <div class="content-section-body">
-                                            <div><label for="menu-cost-price">Einkaufspreis (EK) in $</label><input id="menu-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="0" required></div>
-                                            <div><label for="menu-stock-target">Soll-Bestand</label><input id="menu-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                                            <div><label for="menu-stock-current">Ist-Bestand</label><input id="menu-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                                        </div>
-                                    </details>
-                                    <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
-                                </form>
-                            </details>
-                        </div>
+            <div class="admin-panel" data-admin-panel-content="pricelist" hidden>
+                <div id="pricelist-admin" class="card hidden">
+                    <h2>Preisliste</h2>
+                    <p class="hint" id="pricelist-admin-help">Getränke und Snacks mit Preis, Beschreibung und Kategorie verwalten.</p>
+                    <div id="pricelist-admin-list"></div>
+                    <details class="content-section">
+                        <summary>Neuen Speisekarten-Eintrag hinzufügen</summary>
+                        <form id="menu-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                            <div><label for="menu-name">Name</label><input id="menu-name" name="name" maxlength="120" required></div>
+                            <div>
+                                <label for="menu-category">Kategorie</label>
+                                <select id="menu-category" name="category" required>
+                                    <option value="">Bitte auswählen</option>
+                                    <option value="signature-drinks">SIGNATURE DRINKS</option>
+                                    <option value="spirits">SPIRITS</option>
+                                    <option value="fresh-virgin">FRESH &amp; VIRGIN</option>
+                                    <option value="bar-bites">BAR BITES</option>
+                                    <option value="extras">EXTRA'S</option>
+                                </select>
+                            </div>
+                            <div><label for="menu-price">Verkaufspreis (VK) in $</label><input id="menu-price" name="price" type="number" min="0" max="10000000" step="1" required></div>
+                            <div><label for="menu-sort-order">Reihenfolge</label><input id="menu-sort-order" name="sortOrder" type="number" min="0" max="10000" value="10" required></div>
+                            <div class="full"><label for="menu-description">Beschreibung</label><textarea id="menu-description" name="description" maxlength="500" placeholder="Optional, z. B. Geschmack oder Besonderheiten"></textarea></div>
+                            <div class="full team-editor-actions"><button type="submit" id="menu-create-submit">Eintrag hinzufügen</button></div>
+                        </form>
+                    </details>
+                </div>
+            </div>
 
-                        <div class="menu-column">
-                            <h3>Zutaten-Lager (intern, Rohstoffe)</h3>
-                            <p class="hint">"Fehlt" und "Kosten Nachbestellung" werden automatisch berechnet.</p>
-                            <div id="ingredient-admin-list" class="menu-editor-list"></div>
-                            <details class="content-section">
-                                <summary>Neue Zutat hinzufügen</summary>
-                                <form id="ingredient-create-form" class="menu-editor content-section-body" data-permission-category="menu">
-                                    <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
-                                    <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
-                                    <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
-                                    <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
-                                    <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
-                                </form>
-                            </details>
-                        </div>
-                    </div>
+            <div class="admin-panel" data-admin-panel-content="stock" hidden>
+                <div id="stock-admin" class="card hidden">
+                    <h2>Lager</h2>
+                    <p class="hint" id="stock-admin-help">Soll-/Ist-Bestand und Einkaufspreise pflegen. "Fehlt" wird automatisch berechnet. Trag bei "Anzahl" ein, wie viel du nachbestellen willst - "Kosten" und die Gesamtsumme rechnen sich dann automatisch.</p>
+
+                    <h3>Produkte (Getränke &amp; Speisen)</h3>
+                    <div id="stock-products-list"></div>
+                    <p class="admin-meta">Gesamtsumme Nachbestellung (Produkte): <span id="stock-products-total">0 $</span></p>
+
+                    <hr>
+                    <h3>Zutaten (Rohstoffe)</h3>
+                    <div id="stock-ingredients-list"></div>
+                    <p class="admin-meta">Gesamtsumme Nachbestellung (Zutaten): <span id="stock-ingredients-total">0 $</span></p>
+                    <details class="content-section">
+                        <summary>Neue Zutat hinzufügen</summary>
+                        <form id="ingredient-create-form" class="menu-editor content-section-body" data-permission-category="menu">
+                            <div><label for="ingredient-name">Name</label><input id="ingredient-name" name="name" maxlength="120" required></div>
+                            <div><label for="ingredient-stock-target">Soll-Bestand</label><input id="ingredient-stock-target" name="stockTarget" type="number" min="0" max="1000000" step="1" value="20" required></div>
+                            <div><label for="ingredient-cost-price">Einkaufspreis in $</label><input id="ingredient-cost-price" name="costPrice" type="number" min="0" max="10000000" step="1" value="10" required></div>
+                            <div><label for="ingredient-stock-current">Ist-Bestand</label><input id="ingredient-stock-current" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="0" required></div>
+                            <div class="full team-editor-actions"><button type="submit" id="ingredient-create-submit">Zutat hinzufügen</button></div>
+                        </form>
+                    </details>
+                </div>
                 </div>
             </div>
 
@@ -1322,14 +1320,19 @@
         const teamCreateSubmit = document.querySelector("#team-create-submit");
         const teamAdminList = document.querySelector("#team-admin-list");
         const adminToolbar = document.querySelector("#admin-toolbar");
-        const menuAdmin = document.querySelector("#menu-admin");
-        const menuAdminHelp = document.querySelector("#menu-admin-help");
+        const pricelistAdmin = document.querySelector("#pricelist-admin");
+        const pricelistAdminHelp = document.querySelector("#pricelist-admin-help");
         const menuCreateForm = document.querySelector("#menu-create-form");
         const menuCreateSubmit = document.querySelector("#menu-create-submit");
-        const menuAdminList = document.querySelector("#menu-admin-list");
+        const pricelistAdminList = document.querySelector("#pricelist-admin-list");
+        const stockAdmin = document.querySelector("#stock-admin");
+        const stockAdminHelp = document.querySelector("#stock-admin-help");
+        const stockProductsList = document.querySelector("#stock-products-list");
+        const stockProductsTotal = document.querySelector("#stock-products-total");
+        const stockIngredientsList = document.querySelector("#stock-ingredients-list");
+        const stockIngredientsTotal = document.querySelector("#stock-ingredients-total");
         const ingredientCreateForm = document.querySelector("#ingredient-create-form");
         const ingredientCreateSubmit = document.querySelector("#ingredient-create-submit");
-        const ingredientAdminList = document.querySelector("#ingredient-admin-list");
         const eventAdmin = document.querySelector("#event-admin");
         const eventAdminHelp = document.querySelector("#event-admin-help");
         const eventCreateForm = document.querySelector("#event-create-form");
@@ -1609,9 +1612,11 @@
             contactRequestsList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
             teamAdmin.classList.add("hidden");
             teamAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
-            menuAdmin.classList.add("hidden");
-            menuAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
-            ingredientAdminList.innerHTML = "";
+            pricelistAdmin.classList.add("hidden");
+            pricelistAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
+            stockAdmin.classList.add("hidden");
+            stockProductsList.innerHTML = "";
+            stockIngredientsList.innerHTML = "";
             eventAdmin.classList.add("hidden");
             eventAdminList.innerHTML = '<div class="empty-state">Noch nicht eingeloggt.</div>';
             vipAdmin.classList.add("hidden");
@@ -1653,16 +1658,19 @@
 
             document.querySelectorAll("[data-admin-panel]").forEach((button) => {
                 const category = button.dataset.adminPanel;
-                // "team" und "users" teilen sich jetzt einen Tab - der Tab ist
-                // sichtbar, sobald mindestens einer der beiden Bereiche sichtbar ist.
-                const visible = category === "team" ? (canView("team") || canView("users")) : canView(category);
+                // "team"/"users" teilen sich einen Tab, "pricelist"/"stock"
+                // teilen sich die "menu"-Berechtigung - jeweils sichtbar,
+                // sobald mindestens einer der beiden Bereiche sichtbar ist.
+                let visible;
+                if (category === "team") visible = canView("team") || canView("users");
+                else if (category === "pricelist" || category === "stock") visible = canView("menu");
+                else visible = canView(category);
                 button.classList.toggle("hidden", !visible);
             });
 
             const cardByCategory = {
                 contacts: contactAdmin,
                 team: teamAdmin,
-                menu: menuAdmin,
                 events: eventAdmin,
                 vip: vipAdmin,
                 finance: financeAdmin,
@@ -1674,6 +1682,8 @@
             Object.entries(cardByCategory).forEach(([category, element]) => {
                 element.classList.toggle("hidden", !canView(category));
             });
+            pricelistAdmin.classList.toggle("hidden", !canView("menu"));
+            stockAdmin.classList.toggle("hidden", !canView("menu"));
 
             [menuCreateForm, ingredientCreateForm, teamCreateForm, eventCreateForm, vipTypeCreateForm, vipTicketCreateForm, financeCreateForm, infoCreateForm, userCreateForm].forEach((form) => {
                 if (!form) return;
@@ -1696,7 +1706,7 @@
             await Promise.all(loaders);
 
             const firstCategory = visibleCategories.includes("applications") ? "applications" : visibleCategories[0];
-            const firstPanel = firstCategory === "users" ? "team" : firstCategory;
+            const firstPanel = firstCategory === "users" ? "team" : (firstCategory === "menu" ? "pricelist" : firstCategory);
 
             // Beim erneuten Login-Check (z.B. Tab-Wechsel/Token-Refresh) den
             // zuletzt geöffneten Tab beibehalten, statt immer neu auf den
@@ -1998,7 +2008,6 @@
                             <span class="menu-item-copy">
                                 <span class="menu-item-name">${escapeHtml(item.name)}</span>
                                 ${item.description ? `<span class="menu-item-description">${escapeHtml(item.description)}</span>` : ""}
-                                ${item.recipeVisible && item.recipe && item.recipe.length ? `<span class="menu-item-description">Zutaten: ${item.recipe.map((entry) => `${entry.amount}x ${escapeHtml(entry.name)}`).join(", ")}</span>` : ""}
                             </span>
                             <span class="menu-price">${formatPrice(item.price)}</span>
                         </div>
@@ -2007,14 +2016,8 @@
             });
         }
 
-        function renderMenuAdmin() {
-            if (!allMenuItems.length) {
-                menuAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden. Lege oben den ersten an.</div>';
-                applyReadOnly(menuAdminList, "menu");
-                return;
-            }
-
-            menuAdminList.innerHTML = allMenuItems.map((item) => `
+        function menuItemEditForm(item) {
+            return `
                 <form class="menu-editor" data-menu-form data-id="${item.id}">
                     <div><label for="menu-item-name-${item.id}">Name</label><input id="menu-item-name-${item.id}" name="name" maxlength="120" value="${escapeAttribute(item.name)}" required></div>
                     <div>
@@ -2026,64 +2029,36 @@
                     <div><label for="menu-item-price-${item.id}">VK-Preis in $</label><input id="menu-item-price-${item.id}" name="price" type="number" min="0" max="10000000" step="1" value="${Number(item.price) || 0}" required></div>
                     <div><label for="menu-item-sort-${item.id}">Reihenfolge</label><input id="menu-item-sort-${item.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(item.sortOrder) || 0}" required></div>
                     <div class="full"><label for="menu-item-description-${item.id}">Beschreibung</label><textarea id="menu-item-description-${item.id}" name="description" maxlength="500">${escapeHtml(item.description || "")}</textarea></div>
-                    <div class="full checkbox-field"><label><input type="checkbox" name="recipeVisible" value="true" ${item.recipeVisible ? "checked" : ""}> Rezept öffentlich anzeigen</label></div>
-                    <details class="content-section">
-                        <summary>Lager-Daten &middot; MAX WIN: ${formatPrice(item.maxWin ?? 0)} &middot; Fehlt: ${item.stockMissing ?? 0}</summary>
-                        <div class="content-section-body">
-                            <div><label for="menu-item-cost-${item.id}">EK-Preis in $</label><input id="menu-item-cost-${item.id}" name="costPrice" type="number" min="0" max="10000000" step="1" value="${Number(item.costPrice) || 0}" required></div>
-                            <div><label for="menu-item-stock-target-${item.id}">Soll-Bestand</label><input id="menu-item-stock-target-${item.id}" name="stockTarget" type="number" min="0" max="1000000" step="1" value="${Number(item.stockTarget) || 0}" required></div>
-                            <div><label for="menu-item-stock-current-${item.id}">Ist-Bestand</label><input id="menu-item-stock-current-${item.id}" name="stockCurrent" type="number" min="0" max="1000000" step="1" value="${Number(item.stockCurrent) || 0}" required></div>
-                        </div>
-                    </details>
-                    <div class="full">
-                        <h3>Rezept</h3>
-                        <div class="recipe-list" data-recipe-list data-menu-item-id="${item.id}">
-                            ${(item.recipe || []).map((entry) => `
-                                <span class="recipe-chip">${entry.amount}x ${escapeHtml(entry.name)} <button type="button" data-delete-recipe-item data-recipe-id="${entry.id}">&times;</button></span>
-                            `).join("") || '<span class="hint">Noch keine Zutaten zugeordnet.</span>'}
-                        </div>
-                        <div class="recipe-add-row" data-recipe-add data-menu-item-id="${item.id}">
-                            <select data-recipe-ingredient>
-                                ${allIngredients.map((ingredient) => `<option value="${ingredient.id}">${escapeHtml(ingredient.name)}</option>`).join("")}
-                            </select>
-                            <input type="number" min="1" max="100000" value="1" data-recipe-amount>
-                            <button type="button" data-add-recipe-item>Zutat zuordnen</button>
-                        </div>
-                    </div>
                     <div class="full team-editor-actions">
                         <button type="submit">Änderungen speichern</button>
                         <button type="button" class="danger" data-delete-menu-item>Eintrag löschen</button>
                     </div>
                 </form>
-            `).join("");
-            applyReadOnly(menuAdminList, "menu");
+            `;
         }
 
-        function renderIngredientAdmin() {
-            if (!allIngredients.length) {
-                ingredientAdminList.innerHTML = '<div class="empty-state">Noch keine Zutaten vorhanden.</div>';
-                applyReadOnly(ingredientAdminList, "menu");
+        function renderPricelistAdmin() {
+            if (!allMenuItems.length) {
+                pricelistAdminList.innerHTML = '<div class="empty-state">Noch keine Einträge vorhanden. Lege unten den ersten an.</div>';
                 return;
             }
 
-            ingredientAdminList.innerHTML = allIngredients.map((ingredient) => `
-                <form class="menu-editor" data-ingredient-form data-id="${ingredient.id}">
-                    <div><label>Name</label><input name="name" maxlength="120" value="${escapeAttribute(ingredient.name)}" required></div>
-                    <div><label>Soll-Bestand</label><input name="stockTarget" type="number" min="0" max="1000000" value="${Number(ingredient.stockTarget) || 0}" required></div>
-                    <div><label>Einkaufspreis in $</label><input name="costPrice" type="number" min="0" max="10000000" value="${Number(ingredient.costPrice) || 0}" required></div>
-                    <div><label>Ist-Bestand</label><input name="stockCurrent" type="number" min="0" max="1000000" value="${Number(ingredient.stockCurrent) || 0}" required></div>
-                    <div class="full admin-meta">Fehlt: ${ingredient.missing ?? 0} &middot; Kosten Nachbestellung: ${formatPrice(ingredient.restockCost ?? 0)}</div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-ingredient>Zutat löschen</button>
-                    </div>
-                </form>
-            `).join("");
-            applyReadOnly(ingredientAdminList, "menu");
+            pricelistAdminList.innerHTML = menuCategories.map((category) => {
+                const items = allMenuItems.filter((item) => item.category === category.value);
+                return `
+                    <details class="content-section" open>
+                        <summary>${escapeHtml(category.label)} (${items.length})</summary>
+                        <div class="content-section-body full menu-editor-list">
+                            ${items.length ? items.map(menuItemEditForm).join("") : '<div class="empty-state">Keine Einträge in dieser Kategorie.</div>'}
+                        </div>
+                    </details>
+                `;
+            }).join("");
+            applyReadOnly(pricelistAdminList, "menu");
         }
 
         async function loadMenu(forAdmin = false) {
-            if (forAdmin) menuAdminHelp.textContent = "Speisekarte wird geladen.";
+            if (forAdmin) pricelistAdminHelp.textContent = "Speisekarte wird geladen.";
 
             const response = await apiFetch("/api/menu");
             const data = await response.json().catch(() => ({}));
@@ -2094,8 +2069,8 @@
                     container.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
                 });
                 if (forAdmin) {
-                    menuAdminHelp.textContent = errorText;
-                    menuAdminList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
+                    pricelistAdminHelp.textContent = errorText;
+                    pricelistAdminList.innerHTML = `<div class="empty-state">${escapeHtml(errorText)}</div>`;
                 }
                 return;
             }
@@ -2103,9 +2078,80 @@
             allMenuItems = data.menuItems || [];
             renderPublicMenu();
             if (forAdmin) {
-                menuAdminHelp.textContent = `${allMenuItems.length} Speisekarten-Eintrag/Einträge gespeichert.`;
-                renderMenuAdmin();
+                pricelistAdminHelp.textContent = `${allMenuItems.length} Speisekarten-Eintrag/Einträge gespeichert.`;
+                renderPricelistAdmin();
+                renderStockProducts();
             }
+        }
+
+        function stockRow(kind, item) {
+            const missing = Math.max(0, (Number(item.stockTarget) || 0) - (Number(item.stockCurrent) || 0));
+            return `
+                <tr class="data-row" data-stock-row data-kind="${kind}" data-id="${item.id}" data-cost-price="${Number(item.costPrice) || 0}">
+                    <td>${escapeHtml(item.name)}</td>
+                    <td><input type="number" min="0" max="1000000" value="${Number(item.stockTarget) || 0}" data-field="stockTarget"></td>
+                    <td><input type="number" min="0" max="1000000" value="${Number(item.stockCurrent) || 0}" data-field="stockCurrent"></td>
+                    <td><input type="number" min="0" max="10000000" value="${Number(item.costPrice) || 0}" data-field="costPrice"></td>
+                    <td data-fehlt>${missing}</td>
+                    <td><input type="number" min="0" max="1000000" value="0" data-anzahl></td>
+                    <td data-kosten>${formatPrice(0)}</td>
+                    <td class="row-actions">
+                        <button type="button" class="icon-button" data-save-stock title="Speichern">&#128190;</button>
+                        ${kind === "ingredient" ? `<button type="button" class="icon-button danger" data-delete-ingredient title="Löschen">&#128465;</button>` : ""}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function stockTable(kind, items) {
+            if (!items.length) return '<div class="empty-state">Noch keine Einträge vorhanden.</div>';
+            return `
+                <table class="data-table">
+                    <thead><tr><th>Name</th><th>Soll</th><th>Ist</th><th>EK-Preis</th><th>Fehlt</th><th>Anzahl</th><th>Kosten</th><th></th></tr></thead>
+                    <tbody>${items.map((item) => stockRow(kind, item)).join("")}</tbody>
+                </table>
+            `;
+        }
+
+        function recalcStockRow(row) {
+            const stockTarget = Number(row.querySelector('[data-field="stockTarget"]')?.value) || 0;
+            const stockCurrent = Number(row.querySelector('[data-field="stockCurrent"]')?.value) || 0;
+            const costPrice = Number(row.querySelector('[data-field="costPrice"]')?.value) || 0;
+            const anzahl = Number(row.querySelector('[data-anzahl]')?.value) || 0;
+
+            row.querySelector('[data-fehlt]').textContent = Math.max(0, stockTarget - stockCurrent);
+            row.querySelector('[data-kosten]').textContent = formatPrice(anzahl * costPrice);
+        }
+
+        function recalcStockTotal(container, totalElement) {
+            let total = 0;
+            container.querySelectorAll("[data-stock-row]").forEach((row) => {
+                const costPrice = Number(row.querySelector('[data-field="costPrice"]')?.value) || 0;
+                const anzahl = Number(row.querySelector('[data-anzahl]')?.value) || 0;
+                total += costPrice * anzahl;
+            });
+            totalElement.textContent = formatPrice(total);
+        }
+
+        function bindStockList(container, totalElement) {
+            container.addEventListener("input", (event) => {
+                const row = event.target instanceof Element ? event.target.closest("[data-stock-row]") : null;
+                if (!row) return;
+                recalcStockRow(row);
+                recalcStockTotal(container, totalElement);
+            });
+        }
+
+        function renderStockProducts() {
+            stockProductsList.innerHTML = stockTable("product", allMenuItems);
+            applyReadOnly(stockProductsList, "menu");
+            recalcStockTotal(stockProductsList, stockProductsTotal);
+        }
+
+        function renderStockIngredients() {
+            stockIngredientsList.innerHTML = stockTable("ingredient", allIngredients);
+            applyReadOnly(stockIngredientsList, "menu");
+            recalcStockTotal(stockIngredientsList, stockIngredientsTotal);
         }
 
         async function loadIngredients() {
@@ -2113,13 +2159,12 @@
             const data = await response.json().catch(() => ({}));
 
             if (!response.ok) {
-                ingredientAdminList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Zutaten konnten nicht geladen werden.")}</div>`;
+                stockIngredientsList.innerHTML = `<div class="empty-state">${escapeHtml(data.error || "Zutaten konnten nicht geladen werden.")}</div>`;
                 return;
             }
 
             allIngredients = data.ingredients || [];
-            renderIngredientAdmin();
-            renderMenuAdmin();
+            renderStockIngredients();
         }
 
         function renderEventTicker() {
@@ -2182,28 +2227,46 @@
 
         function renderEventAdmin() {
             if (!allEvents.length) {
-                eventAdminList.innerHTML = '<div class="empty-state">Noch keine Events vorhanden. Lege oben das erste an.</div>';
+                eventAdminList.innerHTML = '<div class="empty-state">Noch keine Events vorhanden. Lege unten das erste an.</div>';
                 return;
             }
 
-            eventAdminList.innerHTML = allEvents.map((event) => `
-                <form class="event-editor" data-event-form data-id="${event.id}">
-                    <div><label for="event-date-${event.id}">Datum</label><input id="event-date-${event.id}" name="eventDate" type="date" value="${escapeAttribute(event.eventDate)}" required></div>
-                    <div><label for="event-time-${event.id}">Startzeit</label><input id="event-time-${event.id}" name="startTime" type="time" value="${escapeAttribute(event.startTime)}" required></div>
-                    <div><label for="event-name-${event.id}">Event Name</label><input id="event-name-${event.id}" name="name" maxlength="140" value="${escapeAttribute(event.name)}" required></div>
-                    <div>
-                        <label for="event-status-${event.id}">Status</label>
-                        <select id="event-status-${event.id}" name="status" required>
-                            ${eventStatuses.map((status) => `<option value="${status.value}"${status.value === event.status ? " selected" : ""}>${status.label}</option>`).join("")}
-                        </select>
-                    </div>
-                    <div class="full"><label for="event-description-${event.id}">Beschreibung</label><textarea id="event-description-${event.id}" name="description" maxlength="1200">${escapeHtml(event.description || "")}</textarea></div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-event>Event löschen</button>
-                    </div>
-                </form>
-            `).join("");
+            eventAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Datum</th><th>Startzeit</th><th>Name</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                        ${allEvents.map((event) => `
+                            <tr class="data-row" data-row-id="${event.id}">
+                                <td>${escapeHtml(event.eventDate)}</td>
+                                <td>${escapeHtml(event.startTime)}</td>
+                                <td>${escapeHtml(event.name)}</td>
+                                <td>${escapeHtml(getEventStatusLabel(event.status))}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="${event.id}" title="Bearbeiten">&#9998;</button>
+                                    <button type="button" class="icon-button danger" data-delete-event data-id="${event.id}" title="Löschen">&#128465;</button>
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="${event.id}">
+                                <td colspan="5">
+                                    <form class="event-editor" data-event-form data-id="${event.id}">
+                                        <div><label for="event-date-${event.id}">Datum</label><input id="event-date-${event.id}" name="eventDate" type="date" value="${escapeAttribute(event.eventDate)}" required></div>
+                                        <div><label for="event-time-${event.id}">Startzeit</label><input id="event-time-${event.id}" name="startTime" type="time" value="${escapeAttribute(event.startTime)}" required></div>
+                                        <div><label for="event-name-${event.id}">Event Name</label><input id="event-name-${event.id}" name="name" maxlength="140" value="${escapeAttribute(event.name)}" required></div>
+                                        <div>
+                                            <label for="event-status-${event.id}">Status</label>
+                                            <select id="event-status-${event.id}" name="status" required>
+                                                ${eventStatuses.map((status) => `<option value="${status.value}"${status.value === event.status ? " selected" : ""}>${status.label}</option>`).join("")}
+                                            </select>
+                                        </div>
+                                        <div class="full"><label for="event-description-${event.id}">Beschreibung</label><textarea id="event-description-${event.id}" name="description" maxlength="1200">${escapeHtml(event.description || "")}</textarea></div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
             applyReadOnly(eventAdminList, "events");
         }
 
@@ -2543,43 +2606,59 @@
 
         function renderTeamAdmin() {
             if (!allTeamMembers.length) {
-                teamAdminList.innerHTML = '<div class="empty-state">Noch keine Mitarbeiter vorhanden. Lege oben den ersten Eintrag an.</div>';
-
+                teamAdminList.innerHTML = '<div class="empty-state">Noch keine Mitarbeiter vorhanden. Lege unten den ersten Eintrag an.</div>';
                 return;
             }
 
-            teamAdminList.innerHTML = allTeamMembers.map((member) => `
-                <form class="team-editor" data-team-form data-id="${member.id}">
-                    <div>
-                        <label for="member-name-${member.id}">Name</label>
-                        <input id="member-name-${member.id}" name="name" maxlength="120" value="${escapeAttribute(member.name)}" required>
-                    </div>
-                    <div>
-                        <label for="member-role-${member.id}">Position</label>
-                        <select id="member-role-${member.id}" name="role" required>
-                            ${teamPositions.map((position) => `
-                                <option${position === member.role ? " selected" : ""}>${escapeHtml(position)}</option>
-                            `).join("")}
-                        </select>
-                    </div>
-                    <div>
-                        <label for="member-expertise-${member.id}">Expertise</label>
-                        <input id="member-expertise-${member.id}" name="expertise" maxlength="240" value="${escapeAttribute(member.expertise || "")}">
-                    </div>
-                    <div>
-                        <label for="member-sort-${member.id}">Reihenfolge</label>
-                        <input id="member-sort-${member.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(member.sortOrder) || 0}" required>
-                    </div>
-                    <div class="full">
-                        <label for="member-description-${member.id}">Beschreibung</label>
-                        <textarea id="member-description-${member.id}" name="description" maxlength="1200">${escapeHtml(member.description || "")}</textarea>
-                    </div>
-                    <div class="full team-editor-actions">
-                        <button type="submit">Änderungen speichern</button>
-                        <button type="button" class="danger" data-delete-team-member>Mitarbeiter löschen</button>
-                    </div>
-                </form>
-            `).join("");
+            teamAdminList.innerHTML = `
+                <table class="data-table">
+                    <thead><tr><th>Name</th><th>Position</th><th>Reihenfolge</th><th></th></tr></thead>
+                    <tbody>
+                        ${allTeamMembers.map((member) => `
+                            <tr class="data-row" data-row-id="${member.id}">
+                                <td>${escapeHtml(member.name)}</td>
+                                <td>${escapeHtml(member.role)}</td>
+                                <td>${Number(member.sortOrder) || 0}</td>
+                                <td class="row-actions">
+                                    <button type="button" class="icon-button" data-toggle-edit="${member.id}" title="Bearbeiten">&#9998;</button>
+                                    <button type="button" class="icon-button danger" data-delete-team-member data-id="${member.id}" title="Löschen">&#128465;</button>
+                                </td>
+                            </tr>
+                            <tr class="edit-row hidden" data-edit-row="${member.id}">
+                                <td colspan="4">
+                                    <form class="team-editor" data-team-form data-id="${member.id}">
+                                        <div>
+                                            <label for="member-name-${member.id}">Name</label>
+                                            <input id="member-name-${member.id}" name="name" maxlength="120" value="${escapeAttribute(member.name)}" required>
+                                        </div>
+                                        <div>
+                                            <label for="member-role-${member.id}">Position</label>
+                                            <select id="member-role-${member.id}" name="role" required>
+                                                ${teamPositions.map((position) => `
+                                                    <option${position === member.role ? " selected" : ""}>${escapeHtml(position)}</option>
+                                                `).join("")}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="member-expertise-${member.id}">Expertise</label>
+                                            <input id="member-expertise-${member.id}" name="expertise" maxlength="240" value="${escapeAttribute(member.expertise || "")}">
+                                        </div>
+                                        <div>
+                                            <label for="member-sort-${member.id}">Reihenfolge</label>
+                                            <input id="member-sort-${member.id}" name="sortOrder" type="number" min="0" max="10000" value="${Number(member.sortOrder) || 0}" required>
+                                        </div>
+                                        <div class="full">
+                                            <label for="member-description-${member.id}">Beschreibung</label>
+                                            <textarea id="member-description-${member.id}" name="description" maxlength="1200">${escapeHtml(member.description || "")}</textarea>
+                                        </div>
+                                        <div class="full team-editor-actions"><button type="submit">Änderungen speichern</button></div>
+                                    </form>
+                                </td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
             applyReadOnly(teamAdminList, "team");
         }
 
@@ -2879,8 +2958,8 @@
             const button = target?.closest("[data-delete-event]");
             if (!button) return;
 
-            const form = button.closest("[data-event-form]");
-            const name = form.querySelector('[name="name"]').value || "dieses Event";
+            const row = button.closest("[data-row-id]");
+            const name = row?.children[2]?.textContent || "dieses Event";
             if (!confirm(`${name} wirklich dauerhaft löschen?`)) return;
 
             button.disabled = true;
@@ -2889,7 +2968,7 @@
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
 
@@ -3259,11 +3338,18 @@
             menuCreateSubmit.disabled = true;
 
             try {
+                const payload = {
+                    ...getFormPayload(menuCreateForm),
+                    costPrice: 0,
+                    stockTarget: 20,
+                    stockCurrent: 0,
+                    recipeVisible: false,
+                };
                 const response = await apiFetch("/api/menu", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify(getFormPayload(menuCreateForm))
+                    body: JSON.stringify(payload)
                 });
                 const data = await response.json().catch(() => ({}));
 
@@ -3271,15 +3357,15 @@
                 menuCreateForm.reset();
                 document.querySelector("#menu-sort-order").value = "10";
                 await loadMenu(true);
-                menuAdminHelp.textContent = "Eintrag wurde hinzugefügt.";
+                pricelistAdminHelp.textContent = "Eintrag wurde hinzugefügt.";
             } catch (error) {
-                menuAdminHelp.textContent = error.message;
+                pricelistAdminHelp.textContent = error.message;
             } finally {
                 menuCreateSubmit.disabled = false;
             }
         });
 
-        menuAdminList.addEventListener("submit", async (event) => {
+        pricelistAdminList.addEventListener("submit", async (event) => {
             const form = event.target.closest("[data-menu-form]");
             if (!form) return;
             event.preventDefault();
@@ -3288,24 +3374,33 @@
             button.disabled = true;
 
             try {
+                const existing = allMenuItems.find((item) => item.id === Number(form.dataset.id)) || {};
+                const payload = {
+                    id: Number(form.dataset.id),
+                    ...getFormPayload(form),
+                    costPrice: existing.costPrice ?? 0,
+                    stockTarget: existing.stockTarget ?? 0,
+                    stockCurrent: existing.stockCurrent ?? 0,
+                    recipeVisible: false,
+                };
                 const response = await apiFetch("/api/menu", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
+                    body: JSON.stringify(payload)
                 });
                 const data = await response.json().catch(() => ({}));
 
                 if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gespeichert werden.");
                 await loadMenu(true);
-                menuAdminHelp.textContent = "Änderungen wurden gespeichert.";
+                pricelistAdminHelp.textContent = "Änderungen wurden gespeichert.";
             } catch (error) {
-                menuAdminHelp.textContent = error.message;
+                pricelistAdminHelp.textContent = error.message;
                 button.disabled = false;
             }
         });
 
-        menuAdminList.addEventListener("click", async (event) => {
+        pricelistAdminList.addEventListener("click", async (event) => {
             const target = event.target instanceof Element ? event.target : null;
             const button = target?.closest("[data-delete-menu-item]");
             if (!button) return;
@@ -3326,59 +3421,10 @@
 
                 if (!response.ok) throw new Error(data.error || "Eintrag konnte nicht gelöscht werden.");
                 await loadMenu(true);
-                menuAdminHelp.textContent = "Eintrag wurde gelöscht.";
+                pricelistAdminHelp.textContent = "Eintrag wurde gelöscht.";
             } catch (error) {
-                menuAdminHelp.textContent = error.message;
+                pricelistAdminHelp.textContent = error.message;
                 button.disabled = false;
-            }
-        });
-
-        menuAdminList.addEventListener("click", async (event) => {
-            const target = event.target instanceof Element ? event.target : null;
-
-            const addButton = target?.closest("[data-add-recipe-item]");
-            if (addButton) {
-                const row = addButton.closest("[data-recipe-add]");
-                const menuItemId = Number(row.dataset.menuItemId);
-                const ingredientId = Number(row.querySelector("[data-recipe-ingredient]").value);
-                const amount = Number(row.querySelector("[data-recipe-amount]").value);
-
-                addButton.disabled = true;
-                try {
-                    const response = await apiFetch("/api/menu?resource=recipe", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "same-origin",
-                        body: JSON.stringify({ menuItemId, ingredientId, amount })
-                    });
-                    const data = await response.json().catch(() => ({}));
-                    if (!response.ok) throw new Error(data.error || "Zutat konnte nicht zugeordnet werden.");
-                    await loadMenu(true);
-                } catch (error) {
-                    menuAdminHelp.textContent = error.message;
-                } finally {
-                    addButton.disabled = false;
-                }
-                return;
-            }
-
-            const deleteRecipeButton = target?.closest("[data-delete-recipe-item]");
-            if (deleteRecipeButton) {
-                deleteRecipeButton.disabled = true;
-                try {
-                    const response = await apiFetch("/api/menu?resource=recipe", {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "same-origin",
-                        body: JSON.stringify({ id: Number(deleteRecipeButton.dataset.recipeId) })
-                    });
-                    const data = await response.json().catch(() => ({}));
-                    if (!response.ok) throw new Error(data.error || "Zutat konnte nicht entfernt werden.");
-                    await loadMenu(true);
-                } catch (error) {
-                    menuAdminHelp.textContent = error.message;
-                    deleteRecipeButton.disabled = false;
-                }
             }
         });
 
@@ -3398,62 +3444,101 @@
                 if (!response.ok) throw new Error(data.error || "Zutat konnte nicht hinzugefügt werden.");
                 ingredientCreateForm.reset();
                 await loadIngredients();
-                menuAdminHelp.textContent = "Zutat wurde hinzugefügt.";
+                stockAdminHelp.textContent = "Zutat wurde hinzugefügt.";
             } catch (error) {
-                menuAdminHelp.textContent = error.message;
+                stockAdminHelp.textContent = error.message;
             } finally {
                 ingredientCreateSubmit.disabled = false;
             }
         });
 
-        ingredientAdminList.addEventListener("submit", async (event) => {
-            const form = event.target.closest("[data-ingredient-form]");
-            if (!form) return;
-            event.preventDefault();
+        bindStockList(stockProductsList, stockProductsTotal);
+        bindStockList(stockIngredientsList, stockIngredientsTotal);
 
-            const button = form.querySelector('button[type="submit"]');
+        async function saveStockRow(row) {
+            const kind = row.dataset.kind;
+            const id = Number(row.dataset.id);
+            const stockTarget = Number(row.querySelector('[data-field="stockTarget"]').value) || 0;
+            const stockCurrent = Number(row.querySelector('[data-field="stockCurrent"]').value) || 0;
+            const costPrice = Number(row.querySelector('[data-field="costPrice"]').value) || 0;
+            const button = row.querySelector("[data-save-stock]");
             button.disabled = true;
+
             try {
-                const response = await apiFetch("/api/menu?resource=ingredients", {
-                    method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id), ...getFormPayload(form) })
-                });
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(data.error || "Zutat konnte nicht gespeichert werden.");
-                await loadIngredients();
-                menuAdminHelp.textContent = "Zutat wurde aktualisiert.";
+                if (kind === "product") {
+                    const existing = allMenuItems.find((item) => item.id === id);
+                    if (!existing) throw new Error("Eintrag nicht gefunden.");
+                    const response = await apiFetch("/api/menu", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "same-origin",
+                        body: JSON.stringify({
+                            id,
+                            name: existing.name,
+                            category: existing.category,
+                            price: existing.price,
+                            sortOrder: existing.sortOrder,
+                            description: existing.description,
+                            recipeVisible: false,
+                            costPrice, stockTarget, stockCurrent,
+                        })
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.error || "Lagerdaten konnten nicht gespeichert werden.");
+                    await loadMenu(true);
+                    stockAdminHelp.textContent = "Lagerdaten gespeichert.";
+                } else {
+                    const existing = allIngredients.find((ingredient) => ingredient.id === id);
+                    if (!existing) throw new Error("Zutat nicht gefunden.");
+                    const response = await apiFetch("/api/menu?resource=ingredients", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "same-origin",
+                        body: JSON.stringify({ id, name: existing.name, costPrice, stockTarget, stockCurrent })
+                    });
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok) throw new Error(data.error || "Lagerdaten konnten nicht gespeichert werden.");
+                    await loadIngredients();
+                    stockAdminHelp.textContent = "Lagerdaten gespeichert.";
+                }
             } catch (error) {
-                menuAdminHelp.textContent = error.message;
+                stockAdminHelp.textContent = error.message;
                 button.disabled = false;
             }
-        });
+        }
 
-        ingredientAdminList.addEventListener("click", async (event) => {
-            const target = event.target instanceof Element ? event.target : null;
-            const button = target?.closest("[data-delete-ingredient]");
-            if (!button) return;
+        [stockProductsList, stockIngredientsList].forEach((list) => {
+            list.addEventListener("click", async (event) => {
+                const target = event.target instanceof Element ? event.target : null;
+                const row = target?.closest("[data-stock-row]");
+                if (!row) return;
 
-            const form = button.closest("[data-ingredient-form]");
-            if (!confirm("Diese Zutat wirklich löschen?")) return;
+                if (target.closest("[data-save-stock]")) {
+                    await saveStockRow(row);
+                    return;
+                }
 
-            button.disabled = true;
-            try {
-                const response = await apiFetch("/api/menu?resource=ingredients", {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
-                });
-                const data = await response.json().catch(() => ({}));
-                if (!response.ok) throw new Error(data.error || "Zutat konnte nicht gelöscht werden.");
-                await loadIngredients();
-                menuAdminHelp.textContent = "Zutat wurde gelöscht.";
-            } catch (error) {
-                menuAdminHelp.textContent = error.message;
-                button.disabled = false;
-            }
+                if (target.closest("[data-delete-ingredient]")) {
+                    if (!confirm("Diese Zutat wirklich löschen?")) return;
+                    const button = target.closest("[data-delete-ingredient]");
+                    button.disabled = true;
+                    try {
+                        const response = await apiFetch("/api/menu?resource=ingredients", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "same-origin",
+                            body: JSON.stringify({ id: Number(row.dataset.id) })
+                        });
+                        const data = await response.json().catch(() => ({}));
+                        if (!response.ok) throw new Error(data.error || "Zutat konnte nicht gelöscht werden.");
+                        await loadIngredients();
+                        stockAdminHelp.textContent = "Zutat wurde gelöscht.";
+                    } catch (error) {
+                        stockAdminHelp.textContent = error.message;
+                        button.disabled = false;
+                    }
+                }
+            });
         });
 
         teamCreateForm.addEventListener("submit", async (event) => {
@@ -3512,8 +3597,8 @@
             const button = target?.closest("[data-delete-team-member]");
             if (!button) return;
 
-            const form = button.closest("[data-team-form]");
-            const name = form.querySelector('[name="name"]').value || "dieses Teammitglied";
+            const row = button.closest("[data-row-id]");
+            const name = row?.children[0]?.textContent || "dieses Teammitglied";
             if (!confirm(`${name} wirklich dauerhaft aus dem Team löschen?`)) return;
 
             button.disabled = true;
@@ -3522,7 +3607,7 @@
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" },
                     credentials: "same-origin",
-                    body: JSON.stringify({ id: Number(form.dataset.id) })
+                    body: JSON.stringify({ id: Number(button.dataset.id) })
                 });
                 const data = await response.json().catch(() => ({}));
 
